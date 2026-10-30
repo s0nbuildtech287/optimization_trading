@@ -4,25 +4,28 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-};
+var __commonJS = (cb, mod) =>
+  function __require() {
+    return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports);
+  };
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
+  if ((from && typeof from === "object") || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+      if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
+var __toESM = (mod, isNodeMode, target) => (
+  (target = mod != null ? __create(__getProtoOf(mod)) : {}),
+  __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+    mod,
+  )
+);
 
 // node_modules/dotenv/package.json
 var require_package = __commonJS({
@@ -37,7 +40,7 @@ var require_package = __commonJS({
         ".": {
           types: "./lib/main.d.ts",
           require: "./lib/main.js",
-          default: "./lib/main.js"
+          default: "./lib/main.js",
         },
         "./config": "./config.js",
         "./config.js": "./config.js",
@@ -45,7 +48,7 @@ var require_package = __commonJS({
         "./lib/env-options.js": "./lib/env-options.js",
         "./lib/cli-options": "./lib/cli-options.js",
         "./lib/cli-options.js": "./lib/cli-options.js",
-        "./package.json": "./package.json"
+        "./package.json": "./package.json",
       },
       scripts: {
         "dts-check": "tsc --project tests/types/tsconfig.json",
@@ -54,23 +57,15 @@ var require_package = __commonJS({
         test: "tap run --allow-empty-coverage --disable-coverage --timeout=60000",
         "test:coverage": "tap run --show-full-coverage --timeout=60000 --coverage-report=text --coverage-report=lcov",
         prerelease: "npm test",
-        release: "standard-version"
+        release: "standard-version",
       },
       repository: {
         type: "git",
-        url: "git://github.com/motdotla/dotenv.git"
+        url: "git://github.com/motdotla/dotenv.git",
       },
       homepage: "https://github.com/motdotla/dotenv#readme",
       funding: "https://dotenvx.com",
-      keywords: [
-        "dotenv",
-        "env",
-        ".env",
-        "environment",
-        "variables",
-        "config",
-        "settings"
-      ],
+      keywords: ["dotenv", "env", ".env", "environment", "variables", "config", "settings"],
       readmeFilename: "README.md",
       license: "BSD-2-Clause",
       devDependencies: {
@@ -80,16 +75,16 @@ var require_package = __commonJS({
         standard: "^17.0.0",
         "standard-version": "^9.5.0",
         tap: "^19.2.0",
-        typescript: "^4.8.4"
+        typescript: "^4.8.4",
       },
       engines: {
-        node: ">=12"
+        node: ">=12",
       },
       browser: {
-        fs: false
-      }
+        fs: false,
+      },
     };
-  }
+  },
 });
 
 // node_modules/dotenv/lib/main.js
@@ -101,18 +96,18 @@ var require_main = __commonJS({
     var crypto = require("crypto");
     var packageJson = require_package();
     var version = packageJson.version;
-    var LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg;
+    var LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/gm;
     function parse(src) {
       const obj = {};
       let lines = src.toString();
-      lines = lines.replace(/\r\n?/mg, "\n");
+      lines = lines.replace(/\r\n?/gm, "\n");
       let match;
       while ((match = LINE.exec(lines)) != null) {
         const key = match[1];
         let value = match[2] || "";
         value = value.trim();
         const maybeQuote = value[0];
-        value = value.replace(/^(['"`])([\s\S]*)\1$/mg, "$2");
+        value = value.replace(/^(['"`])([\s\S]*)\1$/gm, "$2");
         if (maybeQuote === '"') {
           value = value.replace(/\\n/g, "\n");
           value = value.replace(/\\r/g, "\r");
@@ -369,7 +364,7 @@ var require_main = __commonJS({
       config,
       decrypt,
       parse,
-      populate
+      populate,
     };
     module2.exports.configDotenv = DotenvModule.configDotenv;
     module2.exports._configVault = DotenvModule._configVault;
@@ -379,7 +374,7 @@ var require_main = __commonJS({
     module2.exports.parse = DotenvModule.parse;
     module2.exports.populate = DotenvModule.populate;
     module2.exports = DotenvModule;
-  }
+  },
 });
 
 // backend/systemMonitor.ts
@@ -409,12 +404,8 @@ function getMonitorSessionPath() {
 }
 function writeMonitorSession(machineId2, serverUrl2) {
   try {
-    fs.writeFileSync(
-      getMonitorSessionPath(),
-      JSON.stringify({ machineId: machineId2, serverUrl: serverUrl2, updatedAt: Date.now() }, null, 2)
-    );
-  } catch {
-  }
+    fs.writeFileSync(getMonitorSessionPath(), JSON.stringify({ machineId: machineId2, serverUrl: serverUrl2, updatedAt: Date.now() }, null, 2));
+  } catch {}
 }
 function isPathOnly(value) {
   return !value || !value.startsWith("/");
@@ -445,8 +436,7 @@ function clearMonitorSession() {
   try {
     const sessionPath = getMonitorSessionPath();
     if (fs.existsSync(sessionPath)) fs.unlinkSync(sessionPath);
-  } catch {
-  }
+  } catch {}
 }
 function readMonitorMachineId() {
   const session = readMonitorSession();
@@ -457,8 +447,7 @@ function readMonitorMachineId() {
       const state = JSON.parse(fs.readFileSync(statePath, "utf-8"));
       if (state.machineId) return state.machineId;
     }
-  } catch {
-  }
+  } catch {}
   return null;
 }
 function resolveDisconnectUrl(ingestUrl) {
@@ -488,8 +477,8 @@ function httpPost(urlStr, headers, body, timeoutMs = 1e4) {
       method: "POST",
       headers: {
         ...headers,
-        "Content-Length": Buffer.byteLength(body)
-      }
+        "Content-Length": Buffer.byteLength(body),
+      },
     };
     const req = lib.request(options, (res) => {
       let data = "";
@@ -519,7 +508,7 @@ async function sendMonitorDisconnect(ingestUrl, apiKey, machineId2) {
   const headers = {
     "Content-Type": "application/json",
     [AGENT_API_KEY_HEADER]: apiKey.trim(),
-    "User-Agent": `SystemMonitor/${id}`
+    "User-Agent": `SystemMonitor/${id}`,
   };
   const res = await httpPost(url, headers, bodyStr);
   if (res.statusCode < 200 || res.statusCode >= 300) {
@@ -527,31 +516,26 @@ async function sendMonitorDisconnect(ingestUrl, apiKey, machineId2) {
       ok: false,
       url,
       machineId: id,
-      message: `POST ${url} \u2192 HTTP ${res.statusCode}${res.body ? ` (${res.body.slice(0, 160)})` : ""}`
+      message: `POST ${url} \u2192 HTTP ${res.statusCode}${res.body ? ` (${res.body.slice(0, 160)})` : ""}`,
     };
   }
   let serverMessage = "";
   try {
     const parsed = JSON.parse(res.body);
     if (parsed.message) serverMessage = ` \u2013 ${parsed.message}`;
-  } catch {
-  }
+  } catch {}
   clearMonitorSession();
   return {
     ok: true,
     url,
     machineId: id,
-    message: `Disconnect OK: ${id} @ ${url}${serverMessage}`
+    message: `Disconnect OK: ${id} @ ${url}${serverMessage}`,
   };
 }
 
 // backend/systemMonitor.ts
 function loadMonitorEnv() {
-  const candidates = [
-    path2.join(process.cwd(), ".env"),
-    path2.join(__dirname, "..", ".env"),
-    path2.join(__dirname, "../../.env")
-  ];
+  const candidates = [path2.join(process.cwd(), ".env"), path2.join(__dirname, "..", ".env"), path2.join(__dirname, "../../.env")];
   for (const envPath of candidates) {
     if (fs2.existsSync(envPath)) {
       import_dotenv.default.config({ path: envPath });
@@ -562,14 +546,14 @@ function loadMonitorEnv() {
 }
 loadMonitorEnv();
 function logMessage(msg) {
-  console.log(`[${(/* @__PURE__ */ new Date()).toISOString()}] [SystemMonitor] ${msg}`);
+  console.log(`[${/* @__PURE__ */ new Date().toISOString()}] [SystemMonitor] ${msg}`);
 }
 function formatBytes(bytes) {
   if (bytes === 0) return "0 B";
   const k = 1024;
   const sizes = ["B", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
 }
 function generateHardwareBasedId() {
   const interfaces = os2.networkInterfaces();
@@ -721,31 +705,12 @@ var SystemMonitorService = class {
     let args2;
     if (hasExe) {
       cmd = exePath;
-      args2 = [
-        "--interval",
-        String(this.intervalSeconds),
-        "--machine-id",
-        this.machineId,
-        "--rest-start",
-        String(this.restStart),
-        "--rest-end",
-        String(this.restEnd)
-      ];
+      args2 = ["--interval", String(this.intervalSeconds), "--machine-id", this.machineId, "--rest-start", String(this.restStart), "--rest-end", String(this.restEnd)];
       logMessage(`Spawning standalone executable: ${cmd} ${args2.join(" ")}`);
     } else {
       const python = resolvePython();
       cmd = python;
-      args2 = [
-        this.pythonScript,
-        "--interval",
-        String(this.intervalSeconds),
-        "--machine-id",
-        this.machineId,
-        "--rest-start",
-        String(this.restStart),
-        "--rest-end",
-        String(this.restEnd)
-      ];
+      args2 = [this.pythonScript, "--interval", String(this.intervalSeconds), "--machine-id", this.machineId, "--rest-start", String(this.restStart), "--rest-end", String(this.restEnd)];
       logMessage(`Spawning python script: ${cmd} ${args2.join(" ")}`);
     }
     const proc = (0, import_child_process.spawn)(cmd, args2, {
@@ -753,7 +718,7 @@ var SystemMonitorService = class {
       windowsHide: true,
       // Hide CMD window on Windows
       // inherit current env so pip-installed psutil is reachable
-      env: { ...process.env }
+      env: { ...process.env },
     });
     this.pyProc = proc;
     this.lineBuffer = "";
@@ -769,7 +734,10 @@ var SystemMonitorService = class {
     });
     proc.stderr.setEncoding("utf-8");
     proc.stderr.on("data", (chunk) => {
-      chunk.trim().split("\n").forEach((l) => l && logMessage(`[py] ${l.trim()}`));
+      chunk
+        .trim()
+        .split("\n")
+        .forEach((l) => l && logMessage(`[py] ${l.trim()}`));
     });
     proc.on("exit", (code, signal) => {
       logMessage(`Process exited (code=${code}, signal=${signal})`);
@@ -809,9 +777,7 @@ var SystemMonitorService = class {
     this.isSending = true;
     try {
       if (!this.apiKey) {
-        throw new Error(
-          `Missing ${AGENT_API_KEY_HEADER} (set SYSTEM_MONITOR_API_KEY in .env at project root)`
-        );
+        throw new Error(`Missing ${AGENT_API_KEY_HEADER} (set SYSTEM_MONITOR_API_KEY in .env at project root)`);
       }
       const body = JSON.stringify(data);
       const response = await fetch(this.serverUrl, {
@@ -819,16 +785,14 @@ var SystemMonitorService = class {
         headers: {
           "Content-Type": "application/json",
           "User-Agent": `SystemMonitor/${this.machineId}`,
-          [AGENT_API_KEY_HEADER]: this.apiKey
+          [AGENT_API_KEY_HEADER]: this.apiKey,
         },
         body,
-        signal: AbortSignal.timeout(15e3)
+        signal: AbortSignal.timeout(15e3),
       });
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
-          throw new Error(
-            `HTTP ${response.status}: API key rejected \u2013 check SYSTEM_MONITOR_API_KEY matches server .env`
-          );
+          throw new Error(`HTTP ${response.status}: API key rejected \u2013 check SYSTEM_MONITOR_API_KEY matches server .env`);
         }
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
