@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 
 // material-ui
@@ -38,7 +38,7 @@ export default function Login() {
                 WebkitTextFillColor: 'transparent'
               }}
             >
-              Welcome Lotusquant
+              Welcome to Trading Quant System Backtest
             </Typography>
             <Typography
               variant="body2"
@@ -81,3 +81,4 @@ export default function Login() {
     </AuthWrapper>
   );
 }
+
