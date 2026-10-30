@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['backend\\bin\\ea_scanner.py'],
+    ['backend/bin/ea_scanner.py'],
     pathex=[],
     binaries=[],
     datas=[],
