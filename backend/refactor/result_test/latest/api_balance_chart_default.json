@@ -1,0 +1,98 @@
+{
+  "statusCode": 200,
+  "body": {
+    "success": true,
+    "data": [
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "buy",
+        "profit": "0",
+        "commission": "-48.96",
+        "swap": "0",
+        "balance": "999951.04",
+        "drawdown": "48.96"
+      },
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "sell",
+        "profit": "-9990.65",
+        "commission": "0",
+        "swap": "0",
+        "balance": "989960.39",
+        "drawdown": "10039.61"
+      },
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "buy",
+        "profit": "0",
+        "commission": "-77.12",
+        "swap": "0",
+        "balance": "989883.27",
+        "drawdown": "10116.73"
+      },
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "sell",
+        "profit": "-10031",
+        "commission": "0",
+        "swap": "0",
+        "balance": "979852.27",
+        "drawdown": "20147.73"
+      },
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "buy",
+        "profit": "0",
+        "commission": "-50.72",
+        "swap": "0",
+        "balance": "979801.55",
+        "drawdown": "20198.45"
+      },
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "sell",
+        "profit": "-5889.17",
+        "commission": "0",
+        "swap": "0",
+        "balance": "973912.38",
+        "drawdown": "26087.62"
+      },
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "buy",
+        "profit": "0",
+        "commission": "-47.68",
+        "swap": "0",
+        "balance": "973864.70",
+        "drawdown": "26135.30"
+      },
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "sell",
+        "profit": "-7823.63",
+        "commission": "0",
+        "swap": "0",
+        "balance": "966041.07",
+        "drawdown": "33958.93"
+      },
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "buy",
+        "profit": "0",
+        "commission": "-46",
+        "swap": "0",
+        "balance": "965995.07",
+        "drawdown": "34004.93"
+      },
+      {
+        "time": "[DYNAMIC_FIELD_IGNORED]",
+        "type": "sell",
+        "profit": "-9972.68",
+        "commission": "0",
+        "swap": "0",
+        "balance": "956022.39",
+        "drawdown": "43977.61"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Env
+.env
+
+# .data/
+# src/data/
+# src/data_analyst
+# data_analyst/
+
+
+uploads/
+upload/
+*.sql

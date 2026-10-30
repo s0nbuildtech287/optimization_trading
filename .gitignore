@@ -1,0 +1,37 @@
+# Environment and credentials
+**/.env
+**/.env.*
+!**/.env.example
+backend/src/config/serviceAccounts/*.json
+!backend/src/config/serviceAccounts/.gitkeep
+
+# Dependencies and generated output
+**/node_modules/
+**/dist/
+**/build/
+**/release/
+**/out/
+**/coverage/
+**/.vite/
+**/.cache/
+
+# Runtime data
+**/uploads/
+**/upload/
+**/logs/
+**/*.log
+**/*.pid
+**/__pycache__/
+**/.venv/
+
+# Generated executables and local state
+**/*.exe
+backup-mt5/mt5-history-state/
+backup-mt5/backend/mt5-history-config.json
+
+# OS/editor files
+**/.DS_Store
+**/Thumbs.db
+**/.idea/
+**/.vscode/
+

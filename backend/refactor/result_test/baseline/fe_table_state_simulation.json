@@ -1,0 +1,22 @@
+{
+  "searchBTC": [
+    {
+      "id": "001BTCUSDH1OB",
+      "symbol": "BTCUSD"
+    },
+    {
+      "id": "004BTCUSDH4OS",
+      "symbol": "BTCUSD"
+    }
+  ],
+  "paginated": [
+    {
+      "id": "003XAUUSDH1OB",
+      "symbol": "XAUUSD"
+    },
+    {
+      "id": "004BTCUSDH4OS",
+      "symbol": "BTCUSD"
+    }
+  ]
+}

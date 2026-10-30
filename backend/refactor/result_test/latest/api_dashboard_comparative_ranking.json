@@ -1,0 +1,987 @@
+{
+  "statusCode": 200,
+  "body": {
+    "success": true,
+    "data": {
+      "ranking": [
+        {
+          "id": "073BTCUSDH4OB",
+          "bot": "073BTCUSDH4OB",
+          "backtest": "backtest_temp1",
+          "symbol": "BTCUSD",
+          "timeframe": "H4",
+          "direction": "OB",
+          "profit": 4691838.94,
+          "grossProfit": 5381377.24,
+          "grossLoss": -689538.3,
+          "sharpe": 2.305248,
+          "sharpeCapped": 2.305248,
+          "pf": 7.80432,
+          "rf": 8.907873,
+          "pd": 42.01496937646553,
+          "ep": 45998.42098,
+          "lr": 0.965304,
+          "drawdownPct": 7.82,
+          "trades": 102,
+          "largestProfitTrade": 1722113.4,
+          "averageProfitTrade": 298965.402222,
+          "averageLossTrade": 7936.848333,
+          "maxConsecutiveWins": 2,
+          "maxConsecutiveLosses": 11,
+          "hardCount": 0,
+          "softCount": 4,
+          "riskStatus": "Disqualified",
+          "hardFlags": [],
+          "softFlags": [
+            "10",
+            "23",
+            "24",
+            "25"
+          ],
+          "priorityScore": 60,
+          "concentrationScore": 73.76,
+          "performanceScore": 84.27,
+          "penaltyScore": 0,
+          "finalScore": 84.27,
+          "normalized": {
+            "sharpe": 93.05,
+            "pf": 89.19,
+            "rf": 49.75,
+            "pd": 100,
+            "ep": 100,
+            "lr": 98.49,
+            "concentration": 73.76,
+            "concentrationRisk": 73.76
+          },
+          "penalty": {
+            "concentrationRisk": 36.7,
+            "concentrationCoverage": 2.72
+          },
+          "composite": 84.27
+        },
+        {
+          "id": "043XAUUSDH1OB",
+          "bot": "043XAUUSDH1OB",
+          "backtest": "backtest_temp1",
+          "symbol": "XAUUSD",
+          "timeframe": "H1",
+          "direction": "OB",
+          "profit": 3509471.62,
+          "grossProfit": 4504371.51,
+          "grossLoss": -994899.89,
+          "sharpe": 2.914632,
+          "sharpeCapped": 2.914632,
+          "pf": 4.527462,
+          "rf": 17.623449,
+          "pd": 26.88032944467295,
+          "ep": 13602.603178,
+          "lr": 0.973503,
+          "drawdownPct": 11.65,
+          "trades": 258,
+          "largestProfitTrade": 469661.81,
+          "averageProfitTrade": 73842.155902,
+          "averageLossTrade": 4971.290964,
+          "maxConsecutiveWins": 3,
+          "maxConsecutiveLosses": 13,
+          "hardCount": 0,
+          "softCount": 2,
+          "riskStatus": "Warning",
+          "hardFlags": [],
+          "softFlags": [
+            "17",
+            "24"
+          ],
+          "priorityScore": 80,
+          "concentrationScore": 100,
+          "performanceScore": 78.81,
+          "penaltyScore": 0,
+          "finalScore": 78.81,
+          "normalized": {
+            "sharpe": 99.15,
+            "pf": 46.24,
+            "rf": 98.42,
+            "pd": 63.98,
+            "ep": 29.57,
+            "lr": 98.96,
+            "concentration": 100,
+            "concentrationRisk": 100
+          },
+          "penalty": {
+            "concentrationRisk": 13.38,
+            "concentrationCoverage": 7.47
+          },
+          "composite": 78.81
+        },
+        {
+          "id": "085BTCUSDH4OB",
+          "bot": "085BTCUSDH4OB",
+          "backtest": "backtest_temp1",
+          "symbol": "BTCUSD",
+          "timeframe": "H4",
+          "direction": "OB",
+          "profit": 5316260.6,
+          "grossProfit": 6518906.34,
+          "grossLoss": -1202645.74,
+          "sharpe": 2.137752,
+          "sharpeCapped": 2.137752,
+          "pf": 5.420471,
+          "rf": 8.679276,
+          "pd": 26.534810032601378,
+          "ep": 37438.45493,
+          "lr": 0.958951,
+          "drawdownPct": 10.94,
+          "trades": 142,
+          "largestProfitTrade": 1768012.32,
+          "averageProfitTrade": 343100.333684,
+          "averageLossTrade": 9343.777398,
+          "maxConsecutiveWins": 2,
+          "maxConsecutiveLosses": 19,
+          "hardCount": 0,
+          "softCount": 4,
+          "riskStatus": "Disqualified",
+          "hardFlags": [],
+          "softFlags": [
+            "10",
+            "17",
+            "24",
+            "25"
+          ],
+          "priorityScore": 60,
+          "concentrationScore": 100,
+          "performanceScore": 75.38,
+          "penaltyScore": 0,
+          "finalScore": 75.38,
+          "normalized": {
+            "sharpe": 91.38,
+            "pf": 57.94,
+            "rf": 48.47,
+            "pd": 63.16,
+            "ep": 81.39,
+            "lr": 98.13,
+            "concentration": 100,
+            "concentrationRisk": 100
+          },
+          "penalty": {
+            "concentrationRisk": 33.26,
+            "concentrationCoverage": 3.01
+          },
+          "composite": 75.38
+        },
+        {
+          "id": "080BTCUSDH1OB",
+          "bot": "080BTCUSDH1OB",
+          "backtest": "backtest_temp1",
+          "symbol": "BTCUSD",
+          "timeframe": "H1",
+          "direction": "OB",
+          "profit": 6581951.68,
+          "grossProfit": 9289565.57,
+          "grossLoss": -2707613.89,
+          "sharpe": 2.640471,
+          "sharpeCapped": 2.640471,
+          "pf": 3.430905,
+          "rf": 13.855139,
+          "pd": 26.57268785639436,
+          "ep": 21439.58202,
+          "lr": 0.961206,
+          "drawdownPct": 11.68,
+          "trades": 307,
+          "largestProfitTrade": 2121396.28,
+          "averageProfitTrade": 221180.132619,
+          "averageLossTrade": 9433.704943,
+          "maxConsecutiveWins": 2,
+          "maxConsecutiveLosses": 21,
+          "hardCount": 0,
+          "softCount": 3,
+          "riskStatus": "Warning",
+          "hardFlags": [],
+          "softFlags": [
+            "17",
+            "24",
+            "6"
+          ],
+          "priorityScore": 70,
+          "concentrationScore": 100,
+          "performanceScore": 73.88,
+          "penaltyScore": 0,
+          "finalScore": 73.88,
+          "normalized": {
+            "sharpe": 96.4,
+            "pf": 31.86,
+            "rf": 77.38,
+            "pd": 63.25,
+            "ep": 46.61,
+            "lr": 98.26,
+            "concentration": 100,
+            "concentrationRisk": 100
+          },
+          "penalty": {
+            "concentrationRisk": 32.23,
+            "concentrationCoverage": 3.1
+          },
+          "composite": 73.88
+        },
+        {
+          "id": "080BTCUSDH4OB",
+          "bot": "080BTCUSDH4OB",
+          "backtest": "backtest_temp1",
+          "symbol": "BTCUSD",
+          "timeframe": "H4",
+          "direction": "OB",
+          "profit": 4251585.79,
+          "grossProfit": 5581505.94,
+          "grossLoss": -1329920.15,
+          "sharpe": 2.827258,
+          "sharpeCapped": 2.827258,
+          "pf": 4.196873,
+          "rf": 10.18882,
+          "pd": 25.86256146302437,
+          "ep": 27253.755064,
+          "lr": 0.9778,
+          "drawdownPct": 12.05,
+          "trades": 156,
+          "largestProfitTrade": 1262565.12,
+          "averageProfitTrade": 199339.497857,
+          "averageLossTrade": 9936.884922,
+          "maxConsecutiveWins": 3,
+          "maxConsecutiveLosses": 16,
+          "hardCount": 0,
+          "softCount": 4,
+          "riskStatus": "Disqualified",
+          "hardFlags": [],
+          "softFlags": [
+            "16",
+            "17",
+            "24",
+            "25"
+          ],
+          "priorityScore": 60,
+          "concentrationScore": 100,
+          "performanceScore": 73.29,
+          "penaltyScore": 0,
+          "finalScore": 73.29,
+          "normalized": {
+            "sharpe": 98.27,
+            "pf": 41.9,
+            "rf": 56.9,
+            "pd": 61.56,
+            "ep": 59.25,
+            "lr": 99.2,
+            "concentration": 100,
+            "concentrationRisk": 100
+          },
+          "penalty": {
+            "concentrationRisk": 29.7,
+            "concentrationCoverage": 3.37
+          },
+          "composite": 73.29
+        },
+        {
+          "id": "085XAUUSDH4OB",
+          "bot": "085XAUUSDH4OB",
+          "backtest": "backtest_temp1",
+          "symbol": "XAUUSD",
+          "timeframe": "H4",
+          "direction": "OB",
+          "profit": 1802290.95,
+          "grossProfit": 2231266.51,
+          "grossLoss": -428975.56,
+          "sharpe": 2.506046,
+          "sharpeCapped": 2.506046,
+          "pf": 5.201384,
+          "rf": 12.5889,
+          "pd": 17.625751956318663,
+          "ep": 11406.904747,
+          "lr": 0.944254,
+          "drawdownPct": 9.57,
+          "trades": 158,
+          "largestProfitTrade": 350605.42,
+          "averageProfitTrade": 45536.051224,
+          "averageLossTrade": 3876.685505,
+          "maxConsecutiveWins": 3,
+          "maxConsecutiveLosses": 9,
+          "hardCount": 0,
+          "softCount": 2,
+          "riskStatus": "Warning",
+          "hardFlags": [],
+          "softFlags": [
+            "24",
+            "25"
+          ],
+          "priorityScore": 80,
+          "concentrationScore": 100,
+          "performanceScore": 70.59,
+          "penaltyScore": 0,
+          "finalScore": 70.59,
+          "normalized": {
+            "sharpe": 95.06,
+            "pf": 55.07,
+            "rf": 70.3,
+            "pd": 41.95,
+            "ep": 24.8,
+            "lr": 97.29,
+            "concentration": 100,
+            "concentrationRisk": 100
+          },
+          "penalty": {
+            "concentrationRisk": 19.45,
+            "concentrationCoverage": 5.14
+          },
+          "composite": 70.59
+        },
+        {
+          "id": "047XAUUSDH4OB",
+          "bot": "047XAUUSDH4OB",
+          "backtest": "backtest_temp1",
+          "symbol": "XAUUSD",
+          "timeframe": "H4",
+          "direction": "OB",
+          "profit": 1885819.89,
+          "grossProfit": 4095086.29,
+          "grossLoss": -2209266.4,
+          "sharpe": 3.012053,
+          "sharpeCapped": 3,
+          "pf": 1.853596,
+          "rf": 17.90622,
+          "pd": 23.820304113032705,
+          "ep": 3017.311824,
+          "lr": 0.987752,
+          "drawdownPct": 7.59,
+          "trades": 625,
+          "largestProfitTrade": 167217.6,
+          "averageProfitTrade": 17882.472882,
+          "averageLossTrade": 5501.597247,
+          "maxConsecutiveWins": 6,
+          "maxConsecutiveLosses": 9,
+          "hardCount": 0,
+          "softCount": 1,
+          "riskStatus": "Warning",
+          "hardFlags": [],
+          "softFlags": [
+            "24"
+          ],
+          "priorityScore": 90,
+          "concentrationScore": 100,
+          "performanceScore": 70.44,
+          "penaltyScore": 0,
+          "finalScore": 70.44,
+          "normalized": {
+            "sharpe": 99.64,
+            "pf": 11.19,
+            "rf": 100,
+            "pd": 56.69,
+            "ep": 6.56,
+            "lr": 99.77,
+            "concentration": 100,
+            "concentrationRisk": 100
+          },
+          "penalty": {
+            "concentrationRisk": 8.87,
+            "concentrationCoverage": 11.28
+          },
+          "composite": 70.44
+        },
+        {
+          "id": "097BTCUSDH4OB",
+          "bot": "097BTCUSDH4OB",
+          "backtest": "backtest_temp1",
+          "symbol": "BTCUSD",
+          "timeframe": "H4",
+          "direction": "OB",
+          "profit": 1977534.17,
+          "grossProfit": 2625131.87,
+          "grossLoss": -647597.7,
+          "sharpe": 2.826337,
+          "sharpeCapped": 2.826337,
+          "pf": 4.053646,
+          "rf": 11.14519,
+          "pd": 21.019033721494058,
+          "ep": 11172.509435,
+          "lr": 0.965866,
+          "drawdownPct": 7.21,
+          "trades": 177,
+          "largestProfitTrade": 492884.67,
+          "averageProfitTrade": 57068.08413,
+          "averageLossTrade": 4812.478321,
+          "maxConsecutiveWins": 5,
+          "maxConsecutiveLosses": 16,
+          "hardCount": 0,
+          "softCount": 2,
+          "riskStatus": "Warning",
+          "hardFlags": [],
+          "softFlags": [
+            "17",
+            "24"
+          ],
+          "priorityScore": 80,
+          "concentrationScore": 100,
+          "performanceScore": 68.92,
+          "penaltyScore": 0,
+          "finalScore": 68.92,
+          "normalized": {
+            "sharpe": 98.26,
+            "pf": 40.03,
+            "rf": 62.24,
+            "pd": 50.03,
+            "ep": 24.29,
+            "lr": 98.52,
+            "concentration": 100,
+            "concentrationRisk": 100
+          },
+          "penalty": {
+            "concentrationRisk": 24.92,
+            "concentrationCoverage": 4.01
+          },
+          "composite": 68.92
+        },
+        {
+          "id": "076BTCUSDH1OB",
+          "bot": "076BTCUSDH1OB",
+          "backtest": "backtest_temp1",
+          "symbol": "BTCUSD",
+          "timeframe": "H1",
+          "direction": "OB",
+          "profit": 2187365.46,
+          "grossProfit": 2640800.02,
+          "grossLoss": -453434.56,
+          "sharpe": 4.019655,
+          "sharpeCapped": 3,
+          "pf": 5.823994,
+          "rf": 11.407134,
+          "pd": 21.022332135603392,
+          "ep": 14880.037143,
+          "lr": 0.965757,
+          "drawdownPct": 7.84,
+          "trades": 147,
+          "largestProfitTrade": 582274.29,
+          "averageProfitTrade": 88026.667333,
+          "averageLossTrade": 3665.650598,
+          "maxConsecutiveWins": 2,
+          "maxConsecutiveLosses": 18,
+          "hardCount": 0,
+          "softCount": 3,
+          "riskStatus": "Warning",
+          "hardFlags": [],
+          "softFlags": [
+            "10",
+            "17",
+            "24"
+          ],
+          "priorityScore": 70,
+          "concentrationScore": 100,
+          "performanceScore": 68.89,
+          "penaltyScore": 0,
+          "finalScore": 68.89,
+          "normalized": {
+            "sharpe": 69.41,
+            "pf": 63.23,
+            "rf": 63.7,
+            "pd": 50.04,
+            "ep": 32.35,
+            "lr": 98.52,
+            "concentration": 100,
+            "concentrationRisk": 100
+          },
+          "penalty": {
+            "concentrationRisk": 26.62,
+            "concentrationCoverage": 3.76
+          },
+          "composite": 68.89
+        },
+        {
+          "id": "073DE30H1OB",
+          "bot": "073DE30H1OB",
+          "backtest": "backtest_temp1",
+          "symbol": "DE30",
+          "timeframe": "H1",
+          "direction": "OB",
+          "profit": 2415470.81,
+          "grossProfit": 3313264.36,
+          "grossLoss": -897793.55,
+          "sharpe": 2.564274,
+          "sharpeCapped": 2.564274,
+          "pf": 3.690452,
+          "rf": 12.00261,
+          "pd": 15.904475924559659,
+          "ep": 21188.340439,
+          "lr": 0.955041,
+          "drawdownPct": 15.19,
+          "trades": 114,
+          "largestProfitTrade": 694978.39,
+          "averageProfitTrade": 122713.494815,
+          "averageLossTrade": 9630.954483,
+          "maxConsecutiveWins": 3,
+          "maxConsecutiveLosses": 10,
+          "hardCount": 0,
+          "softCount": 4,
+          "riskStatus": "Disqualified",
+          "hardFlags": [],
+          "softFlags": [
+            "10",
+            "16",
+            "23",
+            "24"
+          ],
+          "priorityScore": 60,
+          "concentrationScore": 100,
+          "performanceScore": 68,
+          "penaltyScore": 0,
+          "finalScore": 68,
+          "normalized": {
+            "sharpe": 95.64,
+            "pf": 35.27,
+            "rf": 67.03,
+            "pd": 37.85,
+            "ep": 46.06,
+            "lr": 97.91,
+            "concentration": 100,
+            "concentrationRisk": 100
+          },
+          "penalty": {
+            "concentrationRisk": 28.77,
+            "concentrationCoverage": 3.48
+          },
+          "composite": 68
+        }
+      ],
+      "duels": [
+        {
+          "symbol": "BTCUSD",
+          "h1": {
+            "profit": 970624.69,
+            "sharpe": 2.55,
+            "pf": 1.81,
+            "drawdownPct": 9.74,
+            "pd": 7.14
+          },
+          "h4": {
+            "profit": 659504.53,
+            "sharpe": 1.93,
+            "pf": 1.86,
+            "drawdownPct": 8.81,
+            "pd": 5.92
+          },
+          "winner": "H1"
+        },
+        {
+          "symbol": "DE30",
+          "h1": {
+            "profit": 590987.39,
+            "sharpe": 2.66,
+            "pf": 1.64,
+            "drawdownPct": 9.56,
+            "pd": 5.35
+          },
+          "h4": {
+            "profit": 382670.15,
+            "sharpe": 1.79,
+            "pf": 1.54,
+            "drawdownPct": 8.69,
+            "pd": 3.88
+          },
+          "winner": "H1"
+        },
+        {
+          "symbol": "ETHUSD",
+          "h1": {
+            "profit": 1102009.02,
+            "sharpe": 2.69,
+            "pf": 1.82,
+            "drawdownPct": 8.83,
+            "pd": 7.93
+          },
+          "h4": {
+            "profit": 690154.43,
+            "sharpe": 2,
+            "pf": 1.9,
+            "drawdownPct": 8.1,
+            "pd": 6.47
+          },
+          "winner": "H1"
+        },
+        {
+          "symbol": "HK50",
+          "h1": {
+            "profit": 387341.71,
+            "sharpe": 1.98,
+            "pf": 1.51,
+            "drawdownPct": 9.94,
+            "pd": 3.62
+          },
+          "h4": {
+            "profit": 270924.22,
+            "sharpe": 1.45,
+            "pf": 1.49,
+            "drawdownPct": 7.91,
+            "pd": 3.03
+          },
+          "winner": "H1"
+        },
+        {
+          "symbol": "JP225",
+          "h1": {
+            "profit": 627472.54,
+            "sharpe": 2.4,
+            "pf": 1.59,
+            "drawdownPct": 8.52,
+            "pd": 5.38
+          },
+          "h4": {
+            "profit": 449093.25,
+            "sharpe": 1.61,
+            "pf": 1.63,
+            "drawdownPct": 8.33,
+            "pd": 4.5
+          },
+          "winner": "H1"
+        },
+        {
+          "symbol": "US500",
+          "h1": {
+            "profit": 559656.49,
+            "sharpe": 2.56,
+            "pf": 1.61,
+            "drawdownPct": 8.49,
+            "pd": 4.88
+          },
+          "h4": {
+            "profit": 306494.27,
+            "sharpe": 1.58,
+            "pf": 1.56,
+            "drawdownPct": 7.55,
+            "pd": 3.43
+          },
+          "winner": "H1"
+        },
+        {
+          "symbol": "USOIL",
+          "h1": {
+            "profit": 482504.44,
+            "sharpe": 2.9,
+            "pf": 1.58,
+            "drawdownPct": 7.63,
+            "pd": 4.89
+          },
+          "h4": {
+            "profit": 300321.4,
+            "sharpe": 1.86,
+            "pf": 1.52,
+            "drawdownPct": 7.09,
+            "pd": 3.75
+          },
+          "winner": "H1"
+        },
+        {
+          "symbol": "XAGUSD",
+          "h1": {
+            "profit": 523322.93,
+            "sharpe": 2.02,
+            "pf": 1.67,
+            "drawdownPct": 10.41,
+            "pd": 4.22
+          },
+          "h4": {
+            "profit": 386865.44,
+            "sharpe": 1.56,
+            "pf": 1.69,
+            "drawdownPct": 8.59,
+            "pd": 4.03
+          },
+          "winner": "H1"
+        },
+        {
+          "symbol": "XAUUSD",
+          "h1": {
+            "profit": 810217.46,
+            "sharpe": 2.56,
+            "pf": 1.68,
+            "drawdownPct": 10.02,
+            "pd": 6.14
+          },
+          "h4": {
+            "profit": 557707.1,
+            "sharpe": 1.93,
+            "pf": 1.74,
+            "drawdownPct": 8.75,
+            "pd": 5.25
+          },
+          "winner": "H1"
+        }
+      ],
+      "averages": [
+        {
+          "symbol": "ETHUSD",
+          "avgProfit": 896575.55,
+          "profit": 896575.55,
+          "sharpe": 2.35,
+          "pf": 1.86,
+          "rf": 5.25,
+          "pd": 7.2,
+          "maxDrawdownPct": 8.47,
+          "strategies": 834
+        },
+        {
+          "symbol": "BTCUSD",
+          "avgProfit": 815064.61,
+          "profit": 815064.61,
+          "sharpe": 2.24,
+          "pf": 1.84,
+          "rf": 4.69,
+          "pd": 6.53,
+          "maxDrawdownPct": 9.28,
+          "strategies": 836
+        },
+        {
+          "symbol": "XAUUSD",
+          "avgProfit": 684266.51,
+          "profit": 684266.51,
+          "sharpe": 2.25,
+          "pf": 1.71,
+          "rf": 4.35,
+          "pd": 5.7,
+          "maxDrawdownPct": 9.39,
+          "strategies": 830
+        },
+        {
+          "symbol": "JP225",
+          "avgProfit": 537956.99,
+          "profit": 537956.99,
+          "sharpe": 2.01,
+          "pf": 1.61,
+          "rf": 3.64,
+          "pd": 4.94,
+          "maxDrawdownPct": 8.43,
+          "strategies": 821
+        },
+        {
+          "symbol": "DE30",
+          "avgProfit": 487712.54,
+          "profit": 487712.54,
+          "sharpe": 2.23,
+          "pf": 1.59,
+          "rf": 3.61,
+          "pd": 4.62,
+          "maxDrawdownPct": 9.13,
+          "strategies": 825
+        },
+        {
+          "symbol": "XAGUSD",
+          "avgProfit": 454929.38,
+          "profit": 454929.38,
+          "sharpe": 1.79,
+          "pf": 1.68,
+          "rf": 2.99,
+          "pd": 4.13,
+          "maxDrawdownPct": 9.49,
+          "strategies": 828
+        },
+        {
+          "symbol": "US500",
+          "avgProfit": 433685.41,
+          "profit": 433685.41,
+          "sharpe": 2.07,
+          "pf": 1.58,
+          "rf": 3.05,
+          "pd": 4.16,
+          "maxDrawdownPct": 8.02,
+          "strategies": 830
+        },
+        {
+          "symbol": "USOIL",
+          "avgProfit": 391190.75,
+          "profit": 391190.75,
+          "sharpe": 2.38,
+          "pf": 1.55,
+          "rf": 3.15,
+          "pd": 4.32,
+          "maxDrawdownPct": 7.36,
+          "strategies": 820
+        },
+        {
+          "symbol": "HK50",
+          "avgProfit": 328992.02,
+          "profit": 328992.02,
+          "sharpe": 1.71,
+          "pf": 1.5,
+          "rf": 2.44,
+          "pd": 3.32,
+          "maxDrawdownPct": 8.92,
+          "strategies": 826
+        }
+      ],
+      "obOs": [
+        {
+          "symbol": "BTCUSD",
+          "obValue": 1040882.5,
+          "osValue": 589246.72,
+          "ob": {
+            "profit": 1040882.5,
+            "winrate": 30.26,
+            "trades": 380,
+            "sharpe": 2.36,
+            "pf": 1.96
+          },
+          "os": {
+            "profit": 589246.72,
+            "winrate": 32.25,
+            "trades": 334,
+            "sharpe": 2.11,
+            "pf": 1.71
+          }
+        },
+        {
+          "symbol": "DE30",
+          "obValue": 644463.71,
+          "osValue": 329049.77,
+          "ob": {
+            "profit": 644463.71,
+            "winrate": 35.71,
+            "trades": 332,
+            "sharpe": 2.29,
+            "pf": 1.73
+          },
+          "os": {
+            "profit": 329049.77,
+            "winrate": 34.63,
+            "trades": 281,
+            "sharpe": 2.17,
+            "pf": 1.45
+          }
+        },
+        {
+          "symbol": "ETHUSD",
+          "obValue": 940850.59,
+          "osValue": 852300.51,
+          "ob": {
+            "profit": 940850.59,
+            "winrate": 31.1,
+            "trades": 374,
+            "sharpe": 2.35,
+            "pf": 1.93
+          },
+          "os": {
+            "profit": 852300.51,
+            "winrate": 31.94,
+            "trades": 429,
+            "sharpe": 2.34,
+            "pf": 1.8
+          }
+        },
+        {
+          "symbol": "HK50",
+          "obValue": 272737.22,
+          "osValue": 385519.9,
+          "ob": {
+            "profit": 272737.22,
+            "winrate": 36.1,
+            "trades": 211,
+            "sharpe": 1.59,
+            "pf": 1.47
+          },
+          "os": {
+            "profit": 385519.9,
+            "winrate": 36.25,
+            "trades": 252,
+            "sharpe": 1.84,
+            "pf": 1.53
+          }
+        },
+        {
+          "symbol": "JP225",
+          "obValue": 693116.61,
+          "osValue": 380128.78,
+          "ob": {
+            "profit": 693116.61,
+            "winrate": 34.91,
+            "trades": 413,
+            "sharpe": 2.11,
+            "pf": 1.68
+          },
+          "os": {
+            "profit": 380128.78,
+            "winrate": 32.28,
+            "trades": 240,
+            "sharpe": 1.9,
+            "pf": 1.54
+          }
+        },
+        {
+          "symbol": "US500",
+          "obValue": 510304.97,
+          "osValue": 356695.71,
+          "ob": {
+            "profit": 510304.97,
+            "winrate": 36.19,
+            "trades": 314,
+            "sharpe": 1.99,
+            "pf": 1.67
+          },
+          "os": {
+            "profit": 356695.71,
+            "winrate": 33.71,
+            "trades": 247,
+            "sharpe": 2.15,
+            "pf": 1.5
+          }
+        },
+        {
+          "symbol": "USOIL",
+          "obValue": 415808.96,
+          "osValue": 366811.55,
+          "ob": {
+            "profit": 415808.96,
+            "winrate": 37.04,
+            "trades": 306,
+            "sharpe": 2.54,
+            "pf": 1.55
+          },
+          "os": {
+            "profit": 366811.55,
+            "winrate": 34.73,
+            "trades": 265,
+            "sharpe": 2.22,
+            "pf": 1.55
+          }
+        },
+        {
+          "symbol": "XAGUSD",
+          "obValue": 596516.5,
+          "osValue": 311967.63,
+          "ob": {
+            "profit": 596516.5,
+            "winrate": 33.74,
+            "trades": 262,
+            "sharpe": 1.87,
+            "pf": 1.83
+          },
+          "os": {
+            "profit": 311967.63,
+            "winrate": 32.01,
+            "trades": 196,
+            "sharpe": 1.71,
+            "pf": 1.52
+          }
+        },
+        {
+          "symbol": "XAUUSD",
+          "obValue": 1056918.94,
+          "osValue": 308004.85,
+          "ob": {
+            "profit": 1056918.94,
+            "winrate": 35.42,
+            "trades": 466,
+            "sharpe": 2.58,
+            "pf": 1.91
+          },
+          "os": {
+            "profit": 308004.85,
+            "winrate": 32.61,
+            "trades": 227,
+            "sharpe": 1.91,
+            "pf": 1.51
+          }
+        }
+      ]
+    }
+  }
+}

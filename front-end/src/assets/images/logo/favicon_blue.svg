@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 768" role="img" aria-label="LotusQuant">
+  <defs>
+    <filter id="lotusquant-blue" color-interpolation-filters="sRGB">
+      <feColorMatrix
+        type="matrix"
+        values="
+          0 0 0 0 0.0863
+          0 0 0 0 0.4667
+          0 0 0 0 1
+          0 0 0 1 0"
+      />
+    </filter>
+  </defs>
+  <image
+    href="./favicon_gray.png"
+    width="768"
+    height="768"
+    preserveAspectRatio="none"
+    filter="url(#lotusquant-blue)"
+  />
+</svg>

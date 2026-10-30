@@ -1,0 +1,40 @@
+{
+  "appId": "com.mt5.utilities",
+  "productName": "MT5 Utilities",
+  "directories": {
+    "output": "release",
+    "buildResources": "assets"
+  },
+  "files": [
+    "dist/**/*",
+    "backend/**/*",
+    "utils/**/*",
+    "node_modules/**/*",
+    "package.json",
+    ".env"
+  ],
+  "extraResources": [
+    {
+      "from": "assets/PawnIO_setup.exe",
+      "to": "PawnIO_setup.exe"
+    },
+    {
+      "from": "backend",
+      "to": "backend",
+      "filter": [
+        "**/*.js",
+        "**/*.py",
+        "**/*.exe",
+        "**/*.dll",
+        "**/*.sys"
+      ]
+    }
+  ],
+  "win": {
+    "requestedExecutionLevel": "requireAdministrator",
+    "target": [
+      "nsis"
+    ],
+    "icon": "assets/favicon.ico"
+  }
+}

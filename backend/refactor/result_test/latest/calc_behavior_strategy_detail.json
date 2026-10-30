@@ -1,0 +1,2370 @@
+{
+  "scatterData": [
+    {
+      "holdTime": 0.3,
+      "profit": -10035.35,
+      "type": "loss"
+    },
+    {
+      "holdTime": 6.6,
+      "profit": -10017.45,
+      "type": "loss"
+    },
+    {
+      "holdTime": 19.9,
+      "profit": -10009.31,
+      "type": "loss"
+    },
+    {
+      "holdTime": 25.7,
+      "profit": -10004.44,
+      "type": "loss"
+    },
+    {
+      "holdTime": 28.6,
+      "profit": -9999.56,
+      "type": "loss"
+    },
+    {
+      "holdTime": 29.7,
+      "profit": -10080.68,
+      "type": "loss"
+    },
+    {
+      "holdTime": 33.7,
+      "profit": -10014.33,
+      "type": "loss"
+    },
+    {
+      "holdTime": 39.9,
+      "profit": -9992.39,
+      "type": "loss"
+    },
+    {
+      "holdTime": 40.3,
+      "profit": -10054.11,
+      "type": "loss"
+    },
+    {
+      "holdTime": 40.5,
+      "profit": -10003.03,
+      "type": "loss"
+    },
+    {
+      "holdTime": 42.6,
+      "profit": -10011.9,
+      "type": "loss"
+    },
+    {
+      "holdTime": 43.6,
+      "profit": -10007.85,
+      "type": "loss"
+    },
+    {
+      "holdTime": 59.5,
+      "profit": -10089.93,
+      "type": "loss"
+    },
+    {
+      "holdTime": 60.3,
+      "profit": -10031,
+      "type": "loss"
+    },
+    {
+      "holdTime": 62.5,
+      "profit": -10005.55,
+      "type": "loss"
+    },
+    {
+      "holdTime": 62.7,
+      "profit": -10012.84,
+      "type": "loss"
+    },
+    {
+      "holdTime": 74.5,
+      "profit": -10003.63,
+      "type": "loss"
+    },
+    {
+      "holdTime": 75.7,
+      "profit": -10031.22,
+      "type": "loss"
+    },
+    {
+      "holdTime": 80.4,
+      "profit": -10035.96,
+      "type": "loss"
+    },
+    {
+      "holdTime": 82.6,
+      "profit": -10027.37,
+      "type": "loss"
+    },
+    {
+      "holdTime": 84.3,
+      "profit": -10026.6,
+      "type": "loss"
+    },
+    {
+      "holdTime": 84.6,
+      "profit": -10018.11,
+      "type": "loss"
+    },
+    {
+      "holdTime": 88.7,
+      "profit": -10064.06,
+      "type": "loss"
+    },
+    {
+      "holdTime": 91.7,
+      "profit": -9995.24,
+      "type": "loss"
+    },
+    {
+      "holdTime": 91.9,
+      "profit": -10004.81,
+      "type": "loss"
+    },
+    {
+      "holdTime": 94.5,
+      "profit": -10022.57,
+      "type": "loss"
+    },
+    {
+      "holdTime": 94.6,
+      "profit": -10000.58,
+      "type": "loss"
+    },
+    {
+      "holdTime": 100.6,
+      "profit": -10036.56,
+      "type": "loss"
+    },
+    {
+      "holdTime": 101.2,
+      "profit": -10004.69,
+      "type": "loss"
+    },
+    {
+      "holdTime": 109.5,
+      "profit": -10010.3,
+      "type": "loss"
+    },
+    {
+      "holdTime": 109.5,
+      "profit": -9999.08,
+      "type": "loss"
+    },
+    {
+      "holdTime": 115.6,
+      "profit": -10010.61,
+      "type": "loss"
+    },
+    {
+      "holdTime": 116.5,
+      "profit": -10009.22,
+      "type": "loss"
+    },
+    {
+      "holdTime": 120.4,
+      "profit": -10007.01,
+      "type": "loss"
+    },
+    {
+      "holdTime": 123.7,
+      "profit": -10002.06,
+      "type": "loss"
+    },
+    {
+      "holdTime": 131.5,
+      "profit": -10012.96,
+      "type": "loss"
+    },
+    {
+      "holdTime": 132.2,
+      "profit": -9999.01,
+      "type": "loss"
+    },
+    {
+      "holdTime": 135.7,
+      "profit": -10001.57,
+      "type": "loss"
+    },
+    {
+      "holdTime": 136.6,
+      "profit": -10015,
+      "type": "loss"
+    },
+    {
+      "holdTime": 146.6,
+      "profit": -10000.91,
+      "type": "loss"
+    },
+    {
+      "holdTime": 149.4,
+      "profit": -10014.37,
+      "type": "loss"
+    },
+    {
+      "holdTime": 150.7,
+      "profit": -10011.06,
+      "type": "loss"
+    },
+    {
+      "holdTime": 154.7,
+      "profit": -10008.27,
+      "type": "loss"
+    },
+    {
+      "holdTime": 156.3,
+      "profit": -10015.62,
+      "type": "loss"
+    },
+    {
+      "holdTime": 157,
+      "profit": -10029.51,
+      "type": "loss"
+    },
+    {
+      "holdTime": 164.6,
+      "profit": -10012.54,
+      "type": "loss"
+    },
+    {
+      "holdTime": 165.5,
+      "profit": -10005.67,
+      "type": "loss"
+    },
+    {
+      "holdTime": 166.5,
+      "profit": -10004.59,
+      "type": "loss"
+    },
+    {
+      "holdTime": 166.6,
+      "profit": -10025.53,
+      "type": "loss"
+    },
+    {
+      "holdTime": 168.6,
+      "profit": -10005.26,
+      "type": "loss"
+    },
+    {
+      "holdTime": 169.5,
+      "profit": -10005.59,
+      "type": "loss"
+    },
+    {
+      "holdTime": 172.7,
+      "profit": -10002.51,
+      "type": "loss"
+    },
+    {
+      "holdTime": 176.5,
+      "profit": -10047.91,
+      "type": "loss"
+    },
+    {
+      "holdTime": 180,
+      "profit": -8491.39,
+      "type": "loss"
+    },
+    {
+      "holdTime": 186.1,
+      "profit": -10005.4,
+      "type": "loss"
+    },
+    {
+      "holdTime": 187.7,
+      "profit": -10097.07,
+      "type": "loss"
+    },
+    {
+      "holdTime": 188.7,
+      "profit": -10029.21,
+      "type": "loss"
+    },
+    {
+      "holdTime": 190.6,
+      "profit": -10042.75,
+      "type": "loss"
+    },
+    {
+      "holdTime": 191.7,
+      "profit": -10018.43,
+      "type": "loss"
+    },
+    {
+      "holdTime": 194,
+      "profit": -10007.09,
+      "type": "loss"
+    },
+    {
+      "holdTime": 197.3,
+      "profit": -10028.13,
+      "type": "loss"
+    },
+    {
+      "holdTime": 200.7,
+      "profit": -10006.11,
+      "type": "loss"
+    },
+    {
+      "holdTime": 202.5,
+      "profit": -10007.34,
+      "type": "loss"
+    },
+    {
+      "holdTime": 203.6,
+      "profit": -9992.23,
+      "type": "loss"
+    },
+    {
+      "holdTime": 208.6,
+      "profit": -10011.11,
+      "type": "loss"
+    },
+    {
+      "holdTime": 214.6,
+      "profit": -10004.81,
+      "type": "loss"
+    },
+    {
+      "holdTime": 214.7,
+      "profit": -10037.03,
+      "type": "loss"
+    },
+    {
+      "holdTime": 216.7,
+      "profit": -10037.13,
+      "type": "loss"
+    },
+    {
+      "holdTime": 217.5,
+      "profit": -10019.34,
+      "type": "loss"
+    },
+    {
+      "holdTime": 221.7,
+      "profit": -10021.79,
+      "type": "loss"
+    },
+    {
+      "holdTime": 227.7,
+      "profit": -10026.19,
+      "type": "loss"
+    },
+    {
+      "holdTime": 229.4,
+      "profit": -10071.05,
+      "type": "loss"
+    },
+    {
+      "holdTime": 229.6,
+      "profit": -10007.28,
+      "type": "loss"
+    },
+    {
+      "holdTime": 235.2,
+      "profit": -10010.57,
+      "type": "loss"
+    },
+    {
+      "holdTime": 236,
+      "profit": -10001.65,
+      "type": "loss"
+    },
+    {
+      "holdTime": 239.5,
+      "profit": -10075.65,
+      "type": "loss"
+    },
+    {
+      "holdTime": 240,
+      "profit": -7152.7,
+      "type": "loss"
+    },
+    {
+      "holdTime": 240,
+      "profit": -6778.92,
+      "type": "loss"
+    },
+    {
+      "holdTime": 240.6,
+      "profit": -10002.62,
+      "type": "loss"
+    },
+    {
+      "holdTime": 242.6,
+      "profit": -10012.74,
+      "type": "loss"
+    },
+    {
+      "holdTime": 243.6,
+      "profit": -10003.19,
+      "type": "loss"
+    },
+    {
+      "holdTime": 245.6,
+      "profit": -10016.27,
+      "type": "loss"
+    },
+    {
+      "holdTime": 247.4,
+      "profit": -9996.47,
+      "type": "loss"
+    },
+    {
+      "holdTime": 247.4,
+      "profit": -10003.76,
+      "type": "loss"
+    },
+    {
+      "holdTime": 249.7,
+      "profit": -10010.92,
+      "type": "loss"
+    },
+    {
+      "holdTime": 252.7,
+      "profit": -10028.07,
+      "type": "loss"
+    },
+    {
+      "holdTime": 253.5,
+      "profit": -10021.86,
+      "type": "loss"
+    },
+    {
+      "holdTime": 266.6,
+      "profit": -10007.19,
+      "type": "loss"
+    },
+    {
+      "holdTime": 267.6,
+      "profit": -10006.54,
+      "type": "loss"
+    },
+    {
+      "holdTime": 270.2,
+      "profit": -10015.98,
+      "type": "loss"
+    },
+    {
+      "holdTime": 273.3,
+      "profit": -10026.24,
+      "type": "loss"
+    },
+    {
+      "holdTime": 273.4,
+      "profit": -10014.19,
+      "type": "loss"
+    },
+    {
+      "holdTime": 275.7,
+      "profit": -10012.04,
+      "type": "loss"
+    },
+    {
+      "holdTime": 279.2,
+      "profit": -10009.19,
+      "type": "loss"
+    },
+    {
+      "holdTime": 279.5,
+      "profit": -9998.4,
+      "type": "loss"
+    },
+    {
+      "holdTime": 280.6,
+      "profit": -10030.6,
+      "type": "loss"
+    },
+    {
+      "holdTime": 287.4,
+      "profit": -10002.02,
+      "type": "loss"
+    },
+    {
+      "holdTime": 288.7,
+      "profit": -10014.83,
+      "type": "loss"
+    },
+    {
+      "holdTime": 290.6,
+      "profit": -10033.13,
+      "type": "loss"
+    },
+    {
+      "holdTime": 291.6,
+      "profit": -10036.92,
+      "type": "loss"
+    },
+    {
+      "holdTime": 294.1,
+      "profit": -10071.36,
+      "type": "loss"
+    },
+    {
+      "holdTime": 296.6,
+      "profit": -10006.5,
+      "type": "loss"
+    },
+    {
+      "holdTime": 297,
+      "profit": -10001.82,
+      "type": "loss"
+    },
+    {
+      "holdTime": 300,
+      "profit": -6618.98,
+      "type": "loss"
+    },
+    {
+      "holdTime": 302.4,
+      "profit": -10035.02,
+      "type": "loss"
+    },
+    {
+      "holdTime": 303.3,
+      "profit": -10001.88,
+      "type": "loss"
+    },
+    {
+      "holdTime": 309.7,
+      "profit": -10039.2,
+      "type": "loss"
+    },
+    {
+      "holdTime": 312.3,
+      "profit": -10007.88,
+      "type": "loss"
+    },
+    {
+      "holdTime": 312.5,
+      "profit": -10004.22,
+      "type": "loss"
+    },
+    {
+      "holdTime": 313,
+      "profit": -10011.49,
+      "type": "loss"
+    },
+    {
+      "holdTime": 313.5,
+      "profit": -10016.38,
+      "type": "loss"
+    },
+    {
+      "holdTime": 313.5,
+      "profit": -10014.72,
+      "type": "loss"
+    },
+    {
+      "holdTime": 315.5,
+      "profit": -10041.13,
+      "type": "loss"
+    },
+    {
+      "holdTime": 316.3,
+      "profit": -10063.88,
+      "type": "loss"
+    },
+    {
+      "holdTime": 318.6,
+      "profit": -9998.84,
+      "type": "loss"
+    },
+    {
+      "holdTime": 323.4,
+      "profit": -10041.64,
+      "type": "loss"
+    },
+    {
+      "holdTime": 325,
+      "profit": -10046.3,
+      "type": "loss"
+    },
+    {
+      "holdTime": 325.6,
+      "profit": -10018.44,
+      "type": "loss"
+    },
+    {
+      "holdTime": 326.5,
+      "profit": -10018.75,
+      "type": "loss"
+    },
+    {
+      "holdTime": 330.5,
+      "profit": -10053.42,
+      "type": "loss"
+    },
+    {
+      "holdTime": 335.6,
+      "profit": -10033.68,
+      "type": "loss"
+    },
+    {
+      "holdTime": 341.7,
+      "profit": -10025.48,
+      "type": "loss"
+    },
+    {
+      "holdTime": 346.6,
+      "profit": -10041.13,
+      "type": "loss"
+    },
+    {
+      "holdTime": 347,
+      "profit": -10000.93,
+      "type": "loss"
+    },
+    {
+      "holdTime": 353.6,
+      "profit": -10006.42,
+      "type": "loss"
+    },
+    {
+      "holdTime": 355.1,
+      "profit": -10003.52,
+      "type": "loss"
+    },
+    {
+      "holdTime": 360,
+      "profit": -3651.85,
+      "type": "loss"
+    },
+    {
+      "holdTime": 360,
+      "profit": -3474.94,
+      "type": "loss"
+    },
+    {
+      "holdTime": 360,
+      "profit": -7768.19,
+      "type": "loss"
+    },
+    {
+      "holdTime": 360,
+      "profit": 1740.68,
+      "type": "win"
+    },
+    {
+      "holdTime": 360,
+      "profit": -217.54,
+      "type": "loss"
+    },
+    {
+      "holdTime": 360.1,
+      "profit": -9982.52,
+      "type": "loss"
+    },
+    {
+      "holdTime": 360.3,
+      "profit": -9972.68,
+      "type": "loss"
+    },
+    {
+      "holdTime": 363.6,
+      "profit": -10005.92,
+      "type": "loss"
+    },
+    {
+      "holdTime": 369.4,
+      "profit": -10089.64,
+      "type": "loss"
+    },
+    {
+      "holdTime": 372.6,
+      "profit": -10035.01,
+      "type": "loss"
+    },
+    {
+      "holdTime": 384.4,
+      "profit": -9996.16,
+      "type": "loss"
+    },
+    {
+      "holdTime": 389.6,
+      "profit": -10005.87,
+      "type": "loss"
+    },
+    {
+      "holdTime": 389.7,
+      "profit": -10024.98,
+      "type": "loss"
+    },
+    {
+      "holdTime": 401,
+      "profit": -10026.72,
+      "type": "loss"
+    },
+    {
+      "holdTime": 401.7,
+      "profit": -10026.39,
+      "type": "loss"
+    },
+    {
+      "holdTime": 405.7,
+      "profit": -10053.48,
+      "type": "loss"
+    },
+    {
+      "holdTime": 407.6,
+      "profit": -10028.32,
+      "type": "loss"
+    },
+    {
+      "holdTime": 412.6,
+      "profit": -10015.4,
+      "type": "loss"
+    },
+    {
+      "holdTime": 420,
+      "profit": -5430.76,
+      "type": "loss"
+    },
+    {
+      "holdTime": 420,
+      "profit": -5586.99,
+      "type": "loss"
+    },
+    {
+      "holdTime": 420,
+      "profit": 3069.94,
+      "type": "win"
+    },
+    {
+      "holdTime": 420,
+      "profit": -7379.48,
+      "type": "loss"
+    },
+    {
+      "holdTime": 420,
+      "profit": 2235.4,
+      "type": "win"
+    },
+    {
+      "holdTime": 420,
+      "profit": -6501.25,
+      "type": "loss"
+    },
+    {
+      "holdTime": 420,
+      "profit": -1244.08,
+      "type": "loss"
+    },
+    {
+      "holdTime": 420,
+      "profit": -8739.58,
+      "type": "loss"
+    },
+    {
+      "holdTime": 420,
+      "profit": 1871.89,
+      "type": "win"
+    },
+    {
+      "holdTime": 438.6,
+      "profit": -10032.31,
+      "type": "loss"
+    },
+    {
+      "holdTime": 440.5,
+      "profit": -10007.03,
+      "type": "loss"
+    },
+    {
+      "holdTime": 449.7,
+      "profit": -10004.72,
+      "type": "loss"
+    },
+    {
+      "holdTime": 462.6,
+      "profit": -10023.1,
+      "type": "loss"
+    },
+    {
+      "holdTime": 480,
+      "profit": -491.78,
+      "type": "loss"
+    },
+    {
+      "holdTime": 480,
+      "profit": -2237.99,
+      "type": "loss"
+    },
+    {
+      "holdTime": 480,
+      "profit": 1832.07,
+      "type": "win"
+    },
+    {
+      "holdTime": 480,
+      "profit": -6661,
+      "type": "loss"
+    },
+    {
+      "holdTime": 480,
+      "profit": -3294.2,
+      "type": "loss"
+    },
+    {
+      "holdTime": 480,
+      "profit": -2125.3,
+      "type": "loss"
+    },
+    {
+      "holdTime": 480,
+      "profit": -5117.92,
+      "type": "loss"
+    },
+    {
+      "holdTime": 481.9,
+      "profit": -10017.2,
+      "type": "loss"
+    },
+    {
+      "holdTime": 493.7,
+      "profit": -9998.78,
+      "type": "loss"
+    },
+    {
+      "holdTime": 500.7,
+      "profit": -10004.33,
+      "type": "loss"
+    },
+    {
+      "holdTime": 501.9,
+      "profit": -10014.91,
+      "type": "loss"
+    },
+    {
+      "holdTime": 511.6,
+      "profit": -10015.01,
+      "type": "loss"
+    },
+    {
+      "holdTime": 521,
+      "profit": -10002.59,
+      "type": "loss"
+    },
+    {
+      "holdTime": 521.2,
+      "profit": -10058.7,
+      "type": "loss"
+    },
+    {
+      "holdTime": 522.5,
+      "profit": -10031.33,
+      "type": "loss"
+    },
+    {
+      "holdTime": 523.4,
+      "profit": -10007.01,
+      "type": "loss"
+    },
+    {
+      "holdTime": 525.5,
+      "profit": -10002.22,
+      "type": "loss"
+    },
+    {
+      "holdTime": 540,
+      "profit": -4712.88,
+      "type": "loss"
+    },
+    {
+      "holdTime": 540,
+      "profit": 21747.31,
+      "type": "win"
+    },
+    {
+      "holdTime": 540,
+      "profit": 2466.23,
+      "type": "win"
+    },
+    {
+      "holdTime": 540,
+      "profit": -7226.63,
+      "type": "loss"
+    },
+    {
+      "holdTime": 540,
+      "profit": -7823.63,
+      "type": "loss"
+    },
+    {
+      "holdTime": 540,
+      "profit": -7626.35,
+      "type": "loss"
+    },
+    {
+      "holdTime": 540,
+      "profit": -3201.75,
+      "type": "loss"
+    },
+    {
+      "holdTime": 541.7,
+      "profit": -10027.27,
+      "type": "loss"
+    },
+    {
+      "holdTime": 560.4,
+      "profit": -10118.53,
+      "type": "loss"
+    },
+    {
+      "holdTime": 578.2,
+      "profit": -10034.8,
+      "type": "loss"
+    },
+    {
+      "holdTime": 580.7,
+      "profit": -10004.71,
+      "type": "loss"
+    },
+    {
+      "holdTime": 581.6,
+      "profit": -10002.97,
+      "type": "loss"
+    },
+    {
+      "holdTime": 581.7,
+      "profit": -10002.28,
+      "type": "loss"
+    },
+    {
+      "holdTime": 600,
+      "profit": 26382.26,
+      "type": "win"
+    },
+    {
+      "holdTime": 600,
+      "profit": -7594.77,
+      "type": "loss"
+    },
+    {
+      "holdTime": 600,
+      "profit": -4105.13,
+      "type": "loss"
+    },
+    {
+      "holdTime": 600,
+      "profit": -6452.24,
+      "type": "loss"
+    },
+    {
+      "holdTime": 600,
+      "profit": -3723.47,
+      "type": "loss"
+    },
+    {
+      "holdTime": 600,
+      "profit": 10345.67,
+      "type": "win"
+    },
+    {
+      "holdTime": 600,
+      "profit": 212.34,
+      "type": "win"
+    },
+    {
+      "holdTime": 600,
+      "profit": -2381.3,
+      "type": "loss"
+    },
+    {
+      "holdTime": 600,
+      "profit": 27658.99,
+      "type": "win"
+    },
+    {
+      "holdTime": 600,
+      "profit": 29646.54,
+      "type": "win"
+    },
+    {
+      "holdTime": 600,
+      "profit": 1048.17,
+      "type": "win"
+    },
+    {
+      "holdTime": 600,
+      "profit": -8208.37,
+      "type": "loss"
+    },
+    {
+      "holdTime": 600,
+      "profit": -7731.56,
+      "type": "loss"
+    },
+    {
+      "holdTime": 602.7,
+      "profit": -10021.73,
+      "type": "loss"
+    },
+    {
+      "holdTime": 631.6,
+      "profit": -10049.99,
+      "type": "loss"
+    },
+    {
+      "holdTime": 658.6,
+      "profit": -10012.64,
+      "type": "loss"
+    },
+    {
+      "holdTime": 658.7,
+      "profit": -10026.08,
+      "type": "loss"
+    },
+    {
+      "holdTime": 660,
+      "profit": 19177.44,
+      "type": "win"
+    },
+    {
+      "holdTime": 660,
+      "profit": -666.22,
+      "type": "loss"
+    },
+    {
+      "holdTime": 660,
+      "profit": 5563.21,
+      "type": "win"
+    },
+    {
+      "holdTime": 660,
+      "profit": -4312.55,
+      "type": "loss"
+    },
+    {
+      "holdTime": 660,
+      "profit": -7295.92,
+      "type": "loss"
+    },
+    {
+      "holdTime": 660,
+      "profit": -4762.22,
+      "type": "loss"
+    },
+    {
+      "holdTime": 660,
+      "profit": -2054.85,
+      "type": "loss"
+    },
+    {
+      "holdTime": 683.7,
+      "profit": -10028.79,
+      "type": "loss"
+    },
+    {
+      "holdTime": 684,
+      "profit": -10028.76,
+      "type": "loss"
+    },
+    {
+      "holdTime": 695.6,
+      "profit": -10000.53,
+      "type": "loss"
+    },
+    {
+      "holdTime": 713.6,
+      "profit": -10017.02,
+      "type": "loss"
+    },
+    {
+      "holdTime": 720,
+      "profit": -8206.13,
+      "type": "loss"
+    },
+    {
+      "holdTime": 720,
+      "profit": -1127.71,
+      "type": "loss"
+    },
+    {
+      "holdTime": 720,
+      "profit": 1397.99,
+      "type": "win"
+    },
+    {
+      "holdTime": 720,
+      "profit": 19472.55,
+      "type": "win"
+    },
+    {
+      "holdTime": 720,
+      "profit": 47112.95,
+      "type": "win"
+    },
+    {
+      "holdTime": 720,
+      "profit": -1859.81,
+      "type": "loss"
+    },
+    {
+      "holdTime": 721.1,
+      "profit": -10002.4,
+      "type": "loss"
+    },
+    {
+      "holdTime": 737.6,
+      "profit": -10048.92,
+      "type": "loss"
+    },
+    {
+      "holdTime": 743.5,
+      "profit": -9993.55,
+      "type": "loss"
+    },
+    {
+      "holdTime": 748.7,
+      "profit": -10005.5,
+      "type": "loss"
+    },
+    {
+      "holdTime": 769.6,
+      "profit": -10008.06,
+      "type": "loss"
+    },
+    {
+      "holdTime": 779.6,
+      "profit": -10033.43,
+      "type": "loss"
+    },
+    {
+      "holdTime": 780,
+      "profit": 3960.15,
+      "type": "win"
+    },
+    {
+      "holdTime": 780,
+      "profit": -8051.62,
+      "type": "loss"
+    },
+    {
+      "holdTime": 780,
+      "profit": -4047.16,
+      "type": "loss"
+    },
+    {
+      "holdTime": 780,
+      "profit": 838.83,
+      "type": "win"
+    },
+    {
+      "holdTime": 780,
+      "profit": -6504.87,
+      "type": "loss"
+    },
+    {
+      "holdTime": 780,
+      "profit": -7946.69,
+      "type": "loss"
+    },
+    {
+      "holdTime": 780,
+      "profit": 2873.09,
+      "type": "win"
+    },
+    {
+      "holdTime": 780.2,
+      "profit": -10014.4,
+      "type": "loss"
+    },
+    {
+      "holdTime": 780.3,
+      "profit": -9990.65,
+      "type": "loss"
+    },
+    {
+      "holdTime": 788.2,
+      "profit": -10088.01,
+      "type": "loss"
+    },
+    {
+      "holdTime": 817.4,
+      "profit": -10002.84,
+      "type": "loss"
+    },
+    {
+      "holdTime": 840,
+      "profit": -3040.33,
+      "type": "loss"
+    },
+    {
+      "holdTime": 840,
+      "profit": -219.87,
+      "type": "loss"
+    },
+    {
+      "holdTime": 840,
+      "profit": 17266.35,
+      "type": "win"
+    },
+    {
+      "holdTime": 840,
+      "profit": -7309.96,
+      "type": "loss"
+    },
+    {
+      "holdTime": 840,
+      "profit": 28722.38,
+      "type": "win"
+    },
+    {
+      "holdTime": 840,
+      "profit": 5097.55,
+      "type": "win"
+    },
+    {
+      "holdTime": 840,
+      "profit": -7759.2,
+      "type": "loss"
+    },
+    {
+      "holdTime": 880.6,
+      "profit": -10052.85,
+      "type": "loss"
+    },
+    {
+      "holdTime": 894.6,
+      "profit": -10012.68,
+      "type": "loss"
+    },
+    {
+      "holdTime": 900,
+      "profit": 1070.27,
+      "type": "win"
+    },
+    {
+      "holdTime": 900,
+      "profit": 67812.41,
+      "type": "win"
+    },
+    {
+      "holdTime": 900,
+      "profit": 9678.56,
+      "type": "win"
+    },
+    {
+      "holdTime": 900,
+      "profit": 19156.2,
+      "type": "win"
+    },
+    {
+      "holdTime": 900,
+      "profit": -5027.41,
+      "type": "loss"
+    },
+    {
+      "holdTime": 900,
+      "profit": -3424.26,
+      "type": "loss"
+    },
+    {
+      "holdTime": 900,
+      "profit": 3278.12,
+      "type": "win"
+    },
+    {
+      "holdTime": 900,
+      "profit": -5699.7,
+      "type": "loss"
+    },
+    {
+      "holdTime": 900,
+      "profit": 11090.9,
+      "type": "win"
+    },
+    {
+      "holdTime": 930.7,
+      "profit": -10022.11,
+      "type": "loss"
+    },
+    {
+      "holdTime": 947.7,
+      "profit": -10002.9,
+      "type": "loss"
+    },
+    {
+      "holdTime": 959.5,
+      "profit": -10006.79,
+      "type": "loss"
+    },
+    {
+      "holdTime": 960,
+      "profit": 3036.12,
+      "type": "win"
+    },
+    {
+      "holdTime": 960,
+      "profit": -2531.51,
+      "type": "loss"
+    },
+    {
+      "holdTime": 960,
+      "profit": -811.25,
+      "type": "loss"
+    },
+    {
+      "holdTime": 960,
+      "profit": -3267.58,
+      "type": "loss"
+    },
+    {
+      "holdTime": 960,
+      "profit": 7170.7,
+      "type": "win"
+    },
+    {
+      "holdTime": 960,
+      "profit": 2505.76,
+      "type": "win"
+    },
+    {
+      "holdTime": 960,
+      "profit": -8750.7,
+      "type": "loss"
+    },
+    {
+      "holdTime": 960,
+      "profit": 2885.13,
+      "type": "win"
+    },
+    {
+      "holdTime": 960,
+      "profit": -5374.32,
+      "type": "loss"
+    },
+    {
+      "holdTime": 991.5,
+      "profit": -10018.94,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1020,
+      "profit": -6058.8,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1020,
+      "profit": -6038.17,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1020,
+      "profit": -3386.35,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1020,
+      "profit": 1608.01,
+      "type": "win"
+    },
+    {
+      "holdTime": 1020,
+      "profit": 3359.93,
+      "type": "win"
+    },
+    {
+      "holdTime": 1020,
+      "profit": -8256.09,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1020,
+      "profit": 3784.46,
+      "type": "win"
+    },
+    {
+      "holdTime": 1061.7,
+      "profit": -10016.06,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1079.7,
+      "profit": -10066.73,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1080,
+      "profit": 25668.87,
+      "type": "win"
+    },
+    {
+      "holdTime": 1080,
+      "profit": -7817.21,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1080,
+      "profit": 13054.82,
+      "type": "win"
+    },
+    {
+      "holdTime": 1080,
+      "profit": -1674.63,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1080,
+      "profit": 1845.21,
+      "type": "win"
+    },
+    {
+      "holdTime": 1080,
+      "profit": -3415.47,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1080,
+      "profit": 2024.82,
+      "type": "win"
+    },
+    {
+      "holdTime": 1080,
+      "profit": -453.27,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1080,
+      "profit": 3376.19,
+      "type": "win"
+    },
+    {
+      "holdTime": 1080,
+      "profit": -3626.52,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1111.7,
+      "profit": -10004.43,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1140,
+      "profit": 11121.26,
+      "type": "win"
+    },
+    {
+      "holdTime": 1140,
+      "profit": -5122.4,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1140,
+      "profit": 1406.16,
+      "type": "win"
+    },
+    {
+      "holdTime": 1140,
+      "profit": 15236.47,
+      "type": "win"
+    },
+    {
+      "holdTime": 1140,
+      "profit": 11281.89,
+      "type": "win"
+    },
+    {
+      "holdTime": 1140,
+      "profit": 6620.6,
+      "type": "win"
+    },
+    {
+      "holdTime": 1140,
+      "profit": -1357.22,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1140.4,
+      "profit": -10009.56,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1186.5,
+      "profit": -10002.9,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1193.5,
+      "profit": -10073.48,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1198.7,
+      "profit": -10005.33,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1200,
+      "profit": 630.17,
+      "type": "win"
+    },
+    {
+      "holdTime": 1200,
+      "profit": -57.94,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1200,
+      "profit": -5889.17,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1200,
+      "profit": 21799.53,
+      "type": "win"
+    },
+    {
+      "holdTime": 1200,
+      "profit": 35.24,
+      "type": "win"
+    },
+    {
+      "holdTime": 1200,
+      "profit": -6709.83,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1203.6,
+      "profit": -10025.37,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1260,
+      "profit": 4841.14,
+      "type": "win"
+    },
+    {
+      "holdTime": 1260,
+      "profit": 2342.34,
+      "type": "win"
+    },
+    {
+      "holdTime": 1260,
+      "profit": 2076.9,
+      "type": "win"
+    },
+    {
+      "holdTime": 1260,
+      "profit": 20498.5,
+      "type": "win"
+    },
+    {
+      "holdTime": 1260,
+      "profit": -2822.84,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1260,
+      "profit": -1928.15,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1260,
+      "profit": 13839.46,
+      "type": "win"
+    },
+    {
+      "holdTime": 1260,
+      "profit": 21841.18,
+      "type": "win"
+    },
+    {
+      "holdTime": 1260,
+      "profit": -2979.34,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1260,
+      "profit": 31926.62,
+      "type": "win"
+    },
+    {
+      "holdTime": 1260,
+      "profit": -7527.81,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1320,
+      "profit": -1893.32,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1320,
+      "profit": -3423.28,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1320,
+      "profit": -3340.97,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1320,
+      "profit": 17987.69,
+      "type": "win"
+    },
+    {
+      "holdTime": 1320,
+      "profit": -50.47,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1320,
+      "profit": 59801.68,
+      "type": "win"
+    },
+    {
+      "holdTime": 1343.6,
+      "profit": -10019.17,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1372.7,
+      "profit": -10026.69,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1380,
+      "profit": 28932.41,
+      "type": "win"
+    },
+    {
+      "holdTime": 1380,
+      "profit": 7009.16,
+      "type": "win"
+    },
+    {
+      "holdTime": 1380,
+      "profit": 12974.99,
+      "type": "win"
+    },
+    {
+      "holdTime": 1380,
+      "profit": 63846.92,
+      "type": "win"
+    },
+    {
+      "holdTime": 1380,
+      "profit": 6587.51,
+      "type": "win"
+    },
+    {
+      "holdTime": 1380,
+      "profit": 22102.09,
+      "type": "win"
+    },
+    {
+      "holdTime": 1380,
+      "profit": 19612.89,
+      "type": "win"
+    },
+    {
+      "holdTime": 1380,
+      "profit": 12567.16,
+      "type": "win"
+    },
+    {
+      "holdTime": 1380,
+      "profit": 25394.97,
+      "type": "win"
+    },
+    {
+      "holdTime": 1440,
+      "profit": 2004.48,
+      "type": "win"
+    },
+    {
+      "holdTime": 1440,
+      "profit": 21448.17,
+      "type": "win"
+    },
+    {
+      "holdTime": 1440,
+      "profit": 9026.8,
+      "type": "win"
+    },
+    {
+      "holdTime": 1440,
+      "profit": 1321.24,
+      "type": "win"
+    },
+    {
+      "holdTime": 1440,
+      "profit": -1163.81,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1500,
+      "profit": -7538.44,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1500,
+      "profit": 5014.63,
+      "type": "win"
+    },
+    {
+      "holdTime": 1500,
+      "profit": 16355.07,
+      "type": "win"
+    },
+    {
+      "holdTime": 1500,
+      "profit": -5034.33,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1558.1,
+      "profit": -10052.1,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1560,
+      "profit": -1295.22,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1560,
+      "profit": 3204.26,
+      "type": "win"
+    },
+    {
+      "holdTime": 1560,
+      "profit": 11679.53,
+      "type": "win"
+    },
+    {
+      "holdTime": 1560,
+      "profit": 7026.22,
+      "type": "win"
+    },
+    {
+      "holdTime": 1620,
+      "profit": 21051.74,
+      "type": "win"
+    },
+    {
+      "holdTime": 1620,
+      "profit": 45811.66,
+      "type": "win"
+    },
+    {
+      "holdTime": 1620,
+      "profit": -3486.97,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1680,
+      "profit": 34116.63,
+      "type": "win"
+    },
+    {
+      "holdTime": 1680,
+      "profit": 72796.63,
+      "type": "win"
+    },
+    {
+      "holdTime": 1680,
+      "profit": 32487.77,
+      "type": "win"
+    },
+    {
+      "holdTime": 1680,
+      "profit": 11430.77,
+      "type": "win"
+    },
+    {
+      "holdTime": 1680,
+      "profit": -614.99,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1680,
+      "profit": 47248.64,
+      "type": "win"
+    },
+    {
+      "holdTime": 1703.4,
+      "profit": -10085,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1740,
+      "profit": 64362.17,
+      "type": "win"
+    },
+    {
+      "holdTime": 1740,
+      "profit": -1962.8,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1740,
+      "profit": 4575.73,
+      "type": "win"
+    },
+    {
+      "holdTime": 1740,
+      "profit": 5745.73,
+      "type": "win"
+    },
+    {
+      "holdTime": 1800,
+      "profit": 43546.95,
+      "type": "win"
+    },
+    {
+      "holdTime": 1800,
+      "profit": -7675.98,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1800,
+      "profit": 24244.8,
+      "type": "win"
+    },
+    {
+      "holdTime": 1800,
+      "profit": 24585.36,
+      "type": "win"
+    },
+    {
+      "holdTime": 1860,
+      "profit": 24706.65,
+      "type": "win"
+    },
+    {
+      "holdTime": 1860,
+      "profit": 4251.94,
+      "type": "win"
+    },
+    {
+      "holdTime": 1868.1,
+      "profit": -10014.94,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1920,
+      "profit": -1584.74,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1920,
+      "profit": 8601.09,
+      "type": "win"
+    },
+    {
+      "holdTime": 1920,
+      "profit": 16486.55,
+      "type": "win"
+    },
+    {
+      "holdTime": 1920,
+      "profit": 2355.13,
+      "type": "win"
+    },
+    {
+      "holdTime": 1920,
+      "profit": -175.4,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1920,
+      "profit": 12981.2,
+      "type": "win"
+    },
+    {
+      "holdTime": 1926.3,
+      "profit": -10005.43,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1980,
+      "profit": 73493.24,
+      "type": "win"
+    },
+    {
+      "holdTime": 1980,
+      "profit": 17718.36,
+      "type": "win"
+    },
+    {
+      "holdTime": 1980,
+      "profit": 594.13,
+      "type": "win"
+    },
+    {
+      "holdTime": 1980,
+      "profit": -123.92,
+      "type": "loss"
+    },
+    {
+      "holdTime": 1980,
+      "profit": 39052.34,
+      "type": "win"
+    },
+    {
+      "holdTime": 2040,
+      "profit": -2677.59,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2040,
+      "profit": 76489,
+      "type": "win"
+    },
+    {
+      "holdTime": 2040,
+      "profit": -202.04,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2040,
+      "profit": 7395.03,
+      "type": "win"
+    },
+    {
+      "holdTime": 2040,
+      "profit": 34581.28,
+      "type": "win"
+    },
+    {
+      "holdTime": 2068.3,
+      "profit": -10013.36,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2100,
+      "profit": 11520.09,
+      "type": "win"
+    },
+    {
+      "holdTime": 2100,
+      "profit": 35489.44,
+      "type": "win"
+    },
+    {
+      "holdTime": 2100,
+      "profit": 29947.86,
+      "type": "win"
+    },
+    {
+      "holdTime": 2160,
+      "profit": 45448.76,
+      "type": "win"
+    },
+    {
+      "holdTime": 2220,
+      "profit": 139.96,
+      "type": "win"
+    },
+    {
+      "holdTime": 2220,
+      "profit": 29766.92,
+      "type": "win"
+    },
+    {
+      "holdTime": 2220,
+      "profit": 4214.42,
+      "type": "win"
+    },
+    {
+      "holdTime": 2220,
+      "profit": 40230.76,
+      "type": "win"
+    },
+    {
+      "holdTime": 2220,
+      "profit": 4277.08,
+      "type": "win"
+    },
+    {
+      "holdTime": 2280,
+      "profit": 9363.68,
+      "type": "win"
+    },
+    {
+      "holdTime": 2280,
+      "profit": -9559.9,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2280,
+      "profit": 26384.82,
+      "type": "win"
+    },
+    {
+      "holdTime": 2280,
+      "profit": -1476.99,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2280,
+      "profit": 7947.77,
+      "type": "win"
+    },
+    {
+      "holdTime": 2340,
+      "profit": 106575.7,
+      "type": "win"
+    },
+    {
+      "holdTime": 2340,
+      "profit": 16039.94,
+      "type": "win"
+    },
+    {
+      "holdTime": 2340,
+      "profit": -4372.18,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2340,
+      "profit": 7223.65,
+      "type": "win"
+    },
+    {
+      "holdTime": 2400,
+      "profit": 13341.65,
+      "type": "win"
+    },
+    {
+      "holdTime": 2400,
+      "profit": 3308.12,
+      "type": "win"
+    },
+    {
+      "holdTime": 2400,
+      "profit": 882.23,
+      "type": "win"
+    },
+    {
+      "holdTime": 2400,
+      "profit": 1635.39,
+      "type": "win"
+    },
+    {
+      "holdTime": 2460,
+      "profit": 18703.14,
+      "type": "win"
+    },
+    {
+      "holdTime": 2460,
+      "profit": 17508.84,
+      "type": "win"
+    },
+    {
+      "holdTime": 2520,
+      "profit": 55261.29,
+      "type": "win"
+    },
+    {
+      "holdTime": 2520,
+      "profit": 14482.1,
+      "type": "win"
+    },
+    {
+      "holdTime": 2580,
+      "profit": 18822.76,
+      "type": "win"
+    },
+    {
+      "holdTime": 2580,
+      "profit": -3291.58,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2580,
+      "profit": 10773.85,
+      "type": "win"
+    },
+    {
+      "holdTime": 2580,
+      "profit": 11983.31,
+      "type": "win"
+    },
+    {
+      "holdTime": 2580,
+      "profit": 1300.9,
+      "type": "win"
+    },
+    {
+      "holdTime": 2640,
+      "profit": 44189.39,
+      "type": "win"
+    },
+    {
+      "holdTime": 2640,
+      "profit": 16042.13,
+      "type": "win"
+    },
+    {
+      "holdTime": 2700,
+      "profit": 5908.53,
+      "type": "win"
+    },
+    {
+      "holdTime": 2760,
+      "profit": -7773.92,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2760,
+      "profit": -214.53,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2760,
+      "profit": 47605.64,
+      "type": "win"
+    },
+    {
+      "holdTime": 2880,
+      "profit": 30660.28,
+      "type": "win"
+    },
+    {
+      "holdTime": 2880,
+      "profit": -1554.04,
+      "type": "loss"
+    },
+    {
+      "holdTime": 2880,
+      "profit": 4280.06,
+      "type": "win"
+    },
+    {
+      "holdTime": 2880,
+      "profit": 76333.37,
+      "type": "win"
+    },
+    {
+      "holdTime": 2880,
+      "profit": 4200.44,
+      "type": "win"
+    },
+    {
+      "holdTime": 2940,
+      "profit": 33887.36,
+      "type": "win"
+    },
+    {
+      "holdTime": 2940,
+      "profit": 22231.83,
+      "type": "win"
+    },
+    {
+      "holdTime": 3000,
+      "profit": 12690.96,
+      "type": "win"
+    },
+    {
+      "holdTime": 3060,
+      "profit": 49478.01,
+      "type": "win"
+    },
+    {
+      "holdTime": 3060,
+      "profit": 6667.55,
+      "type": "win"
+    },
+    {
+      "holdTime": 3060,
+      "profit": 21795.93,
+      "type": "win"
+    },
+    {
+      "holdTime": 3120,
+      "profit": 127365.42,
+      "type": "win"
+    },
+    {
+      "holdTime": 3180,
+      "profit": 33765.58,
+      "type": "win"
+    },
+    {
+      "holdTime": 3240,
+      "profit": 77112.5,
+      "type": "win"
+    },
+    {
+      "holdTime": 3240,
+      "profit": 10258.42,
+      "type": "win"
+    },
+    {
+      "holdTime": 3240,
+      "profit": 1808.7,
+      "type": "win"
+    },
+    {
+      "holdTime": 3300,
+      "profit": 8508.01,
+      "type": "win"
+    },
+    {
+      "holdTime": 3300,
+      "profit": 63109.06,
+      "type": "win"
+    },
+    {
+      "holdTime": 3360,
+      "profit": 56465.5,
+      "type": "win"
+    },
+    {
+      "holdTime": 3420,
+      "profit": 19219.85,
+      "type": "win"
+    },
+    {
+      "holdTime": 3480,
+      "profit": 13577.16,
+      "type": "win"
+    },
+    {
+      "holdTime": 3480,
+      "profit": 30097.34,
+      "type": "win"
+    },
+    {
+      "holdTime": 3480,
+      "profit": 7983.68,
+      "type": "win"
+    },
+    {
+      "holdTime": 3540,
+      "profit": 20521.99,
+      "type": "win"
+    },
+    {
+      "holdTime": 3540,
+      "profit": 46341.35,
+      "type": "win"
+    },
+    {
+      "holdTime": 3540,
+      "profit": 9625.14,
+      "type": "win"
+    },
+    {
+      "holdTime": 3540,
+      "profit": 9003.67,
+      "type": "win"
+    },
+    {
+      "holdTime": 3600,
+      "profit": 32410.45,
+      "type": "win"
+    },
+    {
+      "holdTime": 3780,
+      "profit": -4758.16,
+      "type": "loss"
+    },
+    {
+      "holdTime": 3900,
+      "profit": -5341.75,
+      "type": "loss"
+    },
+    {
+      "holdTime": 3960,
+      "profit": 106969.46,
+      "type": "win"
+    },
+    {
+      "holdTime": 4080,
+      "profit": 7500.85,
+      "type": "win"
+    },
+    {
+      "holdTime": 4080,
+      "profit": 44215.52,
+      "type": "win"
+    },
+    {
+      "holdTime": 4320,
+      "profit": 84138.12,
+      "type": "win"
+    },
+    {
+      "holdTime": 4380,
+      "profit": 47188.33,
+      "type": "win"
+    },
+    {
+      "holdTime": 4560,
+      "profit": 27981.8,
+      "type": "win"
+    },
+    {
+      "holdTime": 4560,
+      "profit": 52065.78,
+      "type": "win"
+    },
+    {
+      "holdTime": 5040,
+      "profit": 18038.31,
+      "type": "win"
+    },
+    {
+      "holdTime": 5100,
+      "profit": 16633.88,
+      "type": "win"
+    },
+    {
+      "holdTime": 5100,
+      "profit": 85748.61,
+      "type": "win"
+    },
+    {
+      "holdTime": 5400,
+      "profit": 16013.74,
+      "type": "win"
+    },
+    {
+      "holdTime": 6360,
+      "profit": 83070.77,
+      "type": "win"
+    },
+    {
+      "holdTime": 6780,
+      "profit": 59547.33,
+      "type": "win"
+    }
+  ],
+  "volumeEscalationData": [
+    {
+      "name": "Base Lot",
+      "multiplier": 1
+    },
+    {
+      "name": "1 Loss",
+      "multiplier": 0.93
+    },
+    {
+      "name": "2 Losses",
+      "multiplier": 0.99
+    },
+    {
+      "name": "3 Losses",
+      "multiplier": 1.02
+    },
+    {
+      "name": "4 Losses",
+      "multiplier": 0.88
+    },
+    {
+      "name": "5+ Losses",
+      "multiplier": 0.7
+    }
+  ]
+}

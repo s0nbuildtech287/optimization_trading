@@ -1,0 +1,16 @@
+{
+  "statusCode": 200,
+  "body": {
+    "symbols": [
+      "BTCUSD",
+      "DE30",
+      "ETHUSD",
+      "HK50",
+      "JP225",
+      "US500",
+      "USOIL",
+      "XAGUSD",
+      "XAUUSD"
+    ]
+  }
+}

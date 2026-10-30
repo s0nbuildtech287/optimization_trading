@@ -1,0 +1,41 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+.env.local
+.env.*.local
+out/
+release/
+coverage/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.cache/
+build/
+out/
+
+# Electron
+electron-builder-effective-config.json
+
+# PM2
+pm2.logrotate
+
+# OS
+Thumbs.db
+.DS_Store
+.
+
+# Python
+__pycache__/
+.venv/
+
+backend/bin/*.sys
+backend/bin/_pycache_
+backend/mt5-history-config.json
+mt5-history-state/
+
+# Generated Python executables
+backend/bin/ea_scanner.exe
+backend/bin/system_monitor.exe

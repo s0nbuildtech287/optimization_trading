@@ -1,0 +1,22 @@
+{
+  "totalStrategies": 3842,
+  "riskStrategies": 1389,
+  "hardFlaggedStrategies": 1389,
+  "softFlaggedStrategies": 2453,
+  "warningStrategies": 2409,
+  "errorRate": 36.2,
+  "pieData": [
+    {
+      "name": "Disqualified (Bị Loại)",
+      "value": 1389
+    },
+    {
+      "name": "Warning (Cảnh Báo Nhẹ)",
+      "value": 2409
+    },
+    {
+      "name": "Passed Clean (Sạch Cờ)",
+      "value": 44
+    }
+  ]
+}

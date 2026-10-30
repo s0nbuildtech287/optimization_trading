@@ -1,0 +1,1164 @@
+{
+  "statusCode": 200,
+  "body": {
+    "success": true,
+    "data": {
+      "summary": {
+        "totalStrategies": 7450,
+        "hardFlaggedStrategies": 2733,
+        "passedStrategies": 4717,
+        "warningStrategies": 4580
+      },
+      "hardFlags": {
+        "expectedPayoffNonPositive": {
+          "id": "1",
+          "title": "Expected Payoff <= 0",
+          "count": 0,
+          "strats": []
+        },
+        "profitFactorLow": {
+          "id": "2",
+          "title": "Profit Factor < 1.2",
+          "count": 711,
+          "strats": [
+            {
+              "id": "002BTCUSDH4OS",
+              "val": "PF 1.06"
+            },
+            {
+              "id": "005DE30H4OS",
+              "val": "PF 1.02"
+            },
+            {
+              "id": "006HK50H4OB",
+              "val": "PF 1.07"
+            },
+            {
+              "id": "006US500H1OB",
+              "val": "PF 1"
+            },
+            {
+              "id": "006XAGUSDH1OB",
+              "val": "PF 1"
+            },
+            {
+              "id": "006XAUUSDH1OS",
+              "val": "PF 1.01"
+            },
+            {
+              "id": "010USOILH4OS",
+              "val": "PF 1"
+            },
+            {
+              "id": "012DE30H4OB",
+              "val": "PF 1"
+            },
+            {
+              "id": "012JP225H1OS",
+              "val": "PF 1.03"
+            },
+            {
+              "id": "013USOILH4OS",
+              "val": "PF 1.02"
+            }
+          ]
+        },
+        "recoveryFactorLow": {
+          "id": "3",
+          "title": "Recovery Factor < 1.0",
+          "count": 656,
+          "strats": [
+            {
+              "id": "002BTCUSDH4OS",
+              "val": "RF 0.22"
+            },
+            {
+              "id": "005DE30H4OS",
+              "val": "RF 0.06"
+            },
+            {
+              "id": "006HK50H4OB",
+              "val": "RF 0.24"
+            },
+            {
+              "id": "006US500H1OB",
+              "val": "RF 0.04"
+            },
+            {
+              "id": "006XAGUSDH1OB",
+              "val": "RF 0.02"
+            },
+            {
+              "id": "006XAUUSDH1OS",
+              "val": "RF 0.05"
+            },
+            {
+              "id": "010USOILH4OS",
+              "val": "RF 0"
+            },
+            {
+              "id": "012DE30H4OB",
+              "val": "RF 0.01"
+            },
+            {
+              "id": "012JP225H1OS",
+              "val": "RF 0.07"
+            },
+            {
+              "id": "013USOILH4OS",
+              "val": "RF 0.06"
+            }
+          ]
+        },
+        "pdRatioLow": {
+          "id": "4",
+          "title": "P/D Ratio < 1.0",
+          "count": 495,
+          "strats": [
+            {
+              "id": "002BTCUSDH4OS",
+              "val": "P/D 0.24"
+            },
+            {
+              "id": "005DE30H4OS",
+              "val": "P/D 0.08"
+            },
+            {
+              "id": "006HK50H4OB",
+              "val": "P/D 0.29"
+            },
+            {
+              "id": "006US500H1OB",
+              "val": "P/D 0.04"
+            },
+            {
+              "id": "006XAGUSDH1OB",
+              "val": "P/D 0.02"
+            },
+            {
+              "id": "006XAUUSDH1OS",
+              "val": "P/D 0.05"
+            },
+            {
+              "id": "010USOILH4OS",
+              "val": "P/D 0"
+            },
+            {
+              "id": "012DE30H4OB",
+              "val": "P/D 0.01"
+            },
+            {
+              "id": "012JP225H1OS",
+              "val": "P/D 0.09"
+            },
+            {
+              "id": "013USOILH4OS",
+              "val": "P/D 0.06"
+            }
+          ]
+        },
+        "martingaleTripleFlag": {
+          "id": "5",
+          "title": "Martingale Triple Flag",
+          "count": 0,
+          "strats": []
+        },
+        "highEotRatio": {
+          "id": "7",
+          "title": "End Of Test Ratio > 10%",
+          "count": 0,
+          "strats": []
+        },
+        "recentDecayNegative": {
+          "id": "8",
+          "title": "Recent 12M Profit Negative",
+          "count": 0,
+          "strats": []
+        },
+        "largestLossToNetProfitRatioHigh": {
+          "id": "33",
+          "title": "Largest Loss / Net Profit >= 70%",
+          "count": 0,
+          "strats": []
+        }
+      },
+      "softFlags": [
+        {
+          "id": "9",
+          "title": "Outlier profit > 5σ",
+          "count": 0,
+          "strats": []
+        },
+        {
+          "id": "10",
+          "title": "Low sample + high EP",
+          "count": 2045,
+          "strats": [
+            {
+              "id": "002BTCUSDH4OS",
+              "val": "Trades 133"
+            },
+            {
+              "id": "005DE30H4OS",
+              "val": "Trades 100"
+            },
+            {
+              "id": "006HK50H4OB",
+              "val": "Trades 129"
+            },
+            {
+              "id": "012DE30H4OB",
+              "val": "Trades 143"
+            },
+            {
+              "id": "012JP225H1OS",
+              "val": "Trades 104"
+            },
+            {
+              "id": "013USOILH4OS",
+              "val": "Trades 144"
+            },
+            {
+              "id": "035JP225H4OS",
+              "val": "Trades 136"
+            },
+            {
+              "id": "038USOILH1OB",
+              "val": "Trades 142"
+            },
+            {
+              "id": "048US500H4OS",
+              "val": "Trades 109"
+            },
+            {
+              "id": "053HK50H4OS",
+              "val": "Trades 109"
+            }
+          ]
+        },
+        {
+          "id": "11",
+          "title": "LR Correlation < 0.8",
+          "count": 1800,
+          "strats": [
+            {
+              "id": "005DE30H4OS",
+              "val": "Corr 0.48"
+            },
+            {
+              "id": "006HK50H4OB",
+              "val": "Corr 0.72"
+            },
+            {
+              "id": "006US500H1OB",
+              "val": "Corr 0.47"
+            },
+            {
+              "id": "010USOILH4OS",
+              "val": "Corr 0.47"
+            },
+            {
+              "id": "012DE30H4OB",
+              "val": "Corr 0.33"
+            },
+            {
+              "id": "022DE30H4OS",
+              "val": "Corr 0.3"
+            },
+            {
+              "id": "038USOILH1OB",
+              "val": "Corr 0.31"
+            },
+            {
+              "id": "048US500H4OS",
+              "val": "Corr 0.5"
+            },
+            {
+              "id": "051USOILH1OS",
+              "val": "Corr 0.59"
+            },
+            {
+              "id": "051XAUUSDH4OS",
+              "val": "Corr 0.26"
+            }
+          ]
+        },
+        {
+          "id": "12",
+          "title": "Seasonal dependency",
+          "count": 0,
+          "strats": []
+        },
+        {
+          "id": "13",
+          "title": "Performance decay",
+          "count": 0,
+          "strats": []
+        },
+        {
+          "id": "14",
+          "title": "Sharpe < 0.5",
+          "count": 335,
+          "strats": [
+            {
+              "id": "002BTCUSDH4OS",
+              "val": "Sharpe 0.42"
+            },
+            {
+              "id": "005DE30H4OS",
+              "val": "Sharpe 0.11"
+            },
+            {
+              "id": "006US500H1OB",
+              "val": "Sharpe 0.06"
+            },
+            {
+              "id": "006XAGUSDH1OB",
+              "val": "Sharpe 0.04"
+            },
+            {
+              "id": "006XAUUSDH1OS",
+              "val": "Sharpe 0.1"
+            },
+            {
+              "id": "010USOILH4OS",
+              "val": "Sharpe 0"
+            },
+            {
+              "id": "012DE30H4OB",
+              "val": "Sharpe 0.01"
+            },
+            {
+              "id": "012JP225H1OS",
+              "val": "Sharpe 0.09"
+            },
+            {
+              "id": "013USOILH4OS",
+              "val": "Sharpe 0.08"
+            },
+            {
+              "id": "022DE30H4OS",
+              "val": "Sharpe 0.04"
+            }
+          ]
+        },
+        {
+          "id": "15",
+          "title": "Hidden drawdown duration",
+          "count": 0,
+          "strats": []
+        },
+        {
+          "id": "16",
+          "title": "PF >= 2 with DD >= 12%",
+          "count": 142,
+          "strats": [
+            {
+              "id": "019XAGUSDH1OS",
+              "val": "PF 2.14 · DD 14.8%"
+            },
+            {
+              "id": "058US500H4OS",
+              "val": "PF 2.36 · DD 15.2%"
+            },
+            {
+              "id": "004BTCUSDH4OB",
+              "val": "PF 4.32 · DD 19.6%"
+            },
+            {
+              "id": "004DE30H4OB",
+              "val": "PF 2.81 · DD 19.7%"
+            },
+            {
+              "id": "004JP225H4OS",
+              "val": "PF 2.42 · DD 36.4%"
+            },
+            {
+              "id": "004XAGUSDH1OB",
+              "val": "PF 2.05 · DD 27.5%"
+            },
+            {
+              "id": "004XAGUSDH4OB",
+              "val": "PF 2.68 · DD 20.5%"
+            },
+            {
+              "id": "004XAUUSDH1OB",
+              "val": "PF 2.03 · DD 31.7%"
+            },
+            {
+              "id": "004XAUUSDH4OB",
+              "val": "PF 4.31 · DD 19.6%"
+            },
+            {
+              "id": "005ETHUSDH1OS",
+              "val": "PF 2 · DD 15.9%"
+            }
+          ]
+        },
+        {
+          "id": "17",
+          "title": "Long losing streak warning",
+          "count": 3302,
+          "strats": [
+            {
+              "id": "006XAGUSDH1OB",
+              "val": "Loss streak 15"
+            },
+            {
+              "id": "006XAUUSDH1OS",
+              "val": "Loss streak 14"
+            },
+            {
+              "id": "012DE30H4OB",
+              "val": "Loss streak 20"
+            },
+            {
+              "id": "035JP225H4OS",
+              "val": "Loss streak 15"
+            },
+            {
+              "id": "048US500H4OS",
+              "val": "Loss streak 15"
+            },
+            {
+              "id": "051USOILH1OS",
+              "val": "Loss streak 28"
+            },
+            {
+              "id": "051XAUUSDH4OS",
+              "val": "Loss streak 15"
+            },
+            {
+              "id": "074HK50H4OS",
+              "val": "Loss streak 15"
+            },
+            {
+              "id": "106JP225H1OS",
+              "val": "Loss streak 28"
+            },
+            {
+              "id": "106XAUUSDH1OS",
+              "val": "Loss streak 44"
+            }
+          ]
+        },
+        {
+          "id": "18",
+          "title": "High DD with medium PF",
+          "count": 159,
+          "strats": [
+            {
+              "id": "010XAGUSDH1OS",
+              "val": "DD 25.1% · PF 1.22"
+            },
+            {
+              "id": "012USOILH4OS",
+              "val": "DD 19.9% · PF 1.24"
+            },
+            {
+              "id": "013HK50H1OB",
+              "val": "DD 37.2% · PF 1.23"
+            },
+            {
+              "id": "013XAGUSDH1OS",
+              "val": "DD 31.3% · PF 1.27"
+            },
+            {
+              "id": "019HK50H1OB",
+              "val": "DD 39.2% · PF 1.52"
+            },
+            {
+              "id": "029HK50H1OB",
+              "val": "DD 21.1% · PF 1.26"
+            },
+            {
+              "id": "043XAGUSDH1OS",
+              "val": "DD 20.5% · PF 1.49"
+            },
+            {
+              "id": "089US500H4OS",
+              "val": "DD 20.2% · PF 1.46"
+            },
+            {
+              "id": "009DE30H1OS",
+              "val": "DD 33.4% · PF 1.44"
+            },
+            {
+              "id": "010USOILH1OS",
+              "val": "DD 28.6% · PF 1.52"
+            }
+          ]
+        }
+      ],
+      "strategies": [
+        {
+          "id": "002BTCUSDH4OS",
+          "backtest": "backtest_temp1",
+          "symbol": "BTCUSD",
+          "timeframe": "H4",
+          "trades": 133,
+          "ep": 85.326617,
+          "pf": 1.06148,
+          "rf": 0.218417,
+          "pd": 0.24494216627707954,
+          "netProfit": 11348.44,
+          "hardCount": 4,
+          "softCount": 6,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "10",
+            "14",
+            "20",
+            "24",
+            "25",
+            "34"
+          ],
+          "largestLossTrade": -10017.89,
+          "winratePct": 34.59,
+          "drawdownPct": 4.58,
+          "maxConsecutiveLosses": 11,
+          "sharpeRatio": 0.419783,
+          "lrCorrelation": -0.254167
+        },
+        {
+          "id": "005DE30H4OS",
+          "backtest": "backtest_temp1",
+          "symbol": "DE30",
+          "timeframe": "H4",
+          "trades": 100,
+          "ep": 75.4216,
+          "pf": 1.017572,
+          "rf": 0.05983,
+          "pd": 0.07508138372592273,
+          "netProfit": 7542.16,
+          "hardCount": 4,
+          "softCount": 8,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "10",
+            "11",
+            "14",
+            "20",
+            "23",
+            "24",
+            "25",
+            "34"
+          ],
+          "largestLossTrade": -11155.71,
+          "winratePct": 30,
+          "drawdownPct": 9.28,
+          "maxConsecutiveLosses": 11,
+          "sharpeRatio": 0.112808,
+          "lrCorrelation": 0.483182
+        },
+        {
+          "id": "006HK50H4OB",
+          "backtest": "backtest_temp1",
+          "symbol": "HK50",
+          "timeframe": "H4",
+          "trades": 129,
+          "ep": 53.797054,
+          "pf": 1.07448,
+          "rf": 0.241905,
+          "pd": 0.2888978345005414,
+          "netProfit": 6939.82,
+          "hardCount": 4,
+          "softCount": 7,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "10",
+            "11",
+            "20",
+            "23",
+            "24",
+            "25",
+            "34"
+          ],
+          "largestLossTrade": -5571.9,
+          "winratePct": 40.31,
+          "drawdownPct": 2.33,
+          "maxConsecutiveLosses": 7,
+          "sharpeRatio": 0.574368,
+          "lrCorrelation": 0.716137
+        },
+        {
+          "id": "006US500H1OB",
+          "backtest": "backtest_temp1",
+          "symbol": "US500",
+          "timeframe": "H1",
+          "trades": 946,
+          "ep": 6.263192,
+          "pf": 1.004998,
+          "rf": 0.04291,
+          "pd": 0.04464506787504885,
+          "netProfit": 5924.98,
+          "hardCount": 4,
+          "softCount": 5,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "11",
+            "14",
+            "20",
+            "24",
+            "34"
+          ],
+          "largestLossTrade": -10166.8,
+          "winratePct": 35.2,
+          "drawdownPct": 11.66,
+          "maxConsecutiveLosses": 11,
+          "sharpeRatio": 0.055959,
+          "lrCorrelation": 0.472655
+        },
+        {
+          "id": "006XAGUSDH1OB",
+          "backtest": "backtest_temp1",
+          "symbol": "XAGUSD",
+          "timeframe": "H1",
+          "trades": 694,
+          "ep": 8.01196,
+          "pf": 1.003367,
+          "rf": 0.023394,
+          "pd": 0.0241531067972341,
+          "netProfit": 5560.3,
+          "hardCount": 4,
+          "softCount": 5,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "14",
+            "17",
+            "20",
+            "24",
+            "34"
+          ],
+          "largestLossTrade": -10816.85,
+          "winratePct": 31.7,
+          "drawdownPct": 21.56,
+          "maxConsecutiveLosses": 15,
+          "sharpeRatio": 0.043405,
+          "lrCorrelation": -0.399196
+        },
+        {
+          "id": "006XAUUSDH1OS",
+          "backtest": "backtest_temp1",
+          "symbol": "XAUUSD",
+          "timeframe": "H1",
+          "trades": 740,
+          "ep": 7.422068,
+          "pf": 1.008038,
+          "rf": 0.050592,
+          "pd": 0.05299296245184052,
+          "netProfit": 5492.33,
+          "hardCount": 4,
+          "softCount": 5,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "14",
+            "17",
+            "20",
+            "24",
+            "34"
+          ],
+          "largestLossTrade": -10012.98,
+          "winratePct": 33.11,
+          "drawdownPct": 9.54,
+          "maxConsecutiveLosses": 14,
+          "sharpeRatio": 0.09613,
+          "lrCorrelation": -0.234882
+        },
+        {
+          "id": "010USOILH4OS",
+          "backtest": "backtest_temp1",
+          "symbol": "USOIL",
+          "timeframe": "H4",
+          "trades": 168,
+          "ep": 1.631429,
+          "pf": 1.000461,
+          "rf": 0.001818,
+          "pd": 0.0032477477696322074,
+          "netProfit": 274.08,
+          "hardCount": 4,
+          "softCount": 5,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "11",
+            "14",
+            "20",
+            "24",
+            "34"
+          ],
+          "largestLossTrade": -10155.29,
+          "winratePct": 30.95,
+          "drawdownPct": 7.78,
+          "maxConsecutiveLosses": 10,
+          "sharpeRatio": 0.001196,
+          "lrCorrelation": 0.465818
+        },
+        {
+          "id": "012DE30H4OB",
+          "backtest": "backtest_temp1",
+          "symbol": "DE30",
+          "timeframe": "H4",
+          "trades": 143,
+          "ep": 8.918671,
+          "pf": 1.002713,
+          "rf": 0.006956,
+          "pd": 0.007277377425744924,
+          "netProfit": 1275.37,
+          "hardCount": 4,
+          "softCount": 9,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "10",
+            "11",
+            "14",
+            "17",
+            "20",
+            "24",
+            "25",
+            "34",
+            "6"
+          ],
+          "largestLossTrade": -10140.44,
+          "winratePct": 19.58,
+          "drawdownPct": 17.42,
+          "maxConsecutiveLosses": 20,
+          "sharpeRatio": 0.007172,
+          "lrCorrelation": 0.331565
+        },
+        {
+          "id": "012JP225H1OS",
+          "backtest": "backtest_temp1",
+          "symbol": "JP225",
+          "timeframe": "H1",
+          "trades": 104,
+          "ep": 134.147885,
+          "pf": 1.029405,
+          "rf": 0.07472,
+          "pd": 0.09314570192130894,
+          "netProfit": 13951.38,
+          "hardCount": 4,
+          "softCount": 5,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "10",
+            "14",
+            "23",
+            "24",
+            "34"
+          ],
+          "largestLossTrade": -10577.72,
+          "winratePct": 23.08,
+          "drawdownPct": 13.63,
+          "maxConsecutiveLosses": 10,
+          "sharpeRatio": 0.091908,
+          "lrCorrelation": -0.501929
+        },
+        {
+          "id": "013USOILH4OS",
+          "backtest": "backtest_temp1",
+          "symbol": "USOIL",
+          "timeframe": "H4",
+          "trades": 144,
+          "ep": 68.685139,
+          "pf": 1.017987,
+          "rf": 0.055184,
+          "pd": 0.06242170196528777,
+          "netProfit": 9890.66,
+          "hardCount": 4,
+          "softCount": 6,
+          "status": "Disqualified",
+          "hardFlags": [
+            "2",
+            "3",
+            "4"
+          ],
+          "softFlags": [
+            "10",
+            "14",
+            "20",
+            "24",
+            "25",
+            "34"
+          ],
+          "largestLossTrade": -10208.55,
+          "winratePct": 28.47,
+          "drawdownPct": 14.55,
+          "maxConsecutiveLosses": 10,
+          "sharpeRatio": 0.084536,
+          "lrCorrelation": -0.000924
+        }
+      ],
+      "charts": {
+        "symbolDistribution": [
+          {
+            "symbol": "BTCUSD",
+            "count": 836
+          },
+          {
+            "symbol": "ETHUSD",
+            "count": 834
+          },
+          {
+            "symbol": "US500",
+            "count": 830
+          },
+          {
+            "symbol": "XAUUSD",
+            "count": 830
+          },
+          {
+            "symbol": "XAGUSD",
+            "count": 828
+          },
+          {
+            "symbol": "HK50",
+            "count": 826
+          },
+          {
+            "symbol": "DE30",
+            "count": 825
+          },
+          {
+            "symbol": "JP225",
+            "count": 821
+          },
+          {
+            "symbol": "USOIL",
+            "count": 820
+          }
+        ],
+        "marketNeutral": [
+          {
+            "name": "Buy (OB)",
+            "value": 50.13
+          },
+          {
+            "name": "Sell (OS)",
+            "value": 49.87
+          }
+        ],
+        "assetConcentration": [
+          {
+            "symbol": "ETHUSD",
+            "value": 17.93
+          },
+          {
+            "symbol": "BTCUSD",
+            "value": 16.34
+          },
+          {
+            "symbol": "XAUUSD",
+            "value": 13.62
+          },
+          {
+            "symbol": "JP225",
+            "value": 10.59
+          },
+          {
+            "symbol": "DE30",
+            "value": 9.65
+          },
+          {
+            "symbol": "XAGUSD",
+            "value": 9.03
+          },
+          {
+            "symbol": "US500",
+            "value": 8.63
+          },
+          {
+            "symbol": "USOIL",
+            "value": 7.69
+          },
+          {
+            "symbol": "HK50",
+            "value": 6.52
+          }
+        ],
+        "strategyDominance": [
+          {
+            "id": "107JP225H1OS|backtest_temp1",
+            "pct": 11.17
+          },
+          {
+            "id": "080BTCUSDH1OB|backtest_temp1",
+            "pct": 6.72
+          },
+          {
+            "id": "085BTCUSDH4OB|backtest_temp1",
+            "pct": 5.43
+          },
+          {
+            "id": "044BTCUSDH1OB|backtest_temp1",
+            "pct": 5.36
+          },
+          {
+            "id": "050ETHUSDH1OB|backtest_temp1",
+            "pct": 5.1
+          },
+          {
+            "id": "004XAUUSDH1OB|backtest_temp1",
+            "pct": 4.93
+          },
+          {
+            "id": "015ETHUSDH1OB|backtest_temp1",
+            "pct": 4.91
+          },
+          {
+            "id": "022XAUUSDH4OB|backtest_temp1",
+            "pct": 4.89
+          },
+          {
+            "id": "073BTCUSDH4OB|backtest_temp1",
+            "pct": 4.79
+          },
+          {
+            "id": "022BTCUSDH4OB|backtest_temp1",
+            "pct": 4.73
+          }
+        ],
+        "marginExposure": [
+          {
+            "date": "03/06/21",
+            "count": 2442
+          },
+          {
+            "date": "07/09/21",
+            "count": 2445
+          },
+          {
+            "date": "11/02/22",
+            "count": 2443
+          },
+          {
+            "date": "15/02/22",
+            "count": 2459
+          },
+          {
+            "date": "17/02/22",
+            "count": 2617
+          },
+          {
+            "date": "28/02/22",
+            "count": 2703
+          },
+          {
+            "date": "04/05/22",
+            "count": 2531
+          },
+          {
+            "date": "05/05/22",
+            "count": 2991
+          },
+          {
+            "date": "07/06/22",
+            "count": 2564
+          },
+          {
+            "date": "05/07/22",
+            "count": 2732
+          }
+        ],
+        "correlatedDrawdown": [
+          {
+            "month": "01/23",
+            "days": 3
+          },
+          {
+            "month": "02/23",
+            "days": 1
+          },
+          {
+            "month": "03/23",
+            "days": 3
+          },
+          {
+            "month": "04/23",
+            "days": 2
+          },
+          {
+            "month": "05/23",
+            "days": 2
+          },
+          {
+            "month": "06/23",
+            "days": 3
+          },
+          {
+            "month": "07/23",
+            "days": 8
+          },
+          {
+            "month": "08/23",
+            "days": 8
+          },
+          {
+            "month": "09/23",
+            "days": 2
+          },
+          {
+            "month": "10/23",
+            "days": 1
+          }
+        ],
+        "symbolDivergence": [
+          {
+            "symbol": "XAUUSD",
+            "ob": 440735198.51,
+            "os": 127206004.04
+          },
+          {
+            "symbol": "BTCUSD",
+            "ob": 435088886.3,
+            "os": 246305126.96
+          },
+          {
+            "symbol": "DE30",
+            "ob": 267452441.08,
+            "os": 134910405.27
+          },
+          {
+            "symbol": "JP225",
+            "ob": 286950276.27,
+            "os": 154712413.34
+          },
+          {
+            "symbol": "XAGUSD",
+            "ob": 248150863.25,
+            "os": 128530665.35
+          },
+          {
+            "symbol": "US500",
+            "ob": 212286868.34,
+            "os": 147672024.09
+          },
+          {
+            "symbol": "HK50",
+            "ob": 112913208.81,
+            "os": 158834199.7
+          },
+          {
+            "symbol": "ETHUSD",
+            "ob": 392334697.84,
+            "os": 355409313.44
+          },
+          {
+            "symbol": "USOIL",
+            "ob": 169650055.46,
+            "os": 151126356.58
+          }
+        ],
+        "doubleExposure": [
+          {
+            "pair": "XAUUSD",
+            "days": 195,
+            "total_days": 756,
+            "single_days": 561,
+            "pct": 25.75
+          },
+          {
+            "pair": "DE30",
+            "days": 168,
+            "total_days": 705,
+            "single_days": 537,
+            "pct": 23.77
+          },
+          {
+            "pair": "HK50",
+            "days": 131,
+            "total_days": 586,
+            "single_days": 455,
+            "pct": 22.35
+          },
+          {
+            "pair": "USOIL",
+            "days": 146,
+            "total_days": 674,
+            "single_days": 528,
+            "pct": 21.7
+          },
+          {
+            "pair": "ETHUSD",
+            "days": 200,
+            "total_days": 926,
+            "single_days": 726,
+            "pct": 21.63
+          },
+          {
+            "pair": "XAGUSD",
+            "days": 123,
+            "total_days": 575,
+            "single_days": 452,
+            "pct": 21.34
+          },
+          {
+            "pair": "BTCUSD",
+            "days": 178,
+            "total_days": 844,
+            "single_days": 666,
+            "pct": 21.05
+          },
+          {
+            "pair": "US500",
+            "days": 136,
+            "total_days": 661,
+            "single_days": 525,
+            "pct": 20.65
+          },
+          {
+            "pair": "JP225",
+            "days": 159,
+            "total_days": 813,
+            "single_days": 654,
+            "pct": 19.56
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,6486 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "LotusQuant API Docs",
+    "version": "1.0.0",
+    "description": "Generated from the actual Express route declarations. Authenticate before using protected endpoints."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local backend"
+    },
+    {
+      "url": "https://test-backtest.lotusquant.co",
+      "description": "Test environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "Backtest Tables & Orders"
+    },
+    {
+      "name": "Strategies"
+    },
+    {
+      "name": "Dashboard Overview"
+    },
+    {
+      "name": "Dashboard - Risk Analysis"
+    },
+    {
+      "name": "Dashboard - Behavior Analysis"
+    },
+    {
+      "name": "Dashboard - Comparative Ranking"
+    },
+    {
+      "name": "Dashboard - AI Analysis"
+    },
+    {
+      "name": "Volume Optimization"
+    },
+    {
+      "name": "Market Watch"
+    },
+    {
+      "name": "AI Chat"
+    },
+    {
+      "name": "Users & Accounts"
+    },
+    {
+      "name": "System & Activity Logs"
+    },
+    {
+      "name": "Notifications"
+    },
+    {
+      "name": "MT5 Optimization - Web"
+    },
+    {
+      "name": "MT5 Worker Protocol"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "workerApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "POST /auth/register",
+        "description": "Generated from src/routes/authRoute.js",
+        "operationId": "post_auth__auth_register",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "username": "{{username}}",
+                "email": "{{email}}",
+                "password": "{{password}}",
+                "otp": "{{otp}}"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "POST /auth/login",
+        "description": "Generated from src/routes/authRoute.js",
+        "operationId": "post_auth__auth_login",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "username": "{{username}}",
+                "password": "{{password}}"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/auth/request-otp": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "POST /auth/request-otp",
+        "description": "Generated from src/routes/authRoute.js",
+        "operationId": "post_auth__auth_request_otp",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "username": "{{username}}",
+                "email": "{{email}}",
+                "password": "{{password}}"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/sync-sheet": {
+      "post": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "POST /api/sync-sheet",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "post_op__api_sync_sheet",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "tableName": "{{backtest_table}}",
+                "driveFolderUrl": "{{drive_folder_url}}",
+                "runType": "NEW_RUN"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/sync-sheet-async": {
+      "post": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "POST /api/sync-sheet-async",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "post_op__api_sync_sheet_async",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "tableName": "{{backtest_table}}",
+                "driveFolderUrl": "{{drive_folder_url}}",
+                "runType": "NEW_RUN"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/sync-status/{syncId}": {
+      "get": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "GET /api/sync-status/:syncId",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "get_op__api_sync_status_syncId",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "syncId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/sync-status/{syncId}/cancel": {
+      "post": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "POST /api/sync-status/:syncId/cancel",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "post_op__api_sync_status_syncId_cancel",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "syncId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/clear-table": {
+      "delete": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "DELETE /api/clear-table",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "delete_op__api_clear_table",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/clear-data": {
+      "delete": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "DELETE /api/clear-data",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "delete_op__api_clear_data",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/update-row": {
+      "post": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "POST /api/update-row",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "post_op__api_update_row",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/data/totals": {
+      "get": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "GET /api/data/totals",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "get_op__api_data_totals",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/data": {
+      "get": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "GET /api/data",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "get_op__api_data",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/download-log": {
+      "get": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "GET /api/download-log",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "get_op__api_download_log",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/filter-options": {
+      "get": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "GET /api/filter-options",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "get_op__api_filter_options",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/balance-chart/{tableName}/{strategyId}": {
+      "get": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "GET /api/balance-chart/:tableName/:strategyId",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "get_op__api_balance_chart_tableName_strategyId",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "strategyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/backtest-tables": {
+      "get": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "GET /api/backtest-tables",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "get_op__api_backtest_tables",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "POST /api/backtest-tables",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "post_op__api_backtest_tables",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "tableName": "{{backtest_table}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/data-sources": {
+      "get": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "GET /api/data-sources",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "get_op__api_data_sources",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/backtest-tables/{tableName}": {
+      "delete": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "DELETE /api/backtest-tables/:tableName",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "delete_op__api_backtest_tables_tableName",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/data-sources/{sourceName}/owner": {
+      "patch": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "PATCH /api/data-sources/:sourceName/owner",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "patch_op__api_data_sources_sourceName_owner",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "sourceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "ownerUserId": "{{user_id}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/check-files": {
+      "post": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "POST /api/check-files",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "post_op__api_check_files",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "driveUrl": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/drive-summary-async": {
+      "post": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "POST /api/drive-summary-async",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "post_op__api_drive_summary_async",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "driveFolderUrl": "{{drive_folder_url}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategy-file-check": {
+      "get": {
+        "tags": [
+          "Backtest Tables & Orders"
+        ],
+        "summary": "GET /api/strategy-file-check",
+        "description": "Generated from src/routes/opRoute.js",
+        "operationId": "get_op__api_strategy_file_check",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "GET /api/strategies",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "get_strategyRoutes_js__api_strategies",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/cache/clear": {
+      "post": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "POST /api/strategies/cache/clear",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "post_strategyRoutes_js__api_strategies_cache_clear",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/by-time-range": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "GET /api/strategies/by-time-range",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "get_strategyRoutes_js__api_strategies_by_time_range",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/ids": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "GET /api/strategies/ids",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "get_strategyRoutes_js__api_strategies_ids",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/symbols/distinct": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "GET /api/strategies/symbols/distinct",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "get_strategyRoutes_js__api_strategies_symbols_distinct",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/statistics/summary": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "GET /api/strategies/statistics/summary",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "get_strategyRoutes_js__api_strategies_statistics_summary",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/sheet/download/{sheetId}": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "GET /api/strategies/sheet/download/:sheetId",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "get_strategyRoutes_js__api_strategies_sheet_download_sheetId",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "sheetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/service-accounts": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "GET /api/strategies/service-accounts",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "get_strategyRoutes_js__api_strategies_service_accounts",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/get-from-folder": {
+      "post": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "POST /api/strategies/get-from-folder",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "post_strategyRoutes_js__api_strategies_get_from_folder",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/{strategyId}/{backtestTable}": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "GET /api/strategies/:strategyId/:backtestTable",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "get_strategyRoutes_js__api_strategies_strategyId_backtestTable",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "strategyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "backtestTable",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "DELETE /api/strategies/:strategyId/:backtestTable",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "delete_strategyRoutes_js__api_strategies_strategyId_backtestTable",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "strategyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "backtestTable",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/{strategyId}": {
+      "delete": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "DELETE /api/strategies/:strategyId",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "delete_strategyRoutes_js__api_strategies_strategyId",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "strategyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/strategies/preferences": {
+      "get": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "GET /api/strategies/preferences",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "get_strategyRoutes_js__api_strategies_preferences",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Strategies"
+        ],
+        "summary": "PUT /api/strategies/preferences",
+        "description": "Generated from src/routes/strategyRoutes.js",
+        "operationId": "put_strategyRoutes_js__api_strategies_preferences",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard": {
+      "get": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "GET /api/dashboard",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "get_dashboard__api_dashboard",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/overview/core": {
+      "get": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "GET /api/dashboard/overview/core",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "get_dashboard__api_dashboard_overview_core",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/overview/monthly-profit": {
+      "get": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "GET /api/dashboard/overview/monthly-profit",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "get_dashboard__api_dashboard_overview_monthly_profit",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/overview/top-stats": {
+      "get": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "GET /api/dashboard/overview/top-stats",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "get_dashboard__api_dashboard_overview_top_stats",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/overview/yearly-performance": {
+      "get": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "GET /api/dashboard/overview/yearly-performance",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "get_dashboard__api_dashboard_overview_yearly_performance",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/overview/behavior-summary": {
+      "get": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "GET /api/dashboard/overview/behavior-summary",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "get_dashboard__api_dashboard_overview_behavior_summary",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/overview/comparative": {
+      "get": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "GET /api/dashboard/overview/comparative",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "get_dashboard__api_dashboard_overview_comparative",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/overview/breakdown": {
+      "get": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "GET /api/dashboard/overview/breakdown",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "get_dashboard__api_dashboard_overview_breakdown",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/clear-cache": {
+      "post": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "POST /api/dashboard/clear-cache",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "post_dashboard__api_dashboard_clear_cache",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/cache-stats": {
+      "get": {
+        "tags": [
+          "Dashboard Overview"
+        ],
+        "summary": "GET /api/dashboard/cache-stats",
+        "description": "Generated from src/routes/dashboardRoute.js",
+        "operationId": "get_dashboard__api_dashboard_cache_stats",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/risk-analysis": {
+      "get": {
+        "tags": [
+          "Dashboard - Risk Analysis"
+        ],
+        "summary": "GET /api/dashboard/risk-analysis",
+        "description": "Generated from src/routes/riskAnalysisRoute.js",
+        "operationId": "get_riskAnalysis__api_dashboard_risk_analysis",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/risk-analysis/core": {
+      "get": {
+        "tags": [
+          "Dashboard - Risk Analysis"
+        ],
+        "summary": "GET /api/dashboard/risk-analysis/core",
+        "description": "Generated from src/routes/riskAnalysisRoute.js",
+        "operationId": "get_riskAnalysis__api_dashboard_risk_analysis_core",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/risk-analysis/margin-exposure": {
+      "get": {
+        "tags": [
+          "Dashboard - Risk Analysis"
+        ],
+        "summary": "GET /api/dashboard/risk-analysis/margin-exposure",
+        "description": "Generated from src/routes/riskAnalysisRoute.js",
+        "operationId": "get_riskAnalysis__api_dashboard_risk_analysis_margin_exposure",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/risk-analysis/double-exposure": {
+      "get": {
+        "tags": [
+          "Dashboard - Risk Analysis"
+        ],
+        "summary": "GET /api/dashboard/risk-analysis/double-exposure",
+        "description": "Generated from src/routes/riskAnalysisRoute.js",
+        "operationId": "get_riskAnalysis__api_dashboard_risk_analysis_double_exposure",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/risk-analysis/light-charts": {
+      "get": {
+        "tags": [
+          "Dashboard - Risk Analysis"
+        ],
+        "summary": "GET /api/dashboard/risk-analysis/light-charts",
+        "description": "Generated from src/routes/riskAnalysisRoute.js",
+        "operationId": "get_riskAnalysis__api_dashboard_risk_analysis_light_charts",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/behavior-analysis": {
+      "get": {
+        "tags": [
+          "Dashboard - Behavior Analysis"
+        ],
+        "summary": "GET /api/dashboard/behavior-analysis",
+        "description": "Generated from src/routes/behaviorAnalysisRoute.js",
+        "operationId": "get_behaviorAnalysis__api_dashboard_behavior_analysis",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/behavior-analysis/strategy-detail": {
+      "get": {
+        "tags": [
+          "Dashboard - Behavior Analysis"
+        ],
+        "summary": "GET /api/dashboard/behavior-analysis/strategy-detail",
+        "description": "Generated from src/routes/behaviorAnalysisRoute.js",
+        "operationId": "get_behaviorAnalysis__api_dashboard_behavior_analysis_strategy_detail",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/behavior-analysis/core": {
+      "get": {
+        "tags": [
+          "Dashboard - Behavior Analysis"
+        ],
+        "summary": "GET /api/dashboard/behavior-analysis/core",
+        "description": "Generated from src/routes/behaviorAnalysisRoute.js",
+        "operationId": "get_behaviorAnalysis__api_dashboard_behavior_analysis_core",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/behavior-analysis/activity": {
+      "get": {
+        "tags": [
+          "Dashboard - Behavior Analysis"
+        ],
+        "summary": "GET /api/dashboard/behavior-analysis/activity",
+        "description": "Generated from src/routes/behaviorAnalysisRoute.js",
+        "operationId": "get_behaviorAnalysis__api_dashboard_behavior_analysis_activity",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/behavior-analysis/holding-recovery": {
+      "get": {
+        "tags": [
+          "Dashboard - Behavior Analysis"
+        ],
+        "summary": "GET /api/dashboard/behavior-analysis/holding-recovery",
+        "description": "Generated from src/routes/behaviorAnalysisRoute.js",
+        "operationId": "get_behaviorAnalysis__api_dashboard_behavior_analysis_holding_recovery",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/behavior-analysis/exit": {
+      "get": {
+        "tags": [
+          "Dashboard - Behavior Analysis"
+        ],
+        "summary": "GET /api/dashboard/behavior-analysis/exit",
+        "description": "Generated from src/routes/behaviorAnalysisRoute.js",
+        "operationId": "get_behaviorAnalysis__api_dashboard_behavior_analysis_exit",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/comparative-ranking": {
+      "get": {
+        "tags": [
+          "Dashboard - Comparative Ranking"
+        ],
+        "summary": "GET /api/dashboard/comparative-ranking",
+        "description": "Generated from src/routes/comparativeRankingRoute.js",
+        "operationId": "get_comparativeRanking__api_dashboard_comparative_ranking",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/comparative-ranking/core": {
+      "get": {
+        "tags": [
+          "Dashboard - Comparative Ranking"
+        ],
+        "summary": "GET /api/dashboard/comparative-ranking/core",
+        "description": "Generated from src/routes/comparativeRankingRoute.js",
+        "operationId": "get_comparativeRanking__api_dashboard_comparative_ranking_core",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/comparative-ranking/dimensions": {
+      "get": {
+        "tags": [
+          "Dashboard - Comparative Ranking"
+        ],
+        "summary": "GET /api/dashboard/comparative-ranking/dimensions",
+        "description": "Generated from src/routes/comparativeRankingRoute.js",
+        "operationId": "get_comparativeRanking__api_dashboard_comparative_ranking_dimensions",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/ai-analysis": {
+      "get": {
+        "tags": [
+          "Dashboard - AI Analysis"
+        ],
+        "summary": "GET /api/dashboard/ai-analysis",
+        "description": "Generated from src/routes/aiAnalysisRoute.js",
+        "operationId": "get_aiAnalysis__api_dashboard_ai_analysis",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/ai-analysis/refresh": {
+      "post": {
+        "tags": [
+          "Dashboard - AI Analysis"
+        ],
+        "summary": "POST /api/dashboard/ai-analysis/refresh",
+        "description": "Generated from src/routes/aiAnalysisRoute.js",
+        "operationId": "post_aiAnalysis__api_dashboard_ai_analysis_refresh",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/dashboard/remarks": {
+      "get": {
+        "tags": [
+          "Dashboard - AI Analysis"
+        ],
+        "summary": "GET /api/dashboard/remarks",
+        "description": "Generated from src/routes/aiAnalysisRoute.js",
+        "operationId": "get_aiAnalysis__api_dashboard_remarks",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Dashboard - AI Analysis"
+        ],
+        "summary": "POST /api/dashboard/remarks",
+        "description": "Generated from src/routes/aiAnalysisRoute.js",
+        "operationId": "post_aiAnalysis__api_dashboard_remarks",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "tableName": "{{backtest_table}}",
+                "strategyId": "{{strategy_id}}",
+                "remarks": "QA test remark"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/lot-threshold/run": {
+      "post": {
+        "tags": [
+          "Volume Optimization"
+        ],
+        "summary": "POST /api/lot-threshold/run",
+        "description": "Generated from src/routes/lotThresholdRoute.js",
+        "operationId": "post_lotThreshold__api_lot_threshold_run",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "name": "Postman Volume OP",
+                "sourceTables": [
+                  "{{backtest_table}}"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/lot-threshold/status/{syncId}": {
+      "get": {
+        "tags": [
+          "Volume Optimization"
+        ],
+        "summary": "GET /api/lot-threshold/status/:syncId",
+        "description": "Generated from src/routes/lotThresholdRoute.js",
+        "operationId": "get_lotThreshold__api_lot_threshold_status_syncId",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "syncId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/lot-threshold/results": {
+      "get": {
+        "tags": [
+          "Volume Optimization"
+        ],
+        "summary": "GET /api/lot-threshold/results",
+        "description": "Generated from src/routes/lotThresholdRoute.js",
+        "operationId": "get_lotThreshold__api_lot_threshold_results",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/lot-threshold/optimal": {
+      "get": {
+        "tags": [
+          "Volume Optimization"
+        ],
+        "summary": "GET /api/lot-threshold/optimal",
+        "description": "Generated from src/routes/lotThresholdRoute.js",
+        "operationId": "get_lotThreshold__api_lot_threshold_optimal",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/lot-threshold/time-range": {
+      "get": {
+        "tags": [
+          "Volume Optimization"
+        ],
+        "summary": "GET /api/lot-threshold/time-range",
+        "description": "Generated from src/routes/lotThresholdRoute.js",
+        "operationId": "get_lotThreshold__api_lot_threshold_time_range",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/lot-threshold/runs": {
+      "get": {
+        "tags": [
+          "Volume Optimization"
+        ],
+        "summary": "GET /api/lot-threshold/runs",
+        "description": "Generated from src/routes/lotThresholdRoute.js",
+        "operationId": "get_lotThreshold__api_lot_threshold_runs",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/lot-threshold/selection": {
+      "put": {
+        "tags": [
+          "Volume Optimization"
+        ],
+        "summary": "PUT /api/lot-threshold/selection",
+        "description": "Generated from src/routes/lotThresholdRoute.js",
+        "operationId": "put_lotThreshold__api_lot_threshold_selection",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "analysisRunId": "{{analysis_run_id}}",
+                "strategyId": "{{strategy_id}}",
+                "sourceTable": "{{backtest_table}}",
+                "lotThreshold": 1
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/lot-threshold/selection/reset": {
+      "post": {
+        "tags": [
+          "Volume Optimization"
+        ],
+        "summary": "POST /api/lot-threshold/selection/reset",
+        "description": "Generated from src/routes/lotThresholdRoute.js",
+        "operationId": "post_lotThreshold__api_lot_threshold_selection_reset",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "analysisRunId": "{{analysis_run_id}}",
+                "strategyId": "{{strategy_id}}",
+                "sourceTable": "{{backtest_table}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/lot-threshold/runs/{analysisRunId}": {
+      "delete": {
+        "tags": [
+          "Volume Optimization"
+        ],
+        "summary": "DELETE /api/lot-threshold/runs/:analysisRunId",
+        "description": "Generated from src/routes/lotThresholdRoute.js",
+        "operationId": "delete_lotThreshold__api_lot_threshold_runs_analysisRunId",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "analysisRunId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/market/prices": {
+      "get": {
+        "tags": [
+          "Market Watch"
+        ],
+        "summary": "GET /api/market/prices",
+        "description": "Generated from src/routes/marketRoute.js",
+        "operationId": "get_market__api_market_prices",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/market/symbol-stats/{symbol}": {
+      "get": {
+        "tags": [
+          "Market Watch"
+        ],
+        "summary": "GET /api/market/symbol-stats/:symbol",
+        "description": "Generated from src/routes/marketRoute.js",
+        "operationId": "get_market__api_market_symbol_stats_symbol",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/market/news/{symbol}": {
+      "get": {
+        "tags": [
+          "Market Watch"
+        ],
+        "summary": "GET /api/market/news/:symbol",
+        "description": "Generated from src/routes/marketRoute.js",
+        "operationId": "get_market__api_market_news_symbol",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": []
+      }
+    },
+    "/api/market/candles/{symbol}": {
+      "get": {
+        "tags": [
+          "Market Watch"
+        ],
+        "summary": "GET /api/market/candles/:symbol",
+        "description": "Generated from src/routes/marketRoute.js",
+        "operationId": "get_market__api_market_candles_symbol",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": []
+      }
+    },
+    "/api/chat/models": {
+      "get": {
+        "tags": [
+          "AI Chat"
+        ],
+        "summary": "GET /api/chat/models",
+        "description": "Generated from src/routes/chatRoute.js",
+        "operationId": "get_chat__api_chat_models",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/chat/send": {
+      "post": {
+        "tags": [
+          "AI Chat"
+        ],
+        "summary": "POST /api/chat/send",
+        "description": "Generated from src/routes/chatRoute.js",
+        "operationId": "post_chat__api_chat_send",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "message": "Hello",
+                "model": ""
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/profile": {
+      "get": {
+        "tags": [
+          "Users & Accounts"
+        ],
+        "summary": "GET /api/users/profile",
+        "description": "Generated from src/routes/userRoute.js",
+        "operationId": "get_user__api_users_profile",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Users & Accounts"
+        ],
+        "summary": "PUT /api/users/profile",
+        "description": "Generated from src/routes/userRoute.js",
+        "operationId": "put_user__api_users_profile",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "Users & Accounts"
+        ],
+        "summary": "GET /api/users",
+        "description": "Generated from src/routes/userRoute.js",
+        "operationId": "get_user__api_users",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Users & Accounts"
+        ],
+        "summary": "POST /api/users",
+        "description": "Generated from src/routes/userRoute.js",
+        "operationId": "post_user__api_users",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/{id}": {
+      "put": {
+        "tags": [
+          "Users & Accounts"
+        ],
+        "summary": "PUT /api/users/:id",
+        "description": "Generated from src/routes/userRoute.js",
+        "operationId": "put_user__api_users_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Users & Accounts"
+        ],
+        "summary": "DELETE /api/users/:id",
+        "description": "Generated from src/routes/userRoute.js",
+        "operationId": "delete_user__api_users_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/latest-backtest": {
+      "get": {
+        "tags": [
+          "System & Activity Logs"
+        ],
+        "summary": "GET /api/latest-backtest",
+        "description": "Generated from src/routes/systemLogRoute.js",
+        "operationId": "get_systemLog__api_latest_backtest",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/history/{tableName}": {
+      "get": {
+        "tags": [
+          "System & Activity Logs"
+        ],
+        "summary": "GET /api/history/:tableName",
+        "description": "Generated from src/routes/systemLogRoute.js",
+        "operationId": "get_systemLog__api_history_tableName",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/all": {
+      "get": {
+        "tags": [
+          "System & Activity Logs"
+        ],
+        "summary": "GET /api/all",
+        "description": "Generated from src/routes/systemLogRoute.js",
+        "operationId": "get_systemLog__api_all",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/cleanup": {
+      "delete": {
+        "tags": [
+          "System & Activity Logs"
+        ],
+        "summary": "DELETE /api/cleanup",
+        "description": "Generated from src/routes/systemLogRoute.js",
+        "operationId": "delete_systemLog__api_cleanup",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/activity/{tableName}": {
+      "get": {
+        "tags": [
+          "System & Activity Logs"
+        ],
+        "summary": "GET /api/activity/:tableName",
+        "description": "Generated from src/routes/systemLogRoute.js",
+        "operationId": "get_systemLog__api_activity_tableName",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/sync-jobs/{syncId}/issues/{issueType}/download": {
+      "get": {
+        "tags": [
+          "System & Activity Logs"
+        ],
+        "summary": "GET /api/sync-jobs/:syncId/issues/:issueType/download",
+        "description": "Generated from src/routes/systemLogRoute.js",
+        "operationId": "get_systemLog__api_sync_jobs_syncId_issues_issueType_download",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "syncId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "issueType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/table/{tableName}": {
+      "delete": {
+        "tags": [
+          "System & Activity Logs"
+        ],
+        "summary": "DELETE /api/table/:tableName",
+        "description": "Generated from src/routes/systemLogRoute.js",
+        "operationId": "delete_systemLog__api_table_tableName",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/notifications": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "GET /api/notifications",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "get_notification__api_notifications",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/notifications/unread-count": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "GET /api/notifications/unread-count",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "get_notification__api_notifications_unread_count",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/notifications/preferences": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "GET /api/notifications/preferences",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "get_notification__api_notifications_preferences",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "PATCH /api/notifications/preferences",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "patch_notification__api_notifications_preferences",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "enabled": true
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/notifications/read-all": {
+      "patch": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "PATCH /api/notifications/read-all",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "patch_notification__api_notifications_read_all",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "POST /api/notifications/read-all",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "post_notification__api_notifications_read_all",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/notifications/all": {
+      "delete": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "DELETE /api/notifications/all",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "delete_notification__api_notifications_all",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/notifications/{id}/read": {
+      "patch": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "PATCH /api/notifications/:id/read",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "patch_notification__api_notifications_id_read",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "POST /api/notifications/:id/read",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "post_notification__api_notifications_id_read",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/notifications/{id}": {
+      "delete": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "DELETE /api/notifications/:id",
+        "description": "Generated from src/routes/notificationRoute.js",
+        "operationId": "delete_notification__api_notifications_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/sessions": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/sessions",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_sessions",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/sessions",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_sessions",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "name": "Postman Test Session",
+                "description": "Created by QA"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/sessions/{id}": {
+      "patch": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "PATCH /api/mt5-optimization/sessions/:id",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "patch_mt5Optimization__api_mt5_optimization_sessions_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "name": "Updated Session"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "DELETE /api/mt5-optimization/sessions/:id",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "delete_mt5Optimization__api_mt5_optimization_sessions_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/sessions/{id}/cleanup-preview": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/sessions/:id/cleanup-preview",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_sessions_id_cleanup_preview",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/sessions/{id}/purge-unused-results": {
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/sessions/:id/purge-unused-results",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_sessions_id_purge_unused_results",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/sessions/{id}/delete-preview": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/sessions/:id/delete-preview",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_sessions_id_delete_preview",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/sessions/{id}/running-backtests": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/sessions/:id/running-backtests",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_sessions_id_running_backtests",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/sessions/{id}/results-state": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/sessions/:id/results-state",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_sessions_id_results_state",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/api-keys": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/api-keys",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_api_keys",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/api-keys",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_api_keys",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/api-keys/{id}/revoke": {
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/api-keys/:id/revoke",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_api_keys_id_revoke",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/api-keys/{id}": {
+      "delete": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "DELETE /api/mt5-optimization/api-keys/:id",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "delete_mt5Optimization__api_mt5_optimization_api_keys_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/workers": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/workers",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_workers",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/workers/{id}": {
+      "patch": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "PATCH /api/mt5-optimization/workers/:id",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "patch_mt5Optimization__api_mt5_optimization_workers_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "DELETE /api/mt5-optimization/workers/:id",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "delete_mt5Optimization__api_mt5_optimization_workers_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/jobs": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/jobs",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_jobs",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/jobs",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_jobs",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "session_id": "{{session_id}}",
+                "jobs": []
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/jobs/every-tick": {
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/jobs/every-tick",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_jobs_every_tick",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "session_id": "{{session_id}}",
+                "result_ids": []
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/jobs/{id}/cancel": {
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/jobs/:id/cancel",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_jobs_id_cancel",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/jobs/{id}/retry": {
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/jobs/:id/retry",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_jobs_id_retry",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/jobs/{id}": {
+      "delete": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "DELETE /api/mt5-optimization/jobs/:id",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "delete_mt5Optimization__api_mt5_optimization_jobs_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/results": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/results",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_results",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/results-summary": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/results-summary",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_results_summary",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/results/{id}": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/results/:id",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_results_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/results/{id}/watchlist": {
+      "patch": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "PATCH /api/mt5-optimization/results/:id/watchlist",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "patch_mt5Optimization__api_mt5_optimization_results_id_watchlist",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "selected": true
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/results/{id}/backtest-candidate": {
+      "patch": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "PATCH /api/mt5-optimization/results/:id/backtest-candidate",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "patch_mt5Optimization__api_mt5_optimization_results_id_backtest_candidate",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "selected": true
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/results/{id}/start-backtest": {
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/results/:id/start-backtest",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_results_id_start_backtest",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/backtest-candidates": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/backtest-candidates",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_backtest_candidates",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/backtest-candidates/auto-review": {
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/backtest-candidates/auto-review",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_backtest_candidates_auto_review",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "session_id": "{{session_id}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/backtest-candidates/{id}/sparkline": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/backtest-candidates/:id/sparkline",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_backtest_candidates_id_sparkline",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/backtest-candidates/{id}": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/backtest-candidates/:id",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_backtest_candidates_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "DELETE /api/mt5-optimization/backtest-candidates/:id",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "delete_mt5Optimization__api_mt5_optimization_backtest_candidates_id",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/backtest-candidates/{id}/staging": {
+      "patch": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "PATCH /api/mt5-optimization/backtest-candidates/:id/staging",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "patch_mt5Optimization__api_mt5_optimization_backtest_candidates_id_staging",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "selected": true
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/backtest-candidates/{id}/sync": {
+      "post": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "POST /api/mt5-optimization/backtest-candidates/:id/sync",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "post_mt5Optimization__api_mt5_optimization_backtest_candidates_id_sync",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-optimization/logs": {
+      "get": {
+        "tags": [
+          "MT5 Optimization - Web"
+        ],
+        "summary": "GET /api/mt5-optimization/logs",
+        "description": "Generated from src/routes/mt5OptimizationRoute.js",
+        "operationId": "get_mt5Optimization__api_mt5_optimization_logs",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/mt5-queue/health": {
+      "get": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "GET /api/mt5-queue/health",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "get_mt5Worker__api_mt5_queue_health",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/apikeys/verify": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /api/v1/apikeys/verify",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__api_v1_apikeys_verify",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "api_key": "{{worker_api_key}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/claim": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/claim",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_claim",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "worker_name": "{{worker_name}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/statuses": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/statuses",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_statuses",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "job_ids": []
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/heartbeat": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/heartbeat",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_heartbeat",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "job_id": "{{job_id}}",
+                "worker_name": "{{worker_name}}",
+                "progress": 0
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/done": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/done",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_done",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "job_id": "{{job_id}}",
+                "worker_name": "{{worker_name}}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/fail": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/fail",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_fail",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "job_id": "{{job_id}}",
+                "worker_name": "{{worker_name}}",
+                "error": "QA test error"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/workers/heartbeat": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /workers/heartbeat",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__workers_heartbeat",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "worker_name": "{{worker_name}}",
+                "status": "active"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/workers/{worker}": {
+      "get": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "GET /workers/:worker",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "get_mt5Worker__workers_worker",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "worker",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/artifacts/jobs/{id}/download": {
+      "get": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "GET /artifacts/jobs/:id/download",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "get_mt5Worker__artifacts_jobs_id_download",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/{id}/artifacts/upload": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/:id/artifacts/upload",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_id_artifacts_upload",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/{id}/artifacts/upload-chunk": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/:id/artifacts/upload-chunk",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_id_artifacts_upload_chunk",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/{id}/artifacts/result/status": {
+      "get": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "GET /jobs/:id/artifacts/result/status",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "get_mt5Worker__jobs_id_artifacts_result_status",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/{id}/artifacts/result/download": {
+      "get": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "GET /jobs/:id/artifacts/result/download",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "get_mt5Worker__jobs_id_artifacts_result_download",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/{id}/optimize-results/session/start": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/:id/optimize-results/session/start",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_id_optimize_results_session_start",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/{id}/optimize-results/session/chunk": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/:id/optimize-results/session/chunk",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_id_optimize_results_session_chunk",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/{id}/optimize-results/session/finalize": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/:id/optimize-results/session/finalize",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_id_optimize_results_session_finalize",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/{id}/optimize-results": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/:id/optimize-results",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_id_optimize_results",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    },
+    "/jobs/{id}/backtest-results": {
+      "post": {
+        "tags": [
+          "MT5 Worker Protocol"
+        ],
+        "summary": "POST /jobs/:id/backtest-results",
+        "description": "Generated from src/routes/mt5WorkerRoute.js",
+        "operationId": "post_mt5Worker__jobs_id_backtest_results",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {}
+            }
+          }
+        },
+        "security": [
+          {
+            "workerApiKey": []
+          }
+        ]
+      }
+    }
+  }
+}

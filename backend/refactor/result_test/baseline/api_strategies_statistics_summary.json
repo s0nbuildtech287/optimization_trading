@@ -1,0 +1,8 @@
+{
+  "statusCode": 200,
+  "body": {
+    "total_strategies": "7450",
+    "unique_symbols": "9",
+    "unique_experts": "0"
+  }
+}

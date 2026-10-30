@@ -1,0 +1,3855 @@
+{
+  "info": {
+    "_postman_id": "4dbaf935-cb2c-45b0-9677-b5f9358e3301",
+    "name": "LotusQuant All APIs (158 routes)",
+    "description": "Generated from the actual Express route files. Login first to populate access_token automatically. Destructive endpoints are included but are never executed automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [],
+  "variable": [],
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "Generated from src/routes/authRoute.js",
+      "item": [
+        {
+          "name": "POST /auth/register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/auth/register",
+            "description": "Actual Express route: POST /auth/register",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"otp\": \"{{otp}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/auth/login",
+            "description": "Actual Express route: POST /auth/login",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "  const json = pm.response.json();",
+                  "  const token = json.accessToken || json.token || json.data?.accessToken || json.data?.token;",
+                  "  if (token) pm.environment.set(\"access_token\", token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /auth/request-otp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/auth/request-otp",
+            "description": "Actual Express route: POST /auth/request-otp",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Backtest Tables & Orders",
+      "description": "Generated from src/routes/opRoute.js",
+      "item": [
+        {
+          "name": "POST /api/sync-sheet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/sync-sheet",
+            "description": "Actual Express route: POST /api/sync-sheet",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tableName\": \"{{backtest_table}}\",\n  \"driveFolderUrl\": \"{{drive_folder_url}}\",\n  \"runType\": \"NEW_RUN\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/sync-sheet-async",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/sync-sheet-async",
+            "description": "Actual Express route: POST /api/sync-sheet-async",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tableName\": \"{{backtest_table}}\",\n  \"driveFolderUrl\": \"{{drive_folder_url}}\",\n  \"runType\": \"NEW_RUN\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/sync-status/:syncId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/sync-status/:syncId",
+            "description": "Actual Express route: GET /api/sync-status/:syncId"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/sync-status/:syncId/cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/sync-status/:syncId/cancel",
+            "description": "Actual Express route: POST /api/sync-status/:syncId/cancel",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/clear-table",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/clear-table",
+            "description": "Actual Express route: DELETE /api/clear-table"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/clear-data",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/clear-data",
+            "description": "Actual Express route: DELETE /api/clear-data"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/update-row",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/update-row",
+            "description": "Actual Express route: POST /api/update-row",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/data/totals",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/data/totals",
+            "description": "Actual Express route: GET /api/data/totals"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/data",
+            "description": "Actual Express route: GET /api/data"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/download-log",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/download-log",
+            "description": "Actual Express route: GET /api/download-log"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/filter-options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/filter-options",
+            "description": "Actual Express route: GET /api/filter-options"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/balance-chart/:tableName/:strategyId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/balance-chart/:tableName/:strategyId",
+            "description": "Actual Express route: GET /api/balance-chart/:tableName/:strategyId"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/backtest-tables",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/backtest-tables",
+            "description": "Actual Express route: GET /api/backtest-tables"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/data-sources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/data-sources",
+            "description": "Actual Express route: GET /api/data-sources"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/backtest-tables",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/backtest-tables",
+            "description": "Actual Express route: POST /api/backtest-tables",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tableName\": \"{{backtest_table}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/backtest-tables/:tableName",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/backtest-tables/:tableName",
+            "description": "Actual Express route: DELETE /api/backtest-tables/:tableName"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/data-sources/:sourceName/owner",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/data-sources/:sourceName/owner",
+            "description": "Actual Express route: PATCH /api/data-sources/:sourceName/owner",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ownerUserId\": \"{{user_id}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/check-files",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/check-files",
+            "description": "Actual Express route: POST /api/check-files",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": [],
+                  "description": "Select one or more files"
+                },
+                {
+                  "key": "driveUrl",
+                  "type": "text",
+                  "value": "{{drive_folder_url}}",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/drive-summary-async",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/drive-summary-async",
+            "description": "Actual Express route: POST /api/drive-summary-async",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"driveFolderUrl\": \"{{drive_folder_url}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/strategy-file-check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategy-file-check",
+            "description": "Actual Express route: GET /api/strategy-file-check"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Strategies",
+      "description": "Generated from src/routes/strategyRoutes.js",
+      "item": [
+        {
+          "name": "GET /api/strategies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies",
+            "description": "Actual Express route: GET /api/strategies"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/strategies/cache/clear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/cache/clear",
+            "description": "Actual Express route: POST /api/strategies/cache/clear",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/strategies/by-time-range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/by-time-range",
+            "description": "Actual Express route: GET /api/strategies/by-time-range"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/strategies/ids",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/ids",
+            "description": "Actual Express route: GET /api/strategies/ids"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/strategies/symbols/distinct",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/symbols/distinct",
+            "description": "Actual Express route: GET /api/strategies/symbols/distinct"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/strategies/statistics/summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/statistics/summary",
+            "description": "Actual Express route: GET /api/strategies/statistics/summary"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/strategies/sheet/download/:sheetId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/sheet/download/:sheetId",
+            "description": "Actual Express route: GET /api/strategies/sheet/download/:sheetId"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/strategies/service-accounts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/service-accounts",
+            "description": "Actual Express route: GET /api/strategies/service-accounts"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/strategies/get-from-folder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/get-from-folder",
+            "description": "Actual Express route: POST /api/strategies/get-from-folder",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/strategies/:strategyId/:backtestTable",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/:strategyId/:backtestTable",
+            "description": "Actual Express route: GET /api/strategies/:strategyId/:backtestTable"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/strategies/:strategyId/:backtestTable",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/:strategyId/:backtestTable",
+            "description": "Actual Express route: DELETE /api/strategies/:strategyId/:backtestTable"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/strategies/:strategyId",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/:strategyId",
+            "description": "Actual Express route: DELETE /api/strategies/:strategyId"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/strategies/preferences",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/preferences",
+            "description": "Actual Express route: GET /api/strategies/preferences"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/strategies/preferences",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/strategies/preferences",
+            "description": "Actual Express route: PUT /api/strategies/preferences",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard Overview",
+      "description": "Generated from src/routes/dashboardRoute.js",
+      "item": [
+        {
+          "name": "GET /api/dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard",
+            "description": "Actual Express route: GET /api/dashboard"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/overview/core",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/overview/core",
+            "description": "Actual Express route: GET /api/dashboard/overview/core"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/overview/monthly-profit",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/overview/monthly-profit",
+            "description": "Actual Express route: GET /api/dashboard/overview/monthly-profit"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/overview/top-stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/overview/top-stats",
+            "description": "Actual Express route: GET /api/dashboard/overview/top-stats"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/overview/yearly-performance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/overview/yearly-performance",
+            "description": "Actual Express route: GET /api/dashboard/overview/yearly-performance"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/overview/behavior-summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/overview/behavior-summary",
+            "description": "Actual Express route: GET /api/dashboard/overview/behavior-summary"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/overview/comparative",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/overview/comparative",
+            "description": "Actual Express route: GET /api/dashboard/overview/comparative"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/overview/breakdown",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/overview/breakdown",
+            "description": "Actual Express route: GET /api/dashboard/overview/breakdown"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/dashboard/clear-cache",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/clear-cache",
+            "description": "Actual Express route: POST /api/dashboard/clear-cache",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/cache-stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/cache-stats",
+            "description": "Actual Express route: GET /api/dashboard/cache-stats"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard - Risk Analysis",
+      "description": "Generated from src/routes/riskAnalysisRoute.js",
+      "item": [
+        {
+          "name": "GET /api/dashboard/risk-analysis",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/risk-analysis",
+            "description": "Actual Express route: GET /api/dashboard/risk-analysis"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/risk-analysis/core",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/risk-analysis/core",
+            "description": "Actual Express route: GET /api/dashboard/risk-analysis/core"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/risk-analysis/margin-exposure",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/risk-analysis/margin-exposure",
+            "description": "Actual Express route: GET /api/dashboard/risk-analysis/margin-exposure"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/risk-analysis/double-exposure",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/risk-analysis/double-exposure",
+            "description": "Actual Express route: GET /api/dashboard/risk-analysis/double-exposure"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/risk-analysis/light-charts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/risk-analysis/light-charts",
+            "description": "Actual Express route: GET /api/dashboard/risk-analysis/light-charts"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard - Behavior Analysis",
+      "description": "Generated from src/routes/behaviorAnalysisRoute.js",
+      "item": [
+        {
+          "name": "GET /api/dashboard/behavior-analysis",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/behavior-analysis",
+            "description": "Actual Express route: GET /api/dashboard/behavior-analysis"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/behavior-analysis/strategy-detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/behavior-analysis/strategy-detail",
+            "description": "Actual Express route: GET /api/dashboard/behavior-analysis/strategy-detail"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/behavior-analysis/core",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/behavior-analysis/core",
+            "description": "Actual Express route: GET /api/dashboard/behavior-analysis/core"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/behavior-analysis/activity",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/behavior-analysis/activity",
+            "description": "Actual Express route: GET /api/dashboard/behavior-analysis/activity"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/behavior-analysis/holding-recovery",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/behavior-analysis/holding-recovery",
+            "description": "Actual Express route: GET /api/dashboard/behavior-analysis/holding-recovery"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/behavior-analysis/exit",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/behavior-analysis/exit",
+            "description": "Actual Express route: GET /api/dashboard/behavior-analysis/exit"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard - Comparative Ranking",
+      "description": "Generated from src/routes/comparativeRankingRoute.js",
+      "item": [
+        {
+          "name": "GET /api/dashboard/comparative-ranking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/comparative-ranking",
+            "description": "Actual Express route: GET /api/dashboard/comparative-ranking"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/comparative-ranking/core",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/comparative-ranking/core",
+            "description": "Actual Express route: GET /api/dashboard/comparative-ranking/core"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/comparative-ranking/dimensions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/comparative-ranking/dimensions",
+            "description": "Actual Express route: GET /api/dashboard/comparative-ranking/dimensions"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard - AI Analysis",
+      "description": "Generated from src/routes/aiAnalysisRoute.js",
+      "item": [
+        {
+          "name": "GET /api/dashboard/ai-analysis",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/ai-analysis",
+            "description": "Actual Express route: GET /api/dashboard/ai-analysis"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/dashboard/ai-analysis/refresh",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/ai-analysis/refresh",
+            "description": "Actual Express route: POST /api/dashboard/ai-analysis/refresh",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/dashboard/remarks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/remarks",
+            "description": "Actual Express route: GET /api/dashboard/remarks"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/dashboard/remarks",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/dashboard/remarks",
+            "description": "Actual Express route: POST /api/dashboard/remarks",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tableName\": \"{{backtest_table}}\",\n  \"strategyId\": \"{{strategy_id}}\",\n  \"remarks\": \"QA test remark\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Volume Optimization",
+      "description": "Generated from src/routes/lotThresholdRoute.js",
+      "item": [
+        {
+          "name": "POST /api/lot-threshold/run",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/lot-threshold/run",
+            "description": "Actual Express route: POST /api/lot-threshold/run",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Volume OP\",\n  \"sourceTables\": [\n    \"{{backtest_table}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/lot-threshold/status/:syncId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/lot-threshold/status/:syncId",
+            "description": "Actual Express route: GET /api/lot-threshold/status/:syncId"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/lot-threshold/results",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/lot-threshold/results",
+            "description": "Actual Express route: GET /api/lot-threshold/results"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/lot-threshold/optimal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/lot-threshold/optimal",
+            "description": "Actual Express route: GET /api/lot-threshold/optimal"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/lot-threshold/time-range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/lot-threshold/time-range",
+            "description": "Actual Express route: GET /api/lot-threshold/time-range"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/lot-threshold/runs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/lot-threshold/runs",
+            "description": "Actual Express route: GET /api/lot-threshold/runs"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/lot-threshold/selection",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/lot-threshold/selection",
+            "description": "Actual Express route: PUT /api/lot-threshold/selection",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"analysisRunId\": \"{{analysis_run_id}}\",\n  \"strategyId\": \"{{strategy_id}}\",\n  \"sourceTable\": \"{{backtest_table}}\",\n  \"lotThreshold\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/lot-threshold/selection/reset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/lot-threshold/selection/reset",
+            "description": "Actual Express route: POST /api/lot-threshold/selection/reset",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"analysisRunId\": \"{{analysis_run_id}}\",\n  \"strategyId\": \"{{strategy_id}}\",\n  \"sourceTable\": \"{{backtest_table}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/lot-threshold/runs/:analysisRunId",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/lot-threshold/runs/:analysisRunId",
+            "description": "Actual Express route: DELETE /api/lot-threshold/runs/:analysisRunId"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Market Watch",
+      "description": "Generated from src/routes/marketRoute.js",
+      "item": [
+        {
+          "name": "GET /api/market/prices",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/market/prices",
+            "description": "Actual Express route: GET /api/market/prices",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/market/symbol-stats/:symbol",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/market/symbol-stats/:symbol",
+            "description": "Actual Express route: GET /api/market/symbol-stats/:symbol"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/market/news/:symbol",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/market/news/:symbol",
+            "description": "Actual Express route: GET /api/market/news/:symbol",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/market/candles/:symbol",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/market/candles/:symbol",
+            "description": "Actual Express route: GET /api/market/candles/:symbol",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AI Chat",
+      "description": "Generated from src/routes/chatRoute.js",
+      "item": [
+        {
+          "name": "GET /api/chat/models",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/chat/models",
+            "description": "Actual Express route: GET /api/chat/models"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/chat/send",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/chat/send",
+            "description": "Actual Express route: POST /api/chat/send",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Hello\",\n  \"model\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users & Accounts",
+      "description": "Generated from src/routes/userRoute.js",
+      "item": [
+        {
+          "name": "GET /api/users/profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/users/profile",
+            "description": "Actual Express route: GET /api/users/profile"
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/users/profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/users/profile",
+            "description": "Actual Express route: PUT /api/users/profile",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/users",
+            "description": "Actual Express route: GET /api/users"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/users",
+            "description": "Actual Express route: POST /api/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/users/:id",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/users/:id",
+            "description": "Actual Express route: PUT /api/users/:id",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/users/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/users/:id",
+            "description": "Actual Express route: DELETE /api/users/:id"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "System & Activity Logs",
+      "description": "Generated from src/routes/systemLogRoute.js",
+      "item": [
+        {
+          "name": "GET /api/latest-backtest",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/latest-backtest",
+            "description": "Actual Express route: GET /api/latest-backtest"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/history/:tableName",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/history/:tableName",
+            "description": "Actual Express route: GET /api/history/:tableName"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/all",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/all",
+            "description": "Actual Express route: GET /api/all"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/cleanup",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cleanup",
+            "description": "Actual Express route: DELETE /api/cleanup"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/activity/:tableName",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/activity/:tableName",
+            "description": "Actual Express route: GET /api/activity/:tableName"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/sync-jobs/:syncId/issues/:issueType/download",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/sync-jobs/:syncId/issues/:issueType/download",
+            "description": "Actual Express route: GET /api/sync-jobs/:syncId/issues/:issueType/download"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/table/:tableName",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/table/:tableName",
+            "description": "Actual Express route: DELETE /api/table/:tableName"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "description": "Generated from src/routes/notificationRoute.js",
+      "item": [
+        {
+          "name": "GET /api/notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications",
+            "description": "Actual Express route: GET /api/notifications"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/notifications/unread-count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications/unread-count",
+            "description": "Actual Express route: GET /api/notifications/unread-count"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/notifications/preferences",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications/preferences",
+            "description": "Actual Express route: GET /api/notifications/preferences"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/notifications/preferences",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications/preferences",
+            "description": "Actual Express route: PATCH /api/notifications/preferences",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/notifications/read-all",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications/read-all",
+            "description": "Actual Express route: PATCH /api/notifications/read-all",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/notifications/read-all",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications/read-all",
+            "description": "Actual Express route: POST /api/notifications/read-all",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/notifications/all",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications/all",
+            "description": "Actual Express route: DELETE /api/notifications/all"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/notifications/:id/read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications/:id/read",
+            "description": "Actual Express route: PATCH /api/notifications/:id/read",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/notifications/:id/read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications/:id/read",
+            "description": "Actual Express route: POST /api/notifications/:id/read",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/notifications/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/notifications/:id",
+            "description": "Actual Express route: DELETE /api/notifications/:id"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MT5 Optimization - Web",
+      "description": "Generated from src/routes/mt5OptimizationRoute.js",
+      "item": [
+        {
+          "name": "GET /api/mt5-optimization/sessions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/sessions",
+            "description": "Actual Express route: GET /api/mt5-optimization/sessions"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/sessions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/sessions",
+            "description": "Actual Express route: POST /api/mt5-optimization/sessions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Test Session\",\n  \"description\": \"Created by QA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/mt5-optimization/sessions/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/sessions/:id",
+            "description": "Actual Express route: PATCH /api/mt5-optimization/sessions/:id",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Session\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/sessions/:id/cleanup-preview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/sessions/:id/cleanup-preview",
+            "description": "Actual Express route: GET /api/mt5-optimization/sessions/:id/cleanup-preview"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/sessions/:id/purge-unused-results",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/sessions/:id/purge-unused-results",
+            "description": "Actual Express route: POST /api/mt5-optimization/sessions/:id/purge-unused-results",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/sessions/:id/delete-preview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/sessions/:id/delete-preview",
+            "description": "Actual Express route: GET /api/mt5-optimization/sessions/:id/delete-preview"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/mt5-optimization/sessions/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/sessions/:id",
+            "description": "Actual Express route: DELETE /api/mt5-optimization/sessions/:id"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/sessions/:id/running-backtests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/sessions/:id/running-backtests",
+            "description": "Actual Express route: GET /api/mt5-optimization/sessions/:id/running-backtests"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/sessions/:id/results-state",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/sessions/:id/results-state",
+            "description": "Actual Express route: GET /api/mt5-optimization/sessions/:id/results-state"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/api-keys",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/api-keys",
+            "description": "Actual Express route: GET /api/mt5-optimization/api-keys"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/api-keys",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/api-keys",
+            "description": "Actual Express route: POST /api/mt5-optimization/api-keys",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/api-keys/:id/revoke",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/api-keys/:id/revoke",
+            "description": "Actual Express route: POST /api/mt5-optimization/api-keys/:id/revoke",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/mt5-optimization/api-keys/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/api-keys/:id",
+            "description": "Actual Express route: DELETE /api/mt5-optimization/api-keys/:id"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/workers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/workers",
+            "description": "Actual Express route: GET /api/mt5-optimization/workers"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/mt5-optimization/workers/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/workers/:id",
+            "description": "Actual Express route: PATCH /api/mt5-optimization/workers/:id",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/mt5-optimization/workers/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/workers/:id",
+            "description": "Actual Express route: DELETE /api/mt5-optimization/workers/:id"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/jobs",
+            "description": "Actual Express route: GET /api/mt5-optimization/jobs"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/jobs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/jobs",
+            "description": "Actual Express route: POST /api/mt5-optimization/jobs",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"{{session_id}}\",\n  \"jobs\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/jobs/every-tick",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/jobs/every-tick",
+            "description": "Actual Express route: POST /api/mt5-optimization/jobs/every-tick",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"{{session_id}}\",\n  \"result_ids\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/jobs/:id/cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/jobs/:id/cancel",
+            "description": "Actual Express route: POST /api/mt5-optimization/jobs/:id/cancel",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/jobs/:id/retry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/jobs/:id/retry",
+            "description": "Actual Express route: POST /api/mt5-optimization/jobs/:id/retry",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/mt5-optimization/jobs/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/jobs/:id",
+            "description": "Actual Express route: DELETE /api/mt5-optimization/jobs/:id"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/results",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/results",
+            "description": "Actual Express route: GET /api/mt5-optimization/results"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/results-summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/results-summary",
+            "description": "Actual Express route: GET /api/mt5-optimization/results-summary"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/results/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/results/:id",
+            "description": "Actual Express route: GET /api/mt5-optimization/results/:id"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/mt5-optimization/results/:id/watchlist",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/results/:id/watchlist",
+            "description": "Actual Express route: PATCH /api/mt5-optimization/results/:id/watchlist",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selected\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/mt5-optimization/results/:id/backtest-candidate",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/results/:id/backtest-candidate",
+            "description": "Actual Express route: PATCH /api/mt5-optimization/results/:id/backtest-candidate",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selected\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/results/:id/start-backtest",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/results/:id/start-backtest",
+            "description": "Actual Express route: POST /api/mt5-optimization/results/:id/start-backtest",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/backtest-candidates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/backtest-candidates",
+            "description": "Actual Express route: GET /api/mt5-optimization/backtest-candidates"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/backtest-candidates/auto-review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/backtest-candidates/auto-review",
+            "description": "Actual Express route: POST /api/mt5-optimization/backtest-candidates/auto-review",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"{{session_id}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/backtest-candidates/:id/sparkline",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/backtest-candidates/:id/sparkline",
+            "description": "Actual Express route: GET /api/mt5-optimization/backtest-candidates/:id/sparkline"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/backtest-candidates/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/backtest-candidates/:id",
+            "description": "Actual Express route: GET /api/mt5-optimization/backtest-candidates/:id"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/mt5-optimization/backtest-candidates/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/backtest-candidates/:id",
+            "description": "Actual Express route: DELETE /api/mt5-optimization/backtest-candidates/:id"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/mt5-optimization/backtest-candidates/:id/staging",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/backtest-candidates/:id/staging",
+            "description": "Actual Express route: PATCH /api/mt5-optimization/backtest-candidates/:id/staging",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selected\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/mt5-optimization/backtest-candidates/:id/sync",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/backtest-candidates/:id/sync",
+            "description": "Actual Express route: POST /api/mt5-optimization/backtest-candidates/:id/sync",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/mt5-optimization/logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-optimization/logs",
+            "description": "Actual Express route: GET /api/mt5-optimization/logs"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "MT5 Worker Protocol",
+      "description": "Generated from src/routes/mt5WorkerRoute.js",
+      "item": [
+        {
+          "name": "GET /api/mt5-queue/health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/mt5-queue/health",
+            "description": "Actual Express route: GET /api/mt5-queue/health",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/apikeys/verify",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/v1/apikeys/verify",
+            "description": "Actual Express route: POST /api/v1/apikeys/verify",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"api_key\": \"{{worker_api_key}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/claim",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/claim",
+            "description": "Actual Express route: POST /jobs/claim",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"worker_name\": \"{{worker_name}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/statuses",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/statuses",
+            "description": "Actual Express route: POST /jobs/statuses",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_ids\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/heartbeat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/heartbeat",
+            "description": "Actual Express route: POST /jobs/heartbeat",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_id\": \"{{job_id}}\",\n  \"worker_name\": \"{{worker_name}}\",\n  \"progress\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/done",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/done",
+            "description": "Actual Express route: POST /jobs/done",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_id\": \"{{job_id}}\",\n  \"worker_name\": \"{{worker_name}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/fail",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/fail",
+            "description": "Actual Express route: POST /jobs/fail",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_id\": \"{{job_id}}\",\n  \"worker_name\": \"{{worker_name}}\",\n  \"error\": \"QA test error\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /workers/heartbeat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/workers/heartbeat",
+            "description": "Actual Express route: POST /workers/heartbeat",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"worker_name\": \"{{worker_name}}\",\n  \"status\": \"active\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /workers/:worker",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/workers/:worker",
+            "description": "Actual Express route: GET /workers/:worker",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /artifacts/jobs/:id/download",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/artifacts/jobs/:id/download",
+            "description": "Actual Express route: GET /artifacts/jobs/:id/download",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/:id/artifacts/upload",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/:id/artifacts/upload",
+            "description": "Actual Express route: POST /jobs/:id/artifacts/upload",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "file",
+              "file": {
+                "src": ""
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/:id/artifacts/upload-chunk",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/:id/artifacts/upload-chunk",
+            "description": "Actual Express route: POST /jobs/:id/artifacts/upload-chunk",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "file",
+              "file": {
+                "src": ""
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /jobs/:id/artifacts/result/status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/:id/artifacts/result/status",
+            "description": "Actual Express route: GET /jobs/:id/artifacts/result/status",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /jobs/:id/artifacts/result/download",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/:id/artifacts/result/download",
+            "description": "Actual Express route: GET /jobs/:id/artifacts/result/download",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/:id/optimize-results/session/start",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/:id/optimize-results/session/start",
+            "description": "Actual Express route: POST /jobs/:id/optimize-results/session/start",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/:id/optimize-results/session/chunk",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/:id/optimize-results/session/chunk",
+            "description": "Actual Express route: POST /jobs/:id/optimize-results/session/chunk",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/:id/optimize-results/session/finalize",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/:id/optimize-results/session/finalize",
+            "description": "Actual Express route: POST /jobs/:id/optimize-results/session/finalize",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/:id/optimize-results",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/:id/optimize-results",
+            "description": "Actual Express route: POST /jobs/:id/optimize-results",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /jobs/:id/backtest-results",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/jobs/:id/backtest-results",
+            "description": "Actual Express route: POST /jobs/:id/backtest-results",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{worker_api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

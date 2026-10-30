@@ -1,0 +1,19 @@
+{
+  "interval_seconds": 60,
+  "state_dir": "mt5-history-state",
+  "accounts": [
+    {
+      "name": "example-account",
+      "terminal_path": "C:\\Program Files\\MetaTrader 5\\terminal64.exe",
+      "login": 0,
+      "server": "",
+      "password": "",
+      "api_key": "",
+      "monitor_id": "",
+      "symbol": "",
+      "start_date": "",
+      "history_url": "",
+      "closed_positions_url": ""
+    }
+  ]
+}

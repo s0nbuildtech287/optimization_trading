@@ -1,0 +1,289 @@
+Project mt5_optimization_redesign {
+  database_type: 'PostgreSQL'
+  Note: '''
+    Thiết kế mới gồm đúng 8 bảng MT5 Optimization.
+    users và data_source là bảng có sẵn của hệ thống, chỉ đưa vào để thể hiện ownership và quyền sync.
+    job_id chỉ phục vụ thực thi queue/log; mt5_optimize_results không phụ thuộc job_id.
+  '''
+}
+
+Table users {
+  id integer [pk, note: 'Bảng có sẵn của hệ thống']
+  Note: 'External table - không thuộc 8 bảng MT5 Optimization.'
+}
+
+Table data_source {
+  id integer [pk, increment]
+  source_name varchar(255) [not null, unique]
+  owner_user_id integer
+  enabled boolean [not null, default: true]
+  Note: '''
+    External table - registry của các bảng backtest động.
+    staging_target_table được service kiểm tra với source_name và ownership trước khi sync;
+    không tạo foreign key vì bảng đích là bảng backtest động.
+  '''
+}
+
+Table mt5_sessions {
+  id varchar(40) [pk, note: 'Mã ngắn session-N từ mt5_session_id_seq']
+  user_id integer [not null]
+  name varchar(160) [not null]
+  description text
+  status varchar(20) [not null, default: 'ACTIVE', note: 'ACTIVE | ARCHIVED']
+  result_version bigint [not null, default: 0]
+  optimize_result_count bigint [not null, default: 0]
+  optimize_strategy_count integer [not null, default: 0]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  archived_at timestamptz
+
+  indexes {
+    (user_id, updated_at) [name: 'idx_mt5_sessions_user_updated']
+  }
+
+  Note: 'Workspace nghiệp vụ. Một user có thể sở hữu nhiều session.'
+}
+
+Table api_keys {
+  id bigint [pk, increment]
+  user_id integer [not null]
+  name varchar(120) [not null]
+  api_key varchar(255) [not null, unique, note: 'Lưu plaintext để user có thể xem và copy lại']
+  scopes text[] [not null, note: 'Mặc định: mt5:worker; thiết kế mở rộng cho chức năng khác']
+  status varchar(20) [not null, default: 'ACTIVE', note: 'ACTIVE | REVOKED']
+  expires_at timestamptz
+  last_used_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  revoked_at timestamptz
+
+  indexes {
+    (user_id, name) [unique, name: 'uq_api_keys_user_name']
+    (user_id, status) [name: 'idx_api_keys_user_status']
+  }
+
+  Note: 'API key dùng chung cho worker và các tích hợp tương lai; lưu plaintext vì hệ thống nội bộ.'
+}
+
+Table mt5_workers {
+  id bigint [pk, increment, note: 'ID số tự tăng, phù hợp số lượng worker nhỏ']
+  owner_user_id integer [not null]
+  owner_username varchar(255) [not null]
+  api_key_id bigint
+  worker_instance_id uuid [note: 'ID co dinh do Worker App sinh mot lan; khong thay doi khi doi worker_name']
+  worker_name varchar(160) [not null]
+  status varchar(20) [not null, default: 'OFFLINE', note: 'OFFLINE | ONLINE | BUSY | DRAINING | BLOCKED']
+  run_access boolean [not null, default: false]
+  is_public boolean [not null, default: false]
+  allowed_job_types text[] [not null, note: 'OPEN_PRICE và/hoặc EVERY_TICK']
+  capabilities jsonb [not null, default: '{}']
+  last_seen_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (owner_user_id, worker_name) [unique, name: 'uq_mt5_workers_owner_name']
+    (owner_user_id, worker_instance_id) [unique, name: 'uq_mt5_workers_owner_instance']
+    (status, run_access, is_public, last_seen_at) [name: 'idx_mt5_workers_dispatch']
+  }
+
+  Note: '''
+    Lưu identity, heartbeat, capability và sharing của worker.
+    Current Job được suy ra từ mt5_job_queue, không lưu lặp trong bảng worker.
+  '''
+}
+
+Table mt5_job_queue {
+  job_id varchar(40) [pk, note: 'Mã ngắn job-N; không đổi khi retry và không phải khóa nghiệp vụ result']
+  session_id varchar(40) [not null]
+  job_type varchar(24) [not null, note: 'OPEN_PRICE | EVERY_TICK']
+  status varchar(24) [not null, default: 'PENDING', note: 'PENDING | CLAIMED | RUNNING | DONE | FAILED | CANCELLED']
+  priority integer [not null, default: 0]
+  strategy_id varchar(160)
+  target_strategy_id_r varchar(220) [note: 'Chỉ dùng cho Every Tick execution']
+  ini_content text [not null]
+  job_payload jsonb [not null, default: '{}']
+  input_artifact_path text [note: 'Artifact thực thi tạm thời']
+  claimed_by_worker_id bigint
+  run_id uuid [unique, note: 'Đổi sau mỗi lần claim để chặn callback cũ']
+  attempt_count integer [not null, default: 0]
+  max_attempts integer [not null, default: 3]
+  progress smallint [not null, default: 0, note: '0..100']
+  lease_expires_at timestamptz
+  heartbeat_at timestamptz
+  error_code varchar(80)
+  error_message text
+  created_at timestamptz [not null, default: `now()`]
+  started_at timestamptz
+  finished_at timestamptz
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (status, job_type, priority, created_at) [name: 'idx_mt5_queue_claim']
+    (session_id, created_at) [name: 'idx_mt5_queue_session_created']
+    (claimed_by_worker_id, status) [name: 'idx_mt5_queue_worker_active']
+    (session_id, target_strategy_id_r) [unique, name: 'uq_mt5_queue_active_every_tick_target', note: 'Partial unique cho PENDING | CLAIMED | RUNNING']
+  }
+
+  Note: '''
+    Chỉ là hàng đợi thực thi Open Price/Every Tick.
+    Job được nối tiếp theo session_id + created_at, không có khái niệm batch.
+    Claim thực tế dùng FOR UPDATE SKIP LOCKED và partial indexes trong SQL migration.
+  '''
+}
+
+Table mt5_optimize_results {
+  id bigint [pk, increment]
+  session_id varchar(40) [not null]
+  strategy_id varchar(160) [not null, note: 'Ví dụ: 001BTCUSDH1']
+  strategy_id_r varchar(220) [not null, unique, note: 'Generated từ strategy_id + id BIGSERIAL, ví dụ 001BTCUSDH1_1001']
+  summary_op jsonb [not null, note: 'Payload canonical gồm pass, inputs và metrics Open Price']
+  result_value numeric
+  profit numeric
+  expected_payoff numeric
+  trades integer
+  profit_factor numeric
+  recovery_factor numeric
+  equity_dd_percent numeric
+  sharpe_ratio numeric
+  pd_ratio numeric
+  is_strategy_best boolean [not null, default: false]
+  picked_watchlist boolean [not null, default: false]
+  picked_bt boolean [not null, default: false]
+  backtest_run_count integer [not null, default: 0]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (id, session_id, strategy_id, strategy_id_r) [unique, name: 'uq_mt5_result_candidate_parent']
+    (session_id, strategy_id, id) [name: 'idx_mt5_results_session_strategy']
+    (session_id, strategy_id, result_value, id) [name: 'idx_mt5_results_session_strategy_score']
+    (session_id, result_value, id) [name: 'idx_mt5_results_session_score']
+    (session_id, strategy_id, id) [name: 'idx_mt5_results_session_best', note: 'Partial: is_strategy_best = true']
+    (session_id, strategy_id) [unique, name: 'uq_mt5_results_one_best_per_strategy', note: 'Partial: is_strategy_best = true']
+    (session_id) [name: 'idx_mt5_results_session_qualified', note: 'Partial: trades >= 100 AND profit >= 10000']
+    (session_id, updated_at) [name: 'idx_mt5_results_watchlist']
+    (session_id, updated_at) [name: 'idx_mt5_results_bt_candidates']
+  }
+
+  Note: '''
+    Chỉ giữ kết quả Open Price và lựa chọn watchlist/backtest.
+    Không chứa job_id.
+    Kết quả Every Tick nằm trong mt5_backtest_candidates.
+  '''
+}
+
+Table mt5_backtest_candidates {
+  id bigint [pk, increment]
+  session_id varchar(40) [not null]
+  optimize_result_id bigint [not null]
+  strategy_id varchar(160) [not null]
+  strategy_id_r varchar(220) [not null]
+  backtest_run_no integer [not null]
+  source_run_id uuid [not null, unique, note: 'Run ID nguồn, chống callback Every Tick trùng; không FK tới queue']
+  summary_bt jsonb [not null, note: 'Canonical {settings, results} đầy đủ']
+  deals jsonb [not null, note: 'Mảng deals không rỗng; API list không SELECT']
+  net_profit numeric
+  total_trades integer
+  balance_drawdown_percent numeric
+  balance_drawdown_value numeric
+  profit_factor numeric
+  recovery_factor numeric
+  sharpe_ratio numeric
+  pd_ratio numeric
+  largest_loss_trade numeric
+  expected_payoff numeric
+  backtest_completed_at timestamptz [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (id, session_id, strategy_id) [unique, name: 'uq_mt5_candidate_staging_owner']
+    (optimize_result_id, backtest_run_no) [unique, name: 'uq_mt5_candidate_result_run']
+    (session_id, created_at, id) [name: 'idx_mt5_bt_candidates_session_created']
+    (session_id, strategy_id, created_at) [name: 'idx_mt5_bt_candidates_strategy']
+    (session_id, net_profit, id) [name: 'idx_mt5_bt_candidates_profit']
+    (session_id, total_trades, id) [name: 'idx_mt5_bt_candidates_trades']
+    (session_id, balance_drawdown_percent, id) [name: 'idx_mt5_bt_candidates_drawdown']
+    (session_id, profit_factor, id) [name: 'idx_mt5_bt_candidates_pf']
+    (session_id, recovery_factor, id) [name: 'idx_mt5_bt_candidates_recovery']
+    (session_id, sharpe_ratio, id) [name: 'idx_mt5_bt_candidates_sharpe']
+    (session_id, pd_ratio, id) [name: 'idx_mt5_bt_candidates_pd']
+    (session_id, largest_loss_trade, id) [name: 'idx_mt5_bt_candidates_largest_loss']
+  }
+
+  Note: 'Mỗi dòng là một lần Every Tick thành công của một bộ tham số Open Price.'
+}
+
+Table mt5_backtest_staging {
+  id bigint [pk, increment]
+  session_id varchar(40) [not null]
+  strategy_id varchar(160) [not null]
+  candidate_id bigint [not null]
+  target_table varchar(255)
+  source_table varchar(255)
+  sync_status varchar(20) [not null, default: 'NOT_SYNCED', note: 'NOT_SYNCED | SYNCING | SYNCED | SYNC_FAILED']
+  selected_at timestamptz [not null, default: `now()`]
+  synced_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (session_id, strategy_id) [unique, name: 'uq_mt5_staging_session_strategy']
+    (session_id, updated_at) [name: 'idx_mt5_staging_session_updated']
+    (session_id, sync_status, updated_at) [name: 'idx_mt5_staging_sync_status']
+  }
+
+  Note: 'Giữ con trỏ tới candidate cuối cùng của mỗi strategy/session; không sao chép summary_bt hoặc deals.'
+}
+
+Table mt5_logs {
+  id bigint [pk, increment]
+  session_id varchar(40)
+  actor_user_id integer [note: 'User thực hiện event; không phải owner sao chép từ session']
+  job_id varchar(40) [note: 'Chỉ liên kết execution log; result không dùng job_id']
+  worker_id bigint
+  level varchar(16) [not null, note: 'INFO | WARN | ERROR']
+  event_type varchar(80) [not null]
+  message text [not null]
+  context jsonb [not null, default: '{}']
+  created_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (session_id, created_at) [name: 'idx_mt5_logs_session_created']
+    (job_id, created_at) [name: 'idx_mt5_logs_job_created']
+    (created_at) [name: 'idx_mt5_logs_errors']
+  }
+
+  Note: 'Chỉ ghi event audit/diagnostic; không ghi từng heartbeat hoặc từng dòng stdout.'
+}
+
+TableGroup "MT5 Optimization - 8 tables" {
+  mt5_sessions
+  api_keys
+  mt5_workers
+  mt5_job_queue
+  mt5_optimize_results
+  mt5_backtest_candidates
+  mt5_backtest_staging
+  mt5_logs
+}
+
+TableGroup "Existing system tables" {
+  users
+  data_source
+}
+
+Ref: mt5_sessions.user_id > users.id [delete: cascade]
+Ref: api_keys.user_id > users.id [delete: cascade]
+Ref: mt5_workers.owner_user_id > users.id [delete: cascade]
+Ref: mt5_workers.api_key_id > api_keys.id [delete: set null]
+Ref: mt5_job_queue.session_id > mt5_sessions.id [delete: cascade]
+Ref: mt5_job_queue.claimed_by_worker_id > mt5_workers.id [delete: set null]
+Ref: mt5_optimize_results.session_id > mt5_sessions.id [delete: cascade]
+Ref: mt5_backtest_candidates.(optimize_result_id, session_id, strategy_id, strategy_id_r) > mt5_optimize_results.(id, session_id, strategy_id, strategy_id_r) [delete: cascade]
+Ref: mt5_backtest_staging.(candidate_id, session_id, strategy_id) > mt5_backtest_candidates.(id, session_id, strategy_id) [delete: cascade]
+Ref: mt5_logs.session_id > mt5_sessions.id [delete: cascade]
+Ref: mt5_logs.actor_user_id > users.id [delete: set null]
+Ref: mt5_logs.job_id > mt5_job_queue.job_id [delete: set null]
+Ref: mt5_logs.worker_id > mt5_workers.id [delete: set null]
+Ref: data_source.owner_user_id > users.id [delete: set null]

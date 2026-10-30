@@ -1,0 +1,18 @@
+{
+  "statusCode": 200,
+  "body": {
+    "ids": [
+      "001BTCUSDH1OB",
+      "001BTCUSDH1OS",
+      "001BTCUSDH4OB",
+      "001BTCUSDH4OS",
+      "002BTCUSDH1OB",
+      "002BTCUSDH1OS",
+      "002BTCUSDH4OB",
+      "002BTCUSDH4OS",
+      "003BTCUSDH1OB",
+      "003BTCUSDH1OS"
+    ],
+    "count": 7450
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "mt5-utilities",
+  "version": "1.5.7",
+  "description": "Electron desktop tool for watching and copying MT5 terminal log files with pm2 process control",
+  "main": "dist/main/main.js",
+  "type": "commonjs",
+  "author": {
+    "name": "Lotusquant Co., Ltd."
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev:main\" \"npm run dev:preload\" \"npm run dev:renderer\"",
+    "dev:main": "tsc -w -p tsconfig.main.json",
+    "dev:preload": "tsc -w -p tsconfig.preload.json",
+    "dev:renderer": "tsc -w -p tsconfig.renderer.json",
+    "start": "electron dist/main/main.js",
+    "build": "npm run build:backend && npm run build:renderer && npm run build:preload && npm run build:main",
+    "build:main": "tsc -p tsconfig.main.json && node scripts/postbuild.js",
+    "build:preload": "tsc -p tsconfig.preload.json",
+    "build:renderer": "node scripts/build-renderer.js",
+    "build:system-monitor": "cmd /c scripts\\build-system-monitor.bat",
+    "build:ea-scanner": "cmd /c scripts\\build-ea-scanner.bat",
+    "build:backend": "npm run build:system-monitor && npm run build:ea-scanner && node scripts/build-backend.js",
+    "build:utils": "tsc utils/pm2Utils.ts utils/pathUtils.ts --outDir dist/main --target ES2020 --module commonjs --declaration",
+    "mt5:history": "py backend/mt5HistorySync.py --config backend/mt5-history-config.json",
+    "postbuild:utils": "node -e \"console.log('utils already emitted to dist/main/utils')\"",
+    "postbuild": "node scripts/postbuild.js",
+    "pack": "electron-builder --dir",
+    "dist": "npm run build && electron-builder"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "dotenv": "^16.3.1",
+    "pm2": "^5.3.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.0",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "concurrently": "^8.2.1",
+    "electron": "^27.0.0",
+    "electron-builder": "^23.6.0",
+    "esbuild": "^0.27.2",
+    "typescript": "^5.2.2"
+  }
+}
+

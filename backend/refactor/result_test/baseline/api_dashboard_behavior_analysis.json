@@ -1,0 +1,1002 @@
+{
+  "statusCode": 200,
+  "body": {
+    "success": true,
+    "data": {
+      "summary": {
+        "totalStrategies": 7450,
+        "flaggedBias": 613,
+        "mismatch": 0,
+        "criticalActivity": 5539,
+        "highEot": 0
+      },
+      "directionalBiasData": [
+        {
+          "id": "103US500H4OB",
+          "symbol": "US500",
+          "tf": "H4",
+          "bot": "103",
+          "buyProfit": 229383.89,
+          "sellProfit": 11.15,
+          "buyPct": 100,
+          "sellPct": 0,
+          "weakPct": 0,
+          "status": "DirectionalBias"
+        },
+        {
+          "id": "192XAGUSDH1OB",
+          "symbol": "XAGUSD",
+          "tf": "H1",
+          "bot": "192",
+          "buyProfit": 159860.35,
+          "sellProfit": 43.85,
+          "buyPct": 100,
+          "sellPct": 0,
+          "weakPct": 0,
+          "status": "DirectionalBias"
+        },
+        {
+          "id": "010USOILH4OB",
+          "symbol": "USOIL",
+          "tf": "H4",
+          "bot": "010",
+          "buyProfit": 212869.66,
+          "sellProfit": 274.08,
+          "buyPct": 100,
+          "sellPct": 0,
+          "weakPct": 0.1,
+          "status": "DirectionalBias"
+        },
+        {
+          "id": "075HK50H4OB",
+          "symbol": "HK50",
+          "tf": "H4",
+          "bot": "075",
+          "buyProfit": 25.66,
+          "sellProfit": 41241.65,
+          "buyPct": 0,
+          "sellPct": 100,
+          "weakPct": 0.1,
+          "status": "DirectionalBias"
+        },
+        {
+          "id": "137US500H4OB",
+          "symbol": "US500",
+          "tf": "H4",
+          "bot": "137",
+          "buyProfit": 304776.62,
+          "sellProfit": 562.35,
+          "buyPct": 100,
+          "sellPct": 0,
+          "weakPct": 0.2,
+          "status": "DirectionalBias"
+        },
+        {
+          "id": "006XAUUSDH1OB",
+          "symbol": "XAUUSD",
+          "tf": "H1",
+          "bot": "006",
+          "buyProfit": 1464231.68,
+          "sellProfit": 5492.33,
+          "buyPct": 100,
+          "sellPct": 0,
+          "weakPct": 0.4,
+          "status": "DirectionalBias"
+        },
+        {
+          "id": "022XAUUSDH4OB",
+          "symbol": "XAUUSD",
+          "tf": "H4",
+          "bot": "022",
+          "buyProfit": 4793799.26,
+          "sellProfit": 21330.07,
+          "buyPct": 100,
+          "sellPct": 0,
+          "weakPct": 0.4,
+          "status": "DirectionalBias"
+        },
+        {
+          "id": "048US500H4OB",
+          "symbol": "US500",
+          "tf": "H4",
+          "bot": "048",
+          "buyProfit": 750059.88,
+          "sellProfit": 3485.61,
+          "buyPct": 100,
+          "sellPct": 0,
+          "weakPct": 0.5,
+          "status": "DirectionalBias"
+        },
+        {
+          "id": "027BTCUSDH4OB",
+          "symbol": "BTCUSD",
+          "tf": "H4",
+          "bot": "027",
+          "buyProfit": 3627742.14,
+          "sellProfit": 19593.16,
+          "buyPct": 99,
+          "sellPct": 1,
+          "weakPct": 0.5,
+          "status": "DirectionalBias"
+        },
+        {
+          "id": "051XAUUSDH4OB",
+          "symbol": "XAUUSD",
+          "tf": "H4",
+          "bot": "051",
+          "buyProfit": 1214865.48,
+          "sellProfit": 7159.37,
+          "buyPct": 99,
+          "sellPct": 1,
+          "weakPct": 0.6,
+          "status": "DirectionalBias"
+        }
+      ],
+      "buySellBreakdown": [
+        {
+          "symbol": "BTCUSD",
+          "buyCount": 139812,
+          "buyWR": 31.3,
+          "buyAvgProf": 1918.88,
+          "sellCount": 158946,
+          "sellWR": 29.4,
+          "sellAvgProf": 2889.38
+        },
+        {
+          "symbol": "DE30",
+          "buyCount": 115030,
+          "buyWR": 34,
+          "buyAvgProf": 1406.06,
+          "sellCount": 137589,
+          "sellWR": 35.6,
+          "sellAvgProf": 2147.54
+        },
+        {
+          "symbol": "ETHUSD",
+          "buyCount": 179057,
+          "buyWR": 31.2,
+          "buyAvgProf": 2160.63,
+          "sellCount": 155936,
+          "sellWR": 30.5,
+          "sellAvgProf": 2663.36
+        },
+        {
+          "symbol": "HK50",
+          "buyCount": 103683,
+          "buyWR": 35.5,
+          "buyAvgProf": 2021.14,
+          "sellCount": 87528,
+          "sellWR": 35.6,
+          "sellAvgProf": 1741.86
+        },
+        {
+          "symbol": "JP225",
+          "buyCount": 97800,
+          "buyWR": 32.3,
+          "buyAvgProf": 1890.03,
+          "sellCount": 170805,
+          "sellWR": 34.2,
+          "sellAvgProf": 1943.53
+        },
+        {
+          "symbol": "US500",
+          "buyCount": 102100,
+          "buyWR": 33,
+          "buyAvgProf": 1689.96,
+          "sellCount": 130545,
+          "sellWR": 36.1,
+          "sellAvgProf": 1814.2
+        },
+        {
+          "symbol": "USOIL",
+          "buyCount": 109283,
+          "buyWR": 33.6,
+          "buyAvgProf": 1461.03,
+          "sellCount": 124709,
+          "sellWR": 36.7,
+          "sellAvgProf": 1427.29
+        },
+        {
+          "symbol": "XAGUSD",
+          "buyCount": 80784,
+          "buyWR": 31.1,
+          "buyAvgProf": 1924.04,
+          "sellCount": 108851,
+          "sellWR": 33,
+          "sellAvgProf": 2560.6
+        },
+        {
+          "symbol": "XAUUSD",
+          "buyCount": 93564,
+          "buyWR": 31.9,
+          "buyAvgProf": 1420.64,
+          "sellCount": 194435,
+          "sellWR": 35.1,
+          "sellAvgProf": 2323.62
+        }
+      ],
+      "timeframeMismatchData": [
+        {
+          "id": "001BTCUSDH1OB",
+          "symbol": "BTCUSD",
+          "timeframe": "H1",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "741",
+          "h4Count": "0",
+          "ratio": 0,
+          "status": "Normal"
+        },
+        {
+          "id": "001BTCUSDH1OS",
+          "symbol": "BTCUSD",
+          "timeframe": "H1",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "588",
+          "h4Count": "0",
+          "ratio": 0,
+          "status": "Normal"
+        },
+        {
+          "id": "001BTCUSDH4OB",
+          "symbol": "BTCUSD",
+          "timeframe": "H4",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "0",
+          "h4Count": "375",
+          "ratio": 0,
+          "status": "Normal"
+        },
+        {
+          "id": "001BTCUSDH4OS",
+          "symbol": "BTCUSD",
+          "timeframe": "H4",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "0",
+          "h4Count": "442",
+          "ratio": 0,
+          "status": "Normal"
+        },
+        {
+          "id": "001DE30H1OB",
+          "symbol": "DE30",
+          "timeframe": "H1",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "544",
+          "h4Count": "0",
+          "ratio": 0,
+          "status": "Normal"
+        },
+        {
+          "id": "001DE30H1OS",
+          "symbol": "DE30",
+          "timeframe": "H1",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "420",
+          "h4Count": "0",
+          "ratio": 0,
+          "status": "Normal"
+        },
+        {
+          "id": "001DE30H4OB",
+          "symbol": "DE30",
+          "timeframe": "H4",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "0",
+          "h4Count": "354",
+          "ratio": 0,
+          "status": "Normal"
+        },
+        {
+          "id": "001DE30H4OS",
+          "symbol": "DE30",
+          "timeframe": "H4",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "0",
+          "h4Count": "276",
+          "ratio": 0,
+          "status": "Normal"
+        },
+        {
+          "id": "001ETHUSDH1OB",
+          "symbol": "ETHUSD",
+          "timeframe": "H1",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "596",
+          "h4Count": "0",
+          "ratio": 0,
+          "status": "Normal"
+        },
+        {
+          "id": "001ETHUSDH1OS",
+          "symbol": "ETHUSD",
+          "timeframe": "H1",
+          "backtestTable": "backtest_temp1",
+          "h1Count": "898",
+          "h4Count": "0",
+          "ratio": 0,
+          "status": "Normal"
+        }
+      ],
+      "hourHeatmap": [
+        {
+          "hour": "00h",
+          "profit": 490263524.58,
+          "wr": 38.4
+        },
+        {
+          "hour": "01h",
+          "profit": 23424717.9,
+          "wr": 28.2
+        },
+        {
+          "hour": "02h",
+          "profit": 161731429.59,
+          "wr": 31.8
+        },
+        {
+          "hour": "03h",
+          "profit": 106622646.67,
+          "wr": 31.5
+        },
+        {
+          "hour": "04h",
+          "profit": 650403012.59,
+          "wr": 39.3
+        },
+        {
+          "hour": "05h",
+          "profit": 48980012.69,
+          "wr": 31.2
+        },
+        {
+          "hour": "06h",
+          "profit": 105185566.76,
+          "wr": 31.4
+        },
+        {
+          "hour": "07h",
+          "profit": 51307585.75,
+          "wr": 29.5
+        },
+        {
+          "hour": "08h",
+          "profit": 555988074.44,
+          "wr": 37.1
+        },
+        {
+          "hour": "09h",
+          "profit": 113882732.53,
+          "wr": 31.4
+        }
+      ],
+      "dayHeatmap": [
+        {
+          "day": "T2",
+          "label": "Thứ 2",
+          "profit": 959689566.99,
+          "wr": 33.9
+        },
+        {
+          "day": "T3",
+          "label": "Thứ 3",
+          "profit": 915851616.65,
+          "wr": 33.5
+        },
+        {
+          "day": "T4",
+          "label": "Thứ 4",
+          "profit": 773612631.74,
+          "wr": 32.5
+        },
+        {
+          "day": "T5",
+          "label": "Thứ 5",
+          "profit": 839230471.58,
+          "wr": 33.6
+        },
+        {
+          "day": "T6",
+          "label": "Thứ 6",
+          "profit": 727590395.48,
+          "wr": 33.1
+        }
+      ],
+      "monthHeatmap": [
+        {
+          "month": "T1",
+          "profit": 485005005.46,
+          "wr": 33.3
+        },
+        {
+          "month": "T2",
+          "profit": 363726516.06,
+          "wr": 33.5
+        },
+        {
+          "month": "T3",
+          "profit": 433543206.64,
+          "wr": 34
+        },
+        {
+          "month": "T4",
+          "profit": 336401877.1,
+          "wr": 31.8
+        },
+        {
+          "month": "T5",
+          "profit": 368471376.15,
+          "wr": 33.8
+        },
+        {
+          "month": "T6",
+          "profit": 299860595.62,
+          "wr": 32.2
+        },
+        {
+          "month": "T7",
+          "profit": 422690776.33,
+          "wr": 33.2
+        },
+        {
+          "month": "T8",
+          "profit": 382915677.11,
+          "wr": 33.7
+        },
+        {
+          "month": "T9",
+          "profit": 364154279.56,
+          "wr": 33.7
+        },
+        {
+          "month": "T10",
+          "profit": 481754790.51,
+          "wr": 34.6
+        }
+      ],
+      "strategyYears": [
+        {
+          "id": "001BTCUSDH1OB",
+          "y19": 0,
+          "y20": 0,
+          "y21": 148323.64,
+          "y22": 317156.3,
+          "y23": 540051.2,
+          "y24": 377035.48,
+          "y25": 79136.33,
+          "y26": 27923.45,
+          "stable": true
+        },
+        {
+          "id": "001BTCUSDH1OS",
+          "y19": 0,
+          "y20": 0,
+          "y21": 36242.17,
+          "y22": 256924.58,
+          "y23": 263804.41,
+          "y24": 198674.88,
+          "y25": 15845.37,
+          "y26": 78706.01,
+          "stable": true
+        },
+        {
+          "id": "001BTCUSDH4OB",
+          "y19": 0,
+          "y20": 0,
+          "y21": 8324.76,
+          "y22": 583798.9,
+          "y23": 693694.98,
+          "y24": 697134.27,
+          "y25": 282726.88,
+          "y26": 47990.3,
+          "stable": true
+        },
+        {
+          "id": "001BTCUSDH4OS",
+          "y19": 0,
+          "y20": 0,
+          "y21": 181041.34,
+          "y22": -69924.26,
+          "y23": 702164.06,
+          "y24": 219395.06,
+          "y25": 311014.52,
+          "y26": 391785.25,
+          "stable": true
+        },
+        {
+          "id": "001DE30H1OB",
+          "y19": 0,
+          "y20": 0,
+          "y21": 232398.21,
+          "y22": 137083.29,
+          "y23": 389757.25,
+          "y24": 712874.72,
+          "y25": 618067.79,
+          "y26": -10322.66,
+          "stable": true
+        },
+        {
+          "id": "001DE30H1OS",
+          "y19": 0,
+          "y20": 0,
+          "y21": 52090.4,
+          "y22": 108567.47,
+          "y23": 47549.26,
+          "y24": 49758.07,
+          "y25": 41707.58,
+          "y26": 26393.85,
+          "stable": true
+        },
+        {
+          "id": "001DE30H4OB",
+          "y19": 0,
+          "y20": 0,
+          "y21": -54563.48,
+          "y22": 26065.34,
+          "y23": 285464.45,
+          "y24": 632525.09,
+          "y25": 243674.79,
+          "y26": 124942.01,
+          "stable": true
+        },
+        {
+          "id": "001DE30H4OS",
+          "y19": 0,
+          "y20": 0,
+          "y21": 671780.24,
+          "y22": 171999.15,
+          "y23": 4283.99,
+          "y24": 138111.23,
+          "y25": -97406,
+          "y26": -10249.23,
+          "stable": false
+        },
+        {
+          "id": "001ETHUSDH1OB",
+          "y19": 0,
+          "y20": 0,
+          "y21": -79135.07,
+          "y22": 145231.75,
+          "y23": 420895.08,
+          "y24": 241116.72,
+          "y25": 380616.3,
+          "y26": -18172.08,
+          "stable": false
+        },
+        {
+          "id": "001ETHUSDH1OS",
+          "y19": 0,
+          "y20": 0,
+          "y21": 142191.17,
+          "y22": 309509.56,
+          "y23": 208122.58,
+          "y24": 362168.38,
+          "y25": 428192.03,
+          "y26": 188424.02,
+          "stable": true
+        }
+      ],
+      "quarterlySeasonality": [
+        {
+          "year": "All",
+          "q": "Q1",
+          "label": "Tháng 1–3",
+          "grossProfit": 2905676661.81,
+          "grossLoss": 1623401933.65,
+          "profit": 1282274728.16,
+          "wr": 33.6
+        },
+        {
+          "year": "All",
+          "q": "Q2",
+          "label": "Tháng 4–6",
+          "grossProfit": 2632599992.97,
+          "grossLoss": 1627866144.1,
+          "profit": 1004733848.87,
+          "wr": 32.6
+        },
+        {
+          "year": "All",
+          "q": "Q3",
+          "label": "Tháng 7–9",
+          "grossProfit": 2856636162.61,
+          "grossLoss": 1686875429.61,
+          "profit": 1169760733,
+          "wr": 33.5
+        },
+        {
+          "year": "All",
+          "q": "Q4",
+          "label": "Tháng 10–12",
+          "grossProfit": 2838043763.64,
+          "grossLoss": 1663128412.51,
+          "profit": 1174915351.13,
+          "wr": 33.4
+        },
+        {
+          "year": "2026",
+          "q": "Q1",
+          "label": "Tháng 1–3",
+          "grossProfit": 436767378.59,
+          "grossLoss": 210030287.14,
+          "profit": 226737091.45,
+          "wr": 35.4
+        },
+        {
+          "year": "2026",
+          "q": "Q2",
+          "label": "Tháng 4–6",
+          "grossProfit": 391213.4,
+          "grossLoss": 403144.16,
+          "profit": -11930.76,
+          "wr": 29.5
+        },
+        {
+          "year": "2025",
+          "q": "Q1",
+          "label": "Tháng 1–3",
+          "grossProfit": 514741598.49,
+          "grossLoss": 323976471.83,
+          "profit": 190765126.66,
+          "wr": 33.9
+        },
+        {
+          "year": "2025",
+          "q": "Q2",
+          "label": "Tháng 4–6",
+          "grossProfit": 578243157.95,
+          "grossLoss": 343290397.41,
+          "profit": 234952760.54,
+          "wr": 32.2
+        },
+        {
+          "year": "2025",
+          "q": "Q3",
+          "label": "Tháng 7–9",
+          "grossProfit": 577678348.08,
+          "grossLoss": 328711546,
+          "profit": 248966802.08,
+          "wr": 33.4
+        },
+        {
+          "year": "2025",
+          "q": "Q4",
+          "label": "Tháng 10–12",
+          "grossProfit": 538984460.17,
+          "grossLoss": 332973044.48,
+          "profit": 206011415.69,
+          "wr": 33.5
+        }
+      ],
+      "volatilityRegimeData": [
+        {
+          "regime": "High-Vol",
+          "years": "2020, 2022",
+          "avgProfit": 112983,
+          "wr": 33.8,
+          "drawdown": 8.722244295302014
+        },
+        {
+          "regime": "Low-Vol",
+          "years": "2021, 2023",
+          "avgProfit": 104790,
+          "wr": 32.7,
+          "drawdown": 8.722244295302014
+        }
+      ],
+      "activityGapData": [
+        {
+          "id": "104XAGUSDH1OB",
+          "trades": 219,
+          "maxGap": 1172,
+          "zeroMonths": 48,
+          "status": "Critical"
+        },
+        {
+          "id": "107DE30H1OS",
+          "trades": 101,
+          "maxGap": 1047,
+          "zeroMonths": 47,
+          "status": "Critical"
+        },
+        {
+          "id": "012BTCUSDH4OS",
+          "trades": 152,
+          "maxGap": 984,
+          "zeroMonths": 32,
+          "status": "Critical"
+        },
+        {
+          "id": "107JP225H4OB",
+          "trades": 116,
+          "maxGap": 756,
+          "zeroMonths": 50,
+          "status": "Critical"
+        },
+        {
+          "id": "082DE30H4OS",
+          "trades": 161,
+          "maxGap": 754,
+          "zeroMonths": 35,
+          "status": "Critical"
+        },
+        {
+          "id": "107HK50H4OB",
+          "trades": 116,
+          "maxGap": 644,
+          "zeroMonths": 19,
+          "status": "Critical"
+        },
+        {
+          "id": "013BTCUSDH4OB",
+          "trades": 236,
+          "maxGap": 640,
+          "zeroMonths": 19,
+          "status": "Critical"
+        },
+        {
+          "id": "107XAGUSDH4OS",
+          "trades": 139,
+          "maxGap": 610,
+          "zeroMonths": 35,
+          "status": "Critical"
+        },
+        {
+          "id": "062US500H1OS",
+          "trades": 299,
+          "maxGap": 608,
+          "zeroMonths": 18,
+          "status": "Critical"
+        },
+        {
+          "id": "076US500H4OS",
+          "trades": 211,
+          "maxGap": 569,
+          "zeroMonths": 40,
+          "status": "Critical"
+        }
+      ],
+      "exitReasonsData": [
+        {
+          "symbol": "BTCUSD",
+          "tp": 0.1,
+          "sl": 14.5,
+          "co": 85.4,
+          "eot": 0
+        },
+        {
+          "symbol": "DE30",
+          "tp": 0.1,
+          "sl": 12.8,
+          "co": 87.1,
+          "eot": 0.1
+        },
+        {
+          "symbol": "ETHUSD",
+          "tp": 0,
+          "sl": 13.6,
+          "co": 86.3,
+          "eot": 0
+        },
+        {
+          "symbol": "HK50",
+          "tp": 0.2,
+          "sl": 11.8,
+          "co": 88,
+          "eot": 0.1
+        },
+        {
+          "symbol": "JP225",
+          "tp": 0.1,
+          "sl": 11.8,
+          "co": 88.1,
+          "eot": 0
+        },
+        {
+          "symbol": "US500",
+          "tp": 0.2,
+          "sl": 14.7,
+          "co": 85,
+          "eot": 0.1
+        },
+        {
+          "symbol": "USOIL",
+          "tp": 0.1,
+          "sl": 14,
+          "co": 85.9,
+          "eot": 0.1
+        },
+        {
+          "symbol": "XAGUSD",
+          "tp": 0.1,
+          "sl": 12.2,
+          "co": 87.5,
+          "eot": 0.1
+        },
+        {
+          "symbol": "XAUUSD",
+          "tp": 0.1,
+          "sl": 15.5,
+          "co": 84.3,
+          "eot": 0.1
+        }
+      ],
+      "commissionPerLotData": [
+        {
+          "symbol": "JP225",
+          "avgFeePerLot": 0.05,
+          "minFeePerLot": 0.02,
+          "maxFeePerLot": 0.05,
+          "dealCount": 268605
+        },
+        {
+          "symbol": "US500",
+          "avgFeePerLot": 0.4994,
+          "minFeePerLot": 0.2499,
+          "maxFeePerLot": 0.5011,
+          "dealCount": 232645
+        },
+        {
+          "symbol": "ETHUSD",
+          "avgFeePerLot": 0.625,
+          "minFeePerLot": 0.6241,
+          "maxFeePerLot": 0.6263,
+          "dealCount": 334993
+        },
+        {
+          "symbol": "HK50",
+          "avgFeePerLot": 1.4,
+          "minFeePerLot": 1.3995,
+          "maxFeePerLot": 1.4006,
+          "dealCount": 191211
+        },
+        {
+          "symbol": "DE30",
+          "avgFeePerLot": 2.2481,
+          "minFeePerLot": 0.6243,
+          "maxFeePerLot": 2.2531,
+          "dealCount": 252619
+        },
+        {
+          "symbol": "XAUUSD",
+          "avgFeePerLot": 5.5007,
+          "minFeePerLot": 5.5,
+          "maxFeePerLot": 5.6,
+          "dealCount": 287999
+        },
+        {
+          "symbol": "USOIL",
+          "avgFeePerLot": 6.2503,
+          "minFeePerLot": 6.2381,
+          "maxFeePerLot": 6.2778,
+          "dealCount": 233992
+        },
+        {
+          "symbol": "BTCUSD",
+          "avgFeePerLot": 8,
+          "minFeePerLot": 8,
+          "maxFeePerLot": 8,
+          "dealCount": 298758
+        },
+        {
+          "symbol": "XAGUSD",
+          "avgFeePerLot": 49.9973,
+          "minFeePerLot": 47.5,
+          "maxFeePerLot": 50,
+          "dealCount": 189635
+        }
+      ],
+      "holdingRecoveryData": [
+        {
+          "id": "001BTCUSDH1OB",
+          "symbol": "BTCUSD",
+          "totalTrades": "468",
+          "avgWinTime": 2023.4,
+          "avgLossTime": 635.4,
+          "htr": 0.31,
+          "vei": 1.02,
+          "status": "Excellent",
+          "backtestTable": "backtest_temp1"
+        },
+        {
+          "id": "001BTCUSDH1OS",
+          "symbol": "BTCUSD",
+          "totalTrades": "341",
+          "avgWinTime": 2716.8,
+          "avgLossTime": 1114.9,
+          "htr": 0.41,
+          "vei": 0.92,
+          "status": "Excellent",
+          "backtestTable": "backtest_temp1"
+        },
+        {
+          "id": "001BTCUSDH4OB",
+          "symbol": "BTCUSD",
+          "totalTrades": "262",
+          "avgWinTime": 3385.4,
+          "avgLossTime": 709.6,
+          "htr": 0.21,
+          "vei": 1.15,
+          "status": "Excellent",
+          "backtestTable": "backtest_temp1"
+        },
+        {
+          "id": "001BTCUSDH4OS",
+          "symbol": "BTCUSD",
+          "totalTrades": "302",
+          "avgWinTime": 2893,
+          "avgLossTime": 909.1,
+          "htr": 0.31,
+          "vei": 1.35,
+          "status": "Martingale Risk",
+          "backtestTable": "backtest_temp1"
+        },
+        {
+          "id": "001DE30H1OB",
+          "symbol": "DE30",
+          "totalTrades": "335",
+          "avgWinTime": 2446.4,
+          "avgLossTime": 661.9,
+          "htr": 0.27,
+          "vei": 0.99,
+          "status": "Excellent",
+          "backtestTable": "backtest_temp1"
+        },
+        {
+          "id": "001DE30H1OS",
+          "symbol": "DE30",
+          "totalTrades": "214",
+          "avgWinTime": 3653.6,
+          "avgLossTime": 2011.8,
+          "htr": 0.55,
+          "vei": 0.77,
+          "status": "Excellent",
+          "backtestTable": "backtest_temp1"
+        },
+        {
+          "id": "001DE30H4OB",
+          "symbol": "DE30",
+          "totalTrades": "232",
+          "avgWinTime": 6541.8,
+          "avgLossTime": 1193.1,
+          "htr": 0.18,
+          "vei": 1.43,
+          "status": "Martingale Risk",
+          "backtestTable": "backtest_temp1"
+        },
+        {
+          "id": "001DE30H4OS",
+          "symbol": "DE30",
+          "totalTrades": "188",
+          "avgWinTime": 3730.9,
+          "avgLossTime": 887.1,
+          "htr": 0.24,
+          "vei": 1.37,
+          "status": "Martingale Risk",
+          "backtestTable": "backtest_temp1"
+        },
+        {
+          "id": "001ETHUSDH1OB",
+          "symbol": "ETHUSD",
+          "totalTrades": "365",
+          "avgWinTime": 2499.6,
+          "avgLossTime": 760.1,
+          "htr": 0.3,
+          "vei": 1.07,
+          "status": "Excellent",
+          "backtestTable": "backtest_temp1"
+        },
+        {
+          "id": "001ETHUSDH1OS",
+          "symbol": "ETHUSD",
+          "totalTrades": "551",
+          "avgWinTime": 1823.8,
+          "avgLossTime": 640.4,
+          "htr": 0.35,
+          "vei": 1.31,
+          "status": "Martingale Risk",
+          "backtestTable": "backtest_temp1"
+        }
+      ]
+    }
+  }
+}
