@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import { lazy, Suspense, useMemo } from 'react';
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -47,14 +46,11 @@ export default function AuthLayout() {
     <AuthThemeProvider>
       <Box
         sx={{
-          height: '100vh',
+          minHeight: '100vh',
           width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
           position: 'relative',
           backgroundColor: '#060913',
-          overflow: 'hidden'
+          overflowX: 'hidden'
         }}
       >
         {/* Dynamic 3D Quant Finance Background */}
@@ -62,9 +58,9 @@ export default function AuthLayout() {
           <Quant3DBackground />
         </Suspense>
 
-        <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
+        <Box sx={{ position: 'relative', zIndex: 1, width: '100%', minHeight: '100vh' }}>
           <Outlet />
-        </Container>
+        </Box>
       </Box>
     </AuthThemeProvider>
   );

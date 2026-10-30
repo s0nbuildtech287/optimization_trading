@@ -1,6 +1,7 @@
 import { API_BASE_URL } from 'config';
+import { getDemoResponse, isDemoRequest } from './demoMock';
 
-const DEFAULT_TIMEOUT_MS = 180000; // 3 phút
+const DEFAULT_TIMEOUT_MS = 180000; // 3 phÃºt
 
 function clearAuthState() {
   if (typeof localStorage !== 'undefined') {
@@ -33,6 +34,7 @@ function createTimeoutSignal(signal, timeoutMs) {
  * 2. Injects the Authorization header with the JWT token from localStorage.
  */
 export async function authFetch(url, options = {}) {
+  if (isDemoRequest()) return getDemoResponse(url, options);
   const token = localStorage.getItem('authToken');
   const headers = { ...options.headers };
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
@@ -44,7 +46,8 @@ export async function authFetch(url, options = {}) {
 
   const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
 
-  const { timeoutMs: _timeoutMs, ...fetchOptions } = options;
+  const fetchOptions = { ...options };
+  delete fetchOptions.timeoutMs;
 
   try {
     const response = await fetch(fullUrl, {

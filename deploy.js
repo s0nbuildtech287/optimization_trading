@@ -68,7 +68,7 @@ async function main() {
   run('ssh', ['-p', SSH_PORT, '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', SSH_HOST, 'true']);
 
   if (deployFrontend) {
-    run('npm.cmd', ['run', 'build'], {
+    run(process.platform === 'win32' ? 'cmd.exe' : 'npm', process.platform === 'win32' ? ['/d', '/s', '/c', 'npm', 'run', 'build'] : ['run', 'build'], {
       cwd: FRONTEND_DIR,
       env: { ...process.env, VITE_API_BASE_URL: DOMAIN }
     });
@@ -178,4 +178,5 @@ main()
   .finally(() => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
+
 

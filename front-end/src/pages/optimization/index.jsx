@@ -62,7 +62,8 @@ export default function Mt5OptimizationPage() {
   const theme = useTheme();
   const { pathname } = useLocation();
   const [optimizeTab, setOptimizeTab] = useState('queue');
-  const activePage = PAGES.find((page) => pathname.startsWith(page.path)) || PAGES[0];
+  const normalizedPath = pathname.startsWith('/demo') ? pathname.replace(/^\/demo/, '') : pathname;
+  const activePage = PAGES.find((page) => normalizedPath.startsWith(page.path)) || PAGES[0];
   const activeOptimizeTab = OPTIMIZE_TABS.find((tab) => tab.id === optimizeTab);
   const contentTitle = activePage.optimize ? activeOptimizeTab?.label : activePage.label;
 
@@ -120,11 +121,7 @@ export default function Mt5OptimizationPage() {
                   fontWeight: 600,
                   fontSize: '0.8125rem',
                   color: isActive ? '#ffffff' : theme.palette.text.primary,
-                  bgcolor: isActive
-                    ? theme.palette.mode === 'dark'
-                      ? 'primary.main'
-                      : '#212A37'
-                    : 'transparent',
+                  bgcolor: isActive ? (theme.palette.mode === 'dark' ? 'primary.main' : '#212A37') : 'transparent',
                   borderRadius: 1.5,
                   textTransform: 'none',
                   boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.12)' : 'none',
@@ -164,9 +161,7 @@ export default function Mt5OptimizationPage() {
       {activePage.path !== '/optimization/setup-workers' &&
         activePage.path !== '/optimization/ini-config' &&
         activePage.path !== '/optimization/tpl-generator' &&
-        activePage.path !== '/optimization/optimize' && (
-          <DevelopmentState title={contentTitle} />
-        )}
+        activePage.path !== '/optimization/optimize' && <DevelopmentState title={contentTitle} />}
     </Stack>
   );
 }

@@ -51,7 +51,15 @@ export default function NavItem({ item, level, isParents = false, setSelectedID 
   );
 
   const { pathname } = useLocation();
-  const isSelected = !!matchPath({ path: item?.link ? item.link : item.url, end: false }, pathname);
+  const isDemoMode = pathname.startsWith('/demo');
+  const demoRoutes = ['/order-list', '/backtest-tables', '/strategy-input', '/optimization'];
+  const demoUrl = item.url?.startsWith('/dashboard/')
+    ? item.url.replace('/dashboard', '/demo')
+    : demoRoutes.some((route) => item.url === route || item.url?.startsWith(route + '/'))
+      ? '/demo' + item.url
+      : '/login';
+  const targetUrl = isDemoMode ? demoUrl : item.url;
+  const isSelected = !!matchPath({ path: item?.link ? item.link : targetUrl, end: false }, pathname);
 
   const textColor = '#FFFFFF';
   const iconSelectedColor = '#FFFFFF';
@@ -61,7 +69,7 @@ export default function NavItem({ item, level, isParents = false, setSelectedID 
   const navButton = (
     <ListItemButton
       component={Link}
-      to={item.url}
+      to={targetUrl}
       target={itemTarget}
       disabled={item.disabled}
       selected={isSelected}

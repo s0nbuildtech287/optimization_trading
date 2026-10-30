@@ -272,7 +272,7 @@ export default function AuthLogin({ isDemo = false }) {
                       }
                     }}
                   >
-                    {loading ? 'Authenticating...' : 'Sign In to Lotusquant'}
+                    {loading ? 'Authenticating...' : 'Sign In to Trading Quant System'}
                   </Button>
                 </AnimateButton>
               </Grid>

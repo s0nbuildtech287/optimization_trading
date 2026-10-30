@@ -16,11 +16,12 @@ import AuthLogin from 'sections/auth/AuthLogin';
 export default function Login() {
   // Set page title
   useEffect(() => {
-    document.title = 'Login | Lotusquant';
+    document.title = 'Sign In | Trading Quant System Backtest';
   }, []);
 
   return (
     <AuthWrapper>
+      <Box sx={{ width: '100%', maxWidth: 520, mx: 'auto', px: 2 }}>
       <Grid container spacing={2.5}>
         <Grid size={12}>
           <Stack direction="column" sx={{ alignItems: 'center', mb: 2 }}>
@@ -78,6 +79,7 @@ export default function Login() {
           <AuthLogin />
         </Grid>
       </Grid>
+      </Box>
     </AuthWrapper>
   );
 }
