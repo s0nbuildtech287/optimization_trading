@@ -41,7 +41,8 @@ app.use(
       "http://localhost:3000",
       "http://127.0.0.1:3000",
       "http://localhost:3456",
-      "http://127.0.0.1:3456"
+      "http://127.0.0.1:3456",
+      process.env.CORS_ORIGIN
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
@@ -50,7 +51,7 @@ app.use(
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-// Disable browser cache for dynamic API responses thưa đại ca Xuân Sơn
+// Disable browser cache for dynamic API responses thÃ†Â°a Ã„â€˜Ã¡ÂºÂ¡i ca XuÃƒÂ¢n SÃ†Â¡n
 app.use((req, res, next) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
   res.setHeader("Pragma", "no-cache");
@@ -61,7 +62,7 @@ app.use((req, res, next) => {
 // Swagger documentation
 setupSwagger(app);
 
-// Date range validation middleware for all /api endpoints thưa đại ca Xuân Sơn
+// Date range validation middleware for all /api endpoints thÃ†Â°a Ã„â€˜Ã¡ÂºÂ¡i ca XuÃƒÂ¢n SÃ†Â¡n
 const { validateGeneralDateRange } = require("./src/middlewares/backtestAccess");
 app.use("/api", validateGeneralDateRange);
 
@@ -124,7 +125,7 @@ async function initializeDatabase() {
   try {
     console.log(DATABASE.INIT_START);
     
-    // Tự động tạo bảng User, Role từ models
+    // TÃ¡Â»Â± Ã„â€˜Ã¡Â»â„¢ng tÃ¡ÂºÂ¡o bÃ¡ÂºÂ£ng User, Role tÃ¡Â»Â« models
     const queryInterface = db.sequelize.getQueryInterface();
     const existingTables = await queryInterface.showAllTables();
     const usersExists = existingTables.includes('users');
@@ -145,7 +146,7 @@ async function initializeDatabase() {
     await require("./src/dao/notificationDAO").initNotificationTable();
     await opDao.createBacktestIndexes();
 
-    // Clear tất cả cache khi khởi động server
+    // Clear tÃ¡ÂºÂ¥t cÃ¡ÂºÂ£ cache khi khÃ¡Â»Å¸i Ã„â€˜Ã¡Â»â„¢ng server
     console.log("[CACHE] Clearing all caches on server startup...");
     dashboardService.clearDashboardCache();
     riskAnalysisService.clearRiskAnalysisCache();
