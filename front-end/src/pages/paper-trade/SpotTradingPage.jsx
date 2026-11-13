@@ -684,16 +684,25 @@ export default function SpotTradingPage() {
                     </Typography>
                   </Box>
 
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    color="success"
-                    onClick={() => handleBuyTranche(sym)}
-                    disabled={actionSymbol === sym || usdtBalance < parseFloat(account.risk_per_trade || 10)}
-                    sx={{ textTransform: 'none', py: 0.2, px: 1, fontSize: 11 }}
-                  >
-                    Mua gom ${parseFloat(account.risk_per_trade || 10).toFixed(0)}
-                  </Button>
+                  <Stack alignItems="flex-end" spacing={0.5}>
+                    <Chip
+                      size="small"
+                      color={isOversold ? 'success' : 'default'}
+                      variant={isOversold ? 'filled' : 'outlined'}
+                      label={isOversold ? 'ĐỦ ĐIỀU KIỆN MUA' : 'CHỜ RSI ≤ 35'}
+                      sx={{ height: 22, fontSize: 10, fontWeight: 700 }}
+                    />
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="success"
+                      onClick={() => handleBuyTranche(sym)}
+                      disabled={actionSymbol === sym || usdtBalance < parseFloat(account.risk_per_trade || 10)}
+                      sx={{ textTransform: 'none', py: 0.2, px: 1, fontSize: 11 }}
+                    >
+                      Mua thủ công ${parseFloat(account.risk_per_trade || 10).toFixed(0)}
+                    </Button>
+                  </Stack>
                 </Stack>
               </Box>
             );
@@ -1205,4 +1214,3 @@ export default function SpotTradingPage() {
     </Box>
   );
 }
-
