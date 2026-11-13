@@ -8,7 +8,9 @@ export const MINI_DRAWER_WIDTH = 60;
 // deploy server cloud:
 // export const API_BASE_URL = 'http://34.2.156.21:5000';
 // local server:
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL !== undefined
+  ? import.meta.env.VITE_API_BASE_URL
+  : (import.meta.env.PROD ? '' : 'http://localhost:5000');
 // deploy server backtest with domain:
 // export const API_BASE_URL = 'https://backtest.lotusquant.co';
 // deploy server backtest test with domain: 

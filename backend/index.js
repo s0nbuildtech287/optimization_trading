@@ -42,8 +42,11 @@ app.use(
       "http://127.0.0.1:3000",
       "http://localhost:3456",
       "http://127.0.0.1:3456",
+      "https://backtestt.id.vn",
+      "http://backtestt.id.vn",
+      "https://www.backtestt.id.vn",
       process.env.CORS_ORIGIN
-    ],
+    ].filter(Boolean),
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   }),
