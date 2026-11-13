@@ -85,6 +85,7 @@ app.use("/api", aiAnalysisRoute);
 app.use("/api/lot-threshold", lotThresholdRoute);
 app.use("/api", require("./src/routes/notificationRoute"));
 app.use("/api/mt5-optimization", require("./src/routes/mt5OptimizationRoute"));
+app.use("/api/paper-trade", require("./src/routes/paperTradeRoute"));
 
 const seedDefaultAdmin = async () => {
   try {
@@ -145,6 +146,7 @@ async function initializeDatabase() {
     await mt5OptimizationService.sweepRuntimeDirectories();
     await require("./src/dao/notificationDAO").initNotificationTable();
     await opDao.createBacktestIndexes();
+    await require("./src/service/paperTradeEngine").init();
 
     // Clear tÃ¡ÂºÂ¥t cÃ¡ÂºÂ£ cache khi khÃ¡Â»Å¸i Ã„â€˜Ã¡Â»â„¢ng server
     console.log("[CACHE] Clearing all caches on server startup...");

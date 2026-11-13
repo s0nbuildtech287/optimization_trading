@@ -1,5 +1,5 @@
 // assets
-import { BarChartOutlined, DashboardOutlined, TableOutlined, FormOutlined, ExperimentOutlined, LineChartOutlined, TrophyOutlined, AppstoreOutlined, SettingOutlined, FileTextOutlined, ControlOutlined, ToolOutlined, KeyOutlined } from '@ant-design/icons';
+import { BarChartOutlined, DashboardOutlined, TableOutlined, FormOutlined, ExperimentOutlined, LineChartOutlined, TrophyOutlined, AppstoreOutlined, SettingOutlined, FileTextOutlined, ControlOutlined, ToolOutlined, KeyOutlined, ThunderboltOutlined, ShoppingOutlined, RiseOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
@@ -15,7 +15,10 @@ const icons = {
   FileTextOutlined,
   ControlOutlined,
   ToolOutlined,
-  KeyOutlined
+  KeyOutlined,
+  ThunderboltOutlined,
+  ShoppingOutlined,
+  RiseOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -62,6 +65,31 @@ const dashboard = {
           type: 'item',
           url: '/dashboard/comparative-ranking',
           icon: icons.TrophyOutlined,
+          breadcrumbs: false
+        }
+      ]
+    },
+    {
+      id: 'auto-trade',
+      title: 'Auto Trade',
+      type: 'collapse',
+      icon: icons.ThunderboltOutlined,
+      breadcrumbs: false,
+      children: [
+        {
+          id: 'auto-trade-futures',
+          title: 'Futures',
+          type: 'item',
+          url: '/auto-trade/futures',
+          icon: icons.RiseOutlined,
+          breadcrumbs: false
+        },
+        {
+          id: 'auto-trade-spot',
+          title: 'Spot',
+          type: 'item',
+          url: '/auto-trade/spot',
+          icon: icons.ShoppingOutlined,
           breadcrumbs: false
         }
       ]

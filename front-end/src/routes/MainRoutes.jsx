@@ -40,6 +40,10 @@ const ApiKeysPage = Loadable(lazy(() => import('pages/api-keys')));
 // render - MT5 Optimization shell
 const Mt5Optimization = Loadable(lazy(() => import('pages/optimization')));
 
+// render - Paper Trading page
+const PaperTradingPage = Loadable(lazy(() => import('pages/paper-trade')));
+const SpotTradingPage = Loadable(lazy(() => import('pages/paper-trade/SpotTradingPage')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -150,6 +154,18 @@ const MainRoutes = {
     {
       path: 'optimization/tpl-generator',
       element: <Mt5Optimization />
+    },
+    {
+      path: 'paper-trading',
+      element: <PaperTradingPage />
+    },
+    {
+      path: 'auto-trade/futures',
+      element: <PaperTradingPage />
+    },
+    {
+      path: 'auto-trade/spot',
+      element: <SpotTradingPage />
     }
   ]
 };

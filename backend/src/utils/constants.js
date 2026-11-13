@@ -82,6 +82,13 @@ exports.SYMBOL_VOLUME_CAPS = Object.freeze({
   DEFAULT: 500
 });
 
+exports.SPOT_RISK = Object.freeze({
+  TAKE_PROFIT_PCT: 4.5,
+  STOP_LOSS_PCT: -6,
+  DCA_STOP_PCT: -5,
+  MAX_TRANCHES_PER_SYMBOL: 3
+});
+
 exports.MT5 = Object.freeze({
   SESSION_STATUS: Object.freeze({ ACTIVE: 'ACTIVE', ARCHIVED: 'ARCHIVED' }),
   KEY_STATUS: Object.freeze({ ACTIVE: 'ACTIVE', REVOKED: 'REVOKED' }),
