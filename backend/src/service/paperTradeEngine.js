@@ -1,7 +1,7 @@
 const binanceWsService = require('./binanceWsService');
 const paperStrategyService = require('./paperStrategyService');
 const paperTradeDao = require('../dao/paperTradeDao');
-const { SPOT_RISK } = require('../utils/constants');
+const { SPOT_RISK, FUTURES_RISK } = require('../utils/constants');
 
 class PaperTradeEngine {
   constructor() {
@@ -323,7 +323,7 @@ class PaperTradeEngine {
 
     const openPositions = await paperTradeDao.getOpenPositions(this.futuresAccountId);
     const existingPos = openPositions.find((p) => p.symbol === symbol);
-    if (existingPos || openPositions.length >= 2) return;
+    if (existingPos || openPositions.length >= FUTURES_RISK.MAX_OPEN_POSITIONS) return;
 
     const currentBalance = parseFloat(account.balance);
     const riskPerTrade = parseFloat(account.risk_per_trade) || 2.0;

@@ -89,6 +89,10 @@ exports.SPOT_RISK = Object.freeze({
   MAX_TRANCHES_PER_SYMBOL: 3
 });
 
+exports.FUTURES_RISK = Object.freeze({
+  MAX_OPEN_POSITIONS: 3
+});
+
 exports.MT5 = Object.freeze({
   SESSION_STATUS: Object.freeze({ ACTIVE: 'ACTIVE', ARCHIVED: 'ARCHIVED' }),
   KEY_STATUS: Object.freeze({ ACTIVE: 'ACTIVE', REVOKED: 'REVOKED' }),
