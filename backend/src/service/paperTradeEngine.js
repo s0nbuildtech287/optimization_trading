@@ -736,7 +736,7 @@ class PaperTradeEngine {
     const [account, orders, snapshots, logs] = await Promise.all([
       paperTradeDao.getAccount(accId),
       paperTradeDao.getOrderHistory(accId, 50),
-      paperTradeDao.getEquityHistory(accId, 100),
+      paperTradeDao.getEquityHistory(accId, 500),
       paperTradeDao.getLogs(accId, 40)
     ]);
 
@@ -765,6 +765,8 @@ class PaperTradeEngine {
 
     if (mode === 'spot') {
       const rawHoldings = await paperTradeDao.getSpotHoldings(accId);
+      let totalCoinValue = 0;
+      let totalCost = 0;
       const holdings = rawHoldings.map((h) => {
         const curPrice = livePrices[h.symbol] || parseFloat(h.avg_buy_price);
         const qty = parseFloat(h.quantity);
@@ -772,6 +774,8 @@ class PaperTradeEngine {
         const curVal = qty * curPrice;
         const pnl = curVal - cost;
         const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
+        totalCoinValue += curVal;
+        totalCost += cost;
         return {
           ...h,
           current_price: curPrice,
@@ -781,15 +785,30 @@ class PaperTradeEngine {
         };
       });
 
+      const usdtBalance = parseFloat(account.balance || 0);
+      const currentEquity = usdtBalance + totalCoinValue;
+      const unrealizedPnl = totalCoinValue - totalCost;
+
+      const finalSnapshots = [...snapshots];
+      finalSnapshots.push({
+        account_id: accId,
+        balance: account.balance,
+        equity: Number(currentEquity.toFixed(2)),
+        drawdown_pct: account.max_drawdown_pct,
+        timestamp: new Date().toISOString()
+      });
+
       return {
         account: {
           ...account,
+          equity: Number(currentEquity.toFixed(2)),
+          unrealized_pnl: Number(unrealizedPnl.toFixed(2)),
           winrate
         },
         trackedSymbols: account.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'],
         holdings,
         orders,
-        equitySnapshots: snapshots,
+        equitySnapshots: finalSnapshots,
         logs,
         livePrices,
         lastEvaluations: this.lastEvaluations
@@ -798,15 +817,37 @@ class PaperTradeEngine {
 
     // Default: Futures
     const positions = await paperTradeDao.getOpenPositions(accId);
+    let totalUnrealized = 0;
+    for (const p of positions) {
+      const curPrice = livePrices[p.symbol] || parseFloat(p.current_price || p.entry_price);
+      const entryPrice = parseFloat(p.entry_price);
+      const qty = parseFloat(p.quantity);
+      const pnl = p.side === 'LONG' ? (curPrice - entryPrice) * qty : (entryPrice - curPrice) * qty;
+      totalUnrealized += pnl;
+    }
+    const balance = parseFloat(account.balance || 0);
+    const currentEquity = balance + totalUnrealized;
+
+    const finalSnapshots = [...snapshots];
+    finalSnapshots.push({
+      account_id: accId,
+      balance: account.balance,
+      equity: Number(currentEquity.toFixed(2)),
+      drawdown_pct: account.max_drawdown_pct,
+      timestamp: new Date().toISOString()
+    });
+
     return {
       account: {
         ...account,
+        equity: Number(currentEquity.toFixed(2)),
+        unrealized_pnl: Number(totalUnrealized.toFixed(2)),
         winrate
       },
       trackedSymbols: account.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'],
       positions,
       orders,
-      equitySnapshots: snapshots,
+      equitySnapshots: finalSnapshots,
       logs,
       livePrices,
       lastEvaluations: this.lastEvaluations

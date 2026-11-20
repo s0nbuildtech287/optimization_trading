@@ -276,9 +276,14 @@ async function createEquitySnapshot(accountId, balance, equity, drawdownPct) {
   return res.rows[0];
 }
 
-async function getEquityHistory(accountId = 'acc_binance_futures', limit = 100) {
+async function getEquityHistory(accountId = 'acc_binance_futures', limit = 500) {
   const res = await pool.query(
-    'SELECT * FROM paper_equity_snapshots WHERE account_id = $1 ORDER BY timestamp ASC LIMIT $2',
+    `SELECT * FROM (
+      SELECT * FROM paper_equity_snapshots 
+      WHERE account_id = $1 
+      ORDER BY timestamp DESC 
+      LIMIT $2
+    ) sub ORDER BY timestamp ASC`,
     [accountId, limit]
   );
   return res.rows;

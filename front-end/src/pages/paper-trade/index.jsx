@@ -242,11 +242,17 @@ export default function PaperTradingPage() {
   const account = data?.account || {};
   const positions = data?.positions || [];
   const orders = data?.orders || [];
-  const snapshots = (data?.equitySnapshots || []).map((s) => ({
-    time: new Date(s.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    equity: parseFloat(s.equity),
-    balance: parseFloat(s.balance)
-  }));
+  const snapshots = (data?.equitySnapshots || []).map((s) => {
+    const d = new Date(s.timestamp);
+    const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
+    const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return {
+      time: `${dateStr} ${timeStr}`,
+      rawTime: s.timestamp,
+      equity: parseFloat(s.equity),
+      balance: parseFloat(s.balance)
+    };
+  });
   const livePrices = data?.livePrices || {};
   const logs = data?.logs || [];
   const lastEvaluations = data?.lastEvaluations || {};
@@ -851,8 +857,9 @@ export default function PaperTradingPage() {
                 <XAxis
                   dataKey="time"
                   stroke={theme.palette.text.secondary}
-                  fontSize={12}
+                  fontSize={11}
                   tickLine={false}
+                  minTickGap={40}
                 />
                 <YAxis
                   domain={['auto', 'auto']}
@@ -870,6 +877,7 @@ export default function PaperTradingPage() {
                     boxShadow: theme.customShadows?.z1
                   }}
                   formatter={(v) => [`$${Number(v).toFixed(2)}`, 'Tài sản (Equity)']}
+                  labelFormatter={(label) => `Thời gian: ${label}`}
                 />
                 <Area
                   type="monotone"
