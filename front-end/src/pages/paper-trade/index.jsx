@@ -117,10 +117,13 @@ export default function PaperTradingPage() {
   // Khoảng thời gian hiển thị biểu đồ Equity Curve ('24h', '3d', '7d', 'all')
   const [chartTimeframe, setChartTimeframe] = useState('all');
 
-  const fetchData = async (isInitial = false) => {
+  // Bot đang được chọn để theo dõi chi tiết (Multi-Bot Tournament)
+  const [selectedBotId, setSelectedBotId] = useState('acc_binance_futures');
+
+  const fetchData = async (isInitial = false, botId = selectedBotId) => {
     try {
       if (isInitial) setLoading(true);
-      const res = await getPaperTradeDashboard();
+      const res = await getPaperTradeDashboard('futures', botId);
       if (res.success && res.data) {
         setData(res.data);
         setErrorMsg('');
@@ -133,28 +136,29 @@ export default function PaperTradingPage() {
   };
 
   useEffect(() => {
-    fetchData(true);
+    fetchData(true, selectedBotId);
+    if (pollTimerRef.current) clearInterval(pollTimerRef.current);
     pollTimerRef.current = setInterval(() => {
-      fetchData(false);
+      fetchData(false, selectedBotId);
     }, 2500);
 
     return () => {
       if (pollTimerRef.current) clearInterval(pollTimerRef.current);
     };
-  }, []);
+  }, [selectedBotId]);
 
   const handleToggleBot = async () => {
     if (!data?.account) return;
     try {
       setToggling(true);
       const nextState = !data.account.is_bot_active;
-      await togglePaperTradeBot(nextState);
+      await togglePaperTradeBot(nextState, 'futures', selectedBotId);
       setSnackbar({
         open: true,
         message: nextState ? 'Đã BẬT bot tự động quét tín hiệu!' : 'Đã TẮT bot tự động.',
         severity: nextState ? 'success' : 'info'
       });
-      await fetchData(false);
+      await fetchData(false, selectedBotId);
     } catch (err) {
       setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
@@ -210,11 +214,13 @@ export default function PaperTradingPage() {
       await updatePaperTradeSettings({
         balance: balNum,
         riskPerTrade: riskNum,
-        leverage: levNum
+        leverage: levNum,
+        mode: 'futures',
+        botId: selectedBotId
       });
       setSettingsOpen(false);
       setSnackbar({ open: true, message: 'Cập nhật cấu hình vốn thành công!', severity: 'success' });
-      await fetchData(false);
+      await fetchData(false, selectedBotId);
     } catch (err) {
       setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
@@ -241,10 +247,10 @@ export default function PaperTradingPage() {
     }
     try {
       setWithdrawing(true);
-      const res = await withdrawPaperTradeProfit({ amount: amt, mode: 'futures' });
+      const res = await withdrawPaperTradeProfit({ amount: amt, mode: 'futures', botId: selectedBotId });
       setWithdrawOpen(false);
       setSnackbar({ open: true, message: `🎉 ${res.message || `Đã rút thành công $${amt.toFixed(2)} USDT về két!`}`, severity: 'success' });
-      await fetchData(false);
+      await fetchData(false, selectedBotId);
     } catch (err) {
       setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
@@ -264,17 +270,17 @@ export default function PaperTradingPage() {
 
     setConfirmDialog({
       open: true,
-      title: '⚠️ Xác nhận Reset tài khoản Futures',
-      content: `Thao tác này sẽ xóa toàn bộ vị thế đang mở và lịch sử lệnh, đưa vốn về lại mốc $${balNum.toFixed(2)} USDT. Hành động này không thể hoàn tác!`,
+      title: '⚠️ Xác nhận Reset tài khoản Bot',
+      content: `Thao tác này sẽ xóa toàn bộ vị thế đang mở và lịch sử lệnh của Bot này, đưa vốn về lại mốc $${balNum.toFixed(2)} USDT. Hành động này không thể hoàn tác!`,
       confirmText: 'Xác nhận Reset',
       confirmColor: 'error',
       onConfirm: async () => {
         try {
           setSavingSettings(true);
-          await resetPaperTradeAccount(balNum, riskNum, levNum);
+          await resetPaperTradeAccount(balNum, riskNum, levNum, 'futures', selectedBotId);
           setSettingsOpen(false);
           setSnackbar({ open: true, message: `Đã reset tài khoản về mức vốn $${balNum.toFixed(2)} USDT!`, severity: 'success' });
-          await fetchData(false);
+          await fetchData(false, selectedBotId);
         } catch (err) {
           setSnackbar({ open: true, message: err.message, severity: 'error' });
         } finally {
@@ -289,11 +295,11 @@ export default function PaperTradingPage() {
     if (!sym) return;
     try {
       setAddingSymbol(true);
-      await addPaperTradeSymbol(sym, 'futures');
+      await addPaperTradeSymbol(sym, 'futures', selectedBotId);
       setInputSymbol('');
       setAddSymbolOpen(false);
       setSnackbar({ open: true, message: `Đã thêm cặp coin ${sym} theo dõi thành công!`, severity: 'success' });
-      await fetchData(false);
+      await fetchData(false, selectedBotId);
     } catch (err) {
       setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
@@ -310,9 +316,9 @@ export default function PaperTradingPage() {
       confirmColor: 'warning',
       onConfirm: async () => {
         try {
-          await removePaperTradeSymbol(symToRemove, 'futures');
+          await removePaperTradeSymbol(symToRemove, 'futures', selectedBotId);
           setSnackbar({ open: true, message: `Đã bỏ theo dõi cặp ${symToRemove}`, severity: 'info' });
-          await fetchData(false);
+          await fetchData(false, selectedBotId);
         } catch (err) {
           setSnackbar({ open: true, message: err.message, severity: 'error' });
         }
@@ -420,7 +426,7 @@ export default function PaperTradingPage() {
               <Box>
                 <Stack direction="row" alignItems="center" spacing={1}>
                   <Typography variant="h4" fontWeight={700} color="text.primary">
-                    Auto Trade
+                    {account.name || 'Futures Auto Trade'}
                   </Typography>
                   <Chip
                     icon={
@@ -443,7 +449,7 @@ export default function PaperTradingPage() {
                   />
                 </Stack>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                  Vốn: <b>${balance.toFixed(2)} USDT</b> • Đòn bẩy {account.leverage || 3}x • Rủi ro ${parseFloat(account.risk_per_trade || 2).toFixed(2)}/lệnh • Chiến lược Trend Following EMA + RSI + ATR
+                  Vốn gốc: <b>${initialBalance.toFixed(2)} USDT</b> • Số dư ví: <b>${balance.toFixed(2)} USDT</b> • Đòn bẩy {account.leverage || 3}x • Rủi ro ${parseFloat(account.risk_per_trade || 2).toFixed(2)}/lệnh (Lệnh $10-$15)
                 </Typography>
               </Box>
             </Stack>
@@ -509,6 +515,128 @@ export default function PaperTradingPage() {
             </Tooltip>
           </Stack>
         </Stack>
+      </MainCard>
+
+      {/* 1.1. Đấu trường Chiến lược Đa Bot (Multi-Bot Tournament - $100/Bot) */}
+      <MainCard
+        border
+        sx={{
+          bgcolor: isDark ? 'background.paper' : 'grey.50',
+          borderColor: 'divider',
+          width: '100%',
+          p: 0.5
+        }}
+      >
+        <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} sx={{ mb: 1.5, px: 1 }} spacing={1}>
+          <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap">
+            <TrophyOutlined style={{ fontSize: 20, color: '#f59e0b' }} />
+            <Typography variant="subtitle1" fontWeight={800} color="text.primary">
+              ĐẤU TRƯỜNG CHIẾN LƯỢC ĐA BOT ($100 / BOT)
+            </Typography>
+            <Chip
+              label="3 BOTS LIVE"
+              size="small"
+              color="primary"
+              sx={{ height: 22, fontSize: 10, fontWeight: 700 }}
+            />
+          </Stack>
+          <Typography variant="caption" color="text.secondary">
+            Bấm chọn từng Bot để xem riêng biểu đồ Equity Curve, vị thế và lịch sử lệnh
+          </Typography>
+        </Stack>
+
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+            gap: 1.5
+          }}
+        >
+          {(data?.botList || [
+            { id: 'acc_binance_futures', name: 'Bot 1: Trend Pullback (EMA)', desc: 'Thuận xu hướng EMA200 + Pullback EMA21 & RSI', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true },
+            { id: 'acc_futures_reversion', name: 'Bot 2: Bollinger Reversion', desc: 'Đảo chiều Sideway dải Bollinger Bands + RSI Quá mua/bán', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true },
+            { id: 'acc_futures_breakout', name: 'Bot 3: Breakout Momentum', desc: 'Phá vỡ đỉnh/đáy 20 nến Donchian + Bùng nổ Volume', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true }
+          ]).map((bot) => {
+            const isSelected = selectedBotId === bot.id;
+            const isPnlPositive = (bot.pnl || 0) >= 0;
+
+            return (
+              <Box
+                key={bot.id}
+                onClick={() => setSelectedBotId(bot.id)}
+                sx={{
+                  p: 2,
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                  border: '2px solid',
+                  borderColor: isSelected ? 'primary.main' : 'divider',
+                  bgcolor: isSelected 
+                    ? (isDark ? alpha(theme.palette.primary.main, 0.12) : alpha(theme.palette.primary.main, 0.05))
+                    : (isDark ? 'background.default' : '#ffffff'),
+                  boxShadow: isSelected ? theme.customShadows?.z2 : 'none',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    borderColor: isSelected ? 'primary.main' : theme.palette.text.secondary,
+                    transform: 'translateY(-2px)'
+                  }
+                }}
+              >
+                <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 1 }}>
+                  <Box sx={{ pr: 1 }}>
+                    <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap">
+                      <Typography variant="subtitle2" fontWeight={800} color={isSelected ? 'primary.main' : 'text.primary'}>
+                        {bot.name}
+                      </Typography>
+                      {isSelected && (
+                        <Chip label="ĐANG XEM" size="small" color="primary" sx={{ height: 20, fontSize: 10, fontWeight: 700 }} />
+                      )}
+                    </Stack>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.3, lineHeight: 1.3 }}>
+                      {bot.desc}
+                    </Typography>
+                  </Box>
+                  <Chip
+                    label={bot.is_bot_active ? 'BẬT' : 'TẮT'}
+                    size="small"
+                    color={bot.is_bot_active ? 'success' : 'default'}
+                    variant={bot.is_bot_active ? 'filled' : 'outlined'}
+                    sx={{ height: 20, fontSize: 10, fontWeight: 700 }}
+                  />
+                </Stack>
+
+                <Divider sx={{ my: 1, borderColor: 'divider' }} />
+
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">Tài sản (Equity):</Typography>
+                    <Typography variant="h5" fontWeight={800} color="text.primary">
+                      ${Number(bot.equity || 100).toFixed(2)}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ textAlign: 'right' }}>
+                    <Typography variant="caption" color="text.secondary">Lãi/Lỗ:</Typography>
+                    <Typography
+                      variant="body2"
+                      fontWeight={700}
+                      color={isPnlPositive ? 'success.main' : 'error.main'}
+                    >
+                      {isPnlPositive ? '+' : ''}${Number(bot.pnl || 0).toFixed(2)} ({isPnlPositive ? '+' : ''}{Number(bot.pnlPct || 0).toFixed(1)}%)
+                    </Typography>
+                  </Box>
+                </Stack>
+
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 1 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Thắng/Tổng: <b>{bot.winning_trades || 0}/{bot.total_trades || 0} lệnh</b>
+                  </Typography>
+                  <Typography variant="caption" fontWeight={700} color="primary.main">
+                    Winrate: {Number(bot.winrate || 0).toFixed(1)}%
+                  </Typography>
+                </Stack>
+              </Box>
+            );
+          })}
+        </Box>
       </MainCard>
 
       {withdrawSuccessMsg && (

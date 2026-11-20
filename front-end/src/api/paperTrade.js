@@ -1,16 +1,18 @@
 import { authFetch } from './authFetch';
 
-export async function getPaperTradeDashboard(mode = 'futures') {
-  const res = await authFetch(`/api/paper-trade/dashboard?mode=${mode}`);
+export async function getPaperTradeDashboard(mode = 'futures', botId = null) {
+  let url = `/api/paper-trade/dashboard?mode=${mode}`;
+  if (botId) url += `&botId=${botId}`;
+  const res = await authFetch(url);
   if (!res.ok) throw new Error('Không thể tải dữ liệu Paper Trading');
   return res.json();
 }
 
-export async function togglePaperTradeBot(isActive, mode = 'futures') {
+export async function togglePaperTradeBot(isActive, mode = 'futures', botId = null) {
   const res = await authFetch('/api/paper-trade/toggle', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ isActive, mode })
+    body: JSON.stringify({ isActive, mode, botId })
   });
   if (!res.ok) throw new Error('Không thể thay đổi trạng thái Bot');
   return res.json();
@@ -44,52 +46,52 @@ export async function buySpotHolding(symbol, amountUsdt = 25) {
   return res.json();
 }
 
-export async function resetPaperTradeAccount(initialBalance = 100.0, riskPerTrade = null, leverage = null, mode = 'futures') {
+export async function resetPaperTradeAccount(initialBalance = 100.0, riskPerTrade = null, leverage = null, mode = 'futures', botId = null) {
   const res = await authFetch('/api/paper-trade/reset', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ initialBalance, riskPerTrade, leverage, mode })
+    body: JSON.stringify({ initialBalance, riskPerTrade, leverage, mode, botId })
   });
   if (!res.ok) throw new Error('Không thể reset tài khoản');
   return res.json();
 }
 
-export async function updatePaperTradeSettings({ balance, riskPerTrade, leverage, mode = 'futures' }) {
+export async function updatePaperTradeSettings({ balance, riskPerTrade, leverage, mode = 'futures', botId = null }) {
   const res = await authFetch('/api/paper-trade/settings', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ balance, riskPerTrade, leverage, mode })
+    body: JSON.stringify({ balance, riskPerTrade, leverage, mode, botId })
   });
   if (!res.ok) throw new Error('Không thể cập nhật cài đặt');
   return res.json();
 }
 
-export async function withdrawPaperTradeProfit({ amount, mode = 'futures' }) {
+export async function withdrawPaperTradeProfit({ amount, mode = 'futures', botId = null }) {
   const res = await authFetch('/api/paper-trade/withdraw', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ amount, mode })
+    body: JSON.stringify({ amount, mode, botId })
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Không thể rút tiền lãi');
   return data;
 }
 
-export async function addPaperTradeSymbol(symbol, mode = 'futures') {
+export async function addPaperTradeSymbol(symbol, mode = 'futures', botId = null) {
   const res = await authFetch('/api/paper-trade/symbols/add', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ symbol, mode })
+    body: JSON.stringify({ symbol, mode, botId })
   });
   if (!res.ok) throw new Error('Không thể thêm cặp coin');
   return res.json();
 }
 
-export async function removePaperTradeSymbol(symbol, mode = 'futures') {
+export async function removePaperTradeSymbol(symbol, mode = 'futures', botId = null) {
   const res = await authFetch('/api/paper-trade/symbols/remove', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ symbol, mode })
+    body: JSON.stringify({ symbol, mode, botId })
   });
   if (!res.ok) throw new Error('Không thể xóa cặp coin');
   return res.json();

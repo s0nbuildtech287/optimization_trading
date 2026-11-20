@@ -3,10 +3,36 @@ const paperStrategyService = require('./paperStrategyService');
 const paperTradeDao = require('../dao/paperTradeDao');
 const { SPOT_RISK, FUTURES_RISK } = require('../utils/constants');
 
+// Danh sách các Bot Futures độc lập (Multi-Bot Tournament)
+const FUTURES_BOTS = [
+  {
+    id: 'acc_binance_futures',
+    name: 'Bot 1: Trend Pullback (EMA)',
+    desc: 'Thuận xu hướng EMA200 + Pullback EMA21 & RSI',
+    strategyKey: 'TREND_PULLBACK',
+    evaluator: paperStrategyService.evaluateTrendPullbackStrategy
+  },
+  {
+    id: 'acc_futures_reversion',
+    name: 'Bot 2: Bollinger Reversion',
+    desc: 'Đảo chiều Sideway dải Bollinger Bands + RSI Quá mua/Quá bán',
+    strategyKey: 'BOLLINGER_REVERSION',
+    evaluator: paperStrategyService.evaluateBollingerMeanReversionStrategy
+  },
+  {
+    id: 'acc_futures_breakout',
+    name: 'Bot 3: Breakout Momentum',
+    desc: 'Phá vỡ đỉnh/đáy 20 nến Donchian + Bùng nổ Volume',
+    strategyKey: 'BREAKOUT_MOMENTUM',
+    evaluator: paperStrategyService.evaluateBreakoutMomentumStrategy
+  }
+];
+
 class PaperTradeEngine {
   constructor() {
     this.futuresAccountId = 'acc_binance_futures';
     this.spotAccountId = 'acc_binance_spot';
+    this.futuresBots = FUTURES_BOTS;
     this.isProcessingTick = false;
     this.snapshotTimer = null;
     this.lastEvaluations = {};
@@ -96,66 +122,68 @@ class PaperTradeEngine {
     this.isProcessingTick = true;
 
     try {
-      // 1. CẬP NHẬT FUTURES
-      const openPositions = await paperTradeDao.getOpenPositions(this.futuresAccountId);
-      const symbolPositions = openPositions.filter((p) => p.symbol === symbol);
+      // 1. CẬP NHẬT FUTURES CHO TẤT CẢ CÁC BOT
+      for (const bot of this.futuresBots) {
+        const openPositions = await paperTradeDao.getOpenPositions(bot.id);
+        const symbolPositions = openPositions.filter((p) => p.symbol === symbol);
 
-      for (const pos of symbolPositions) {
-        const entryPrice = parseFloat(pos.entry_price);
-        const stopLoss = parseFloat(pos.stop_loss);
-        const takeProfit = parseFloat(pos.take_profit);
-        const quantity = parseFloat(pos.quantity);
-        const margin = parseFloat(pos.margin);
-        const isBreakeven = pos.is_breakeven_triggered;
+        for (const pos of symbolPositions) {
+          const entryPrice = parseFloat(pos.entry_price);
+          const stopLoss = parseFloat(pos.stop_loss);
+          const takeProfit = parseFloat(pos.take_profit);
+          const quantity = parseFloat(pos.quantity);
+          const margin = parseFloat(pos.margin);
+          const isBreakeven = pos.is_breakeven_triggered;
 
-        let pnl = 0;
-        if (pos.side === 'LONG') {
-          pnl = (currentPrice - entryPrice) * quantity;
-        } else {
-          pnl = (entryPrice - currentPrice) * quantity;
+          let pnl = 0;
+          if (pos.side === 'LONG') {
+            pnl = (currentPrice - entryPrice) * quantity;
+          } else {
+            pnl = (entryPrice - currentPrice) * quantity;
+          }
+          const pnlPct = margin > 0 ? (pnl / margin) * 100 : 0;
+
+          // Dời SL về Breakeven khi lãi >= $2 (1R)
+          if (!isBreakeven && pnl >= 2.00) {
+            await paperTradeDao.updatePosition(pos.id, {
+              stop_loss: entryPrice,
+              is_breakeven_triggered: true,
+              current_price: currentPrice,
+              unrealized_pnl: pnl,
+              unrealized_pnl_pct: pnlPct
+            });
+            await paperTradeDao.createLog(
+              bot.id,
+              symbol,
+              'INFO',
+              `🛡️ Dời Stop Loss về hòa vốn (Breakeven @ ${entryPrice}) cho vị thế ${pos.side} [${bot.name}] khi đạt lãi +$${pnl.toFixed(2)}`
+            );
+            continue;
+          }
+
+          // Kiểm tra đóng lệnh Futures
+          let exitReason = null;
+          if (pos.side === 'LONG') {
+            if (currentPrice <= stopLoss) exitReason = 'STOP_LOSS';
+            else if (currentPrice >= takeProfit) exitReason = 'TAKE_PROFIT';
+          } else {
+            if (currentPrice >= stopLoss) exitReason = 'STOP_LOSS';
+            else if (currentPrice <= takeProfit) exitReason = 'TAKE_PROFIT';
+          }
+
+          if (exitReason) {
+            await this.closeFuturesPosition(pos, currentPrice, exitReason);
+          } else {
+            await paperTradeDao.updatePosition(pos.id, {
+              current_price: currentPrice,
+              unrealized_pnl: pnl,
+              unrealized_pnl_pct: pnlPct
+            });
+          }
         }
-        const pnlPct = margin > 0 ? (pnl / margin) * 100 : 0;
 
-        // Dời SL về Breakeven khi lãi >= $2 (1R)
-        if (!isBreakeven && pnl >= 2.00) {
-          await paperTradeDao.updatePosition(pos.id, {
-            stop_loss: entryPrice,
-            is_breakeven_triggered: true,
-            current_price: currentPrice,
-            unrealized_pnl: pnl,
-            unrealized_pnl_pct: pnlPct
-          });
-          await paperTradeDao.createLog(
-            this.futuresAccountId,
-            symbol,
-            'INFO',
-            `🛡️ Dời Stop Loss về hòa vốn (Breakeven @ ${entryPrice}) cho vị thế ${pos.side} khi đạt lãi +$${pnl.toFixed(2)}`
-          );
-          continue;
-        }
-
-        // Kiểm tra đóng lệnh Futures
-        let exitReason = null;
-        if (pos.side === 'LONG') {
-          if (currentPrice <= stopLoss) exitReason = 'STOP_LOSS';
-          else if (currentPrice >= takeProfit) exitReason = 'TAKE_PROFIT';
-        } else {
-          if (currentPrice >= stopLoss) exitReason = 'STOP_LOSS';
-          else if (currentPrice <= takeProfit) exitReason = 'TAKE_PROFIT';
-        }
-
-        if (exitReason) {
-          await this.closeFuturesPosition(pos, currentPrice, exitReason);
-        } else {
-          await paperTradeDao.updatePosition(pos.id, {
-            current_price: currentPrice,
-            unrealized_pnl: pnl,
-            unrealized_pnl_pct: pnlPct
-          });
-        }
+        await this.recalculateAccountEquity(bot.id);
       }
-
-      await this.recalculateAccountEquity(this.futuresAccountId);
 
       // 2. CẬP NHẬT SPOT HOLDINGS & RECHECK SPOT TAKE PROFIT
       await this.checkSpotHoldingsUpdate(symbol, currentPrice);
@@ -226,6 +254,7 @@ class PaperTradeEngine {
    * Đóng một vị thế Futures
    */
   async closeFuturesPosition(pos, exitPrice, exitReason) {
+    const targetAccId = pos.account_id || this.futuresAccountId;
     const entryPrice = parseFloat(pos.entry_price);
     const quantity = parseFloat(pos.quantity);
     const margin = parseFloat(pos.margin);
@@ -245,7 +274,7 @@ class PaperTradeEngine {
     const pnlPct = margin > 0 ? (netPnl / margin) * 100 : 0;
 
     await paperTradeDao.createOrder({
-      accountId: this.futuresAccountId,
+      accountId: targetAccId,
       symbol: pos.symbol,
       side: pos.side,
       entryPrice,
@@ -262,7 +291,7 @@ class PaperTradeEngine {
 
     await paperTradeDao.deletePosition(pos.id);
 
-    const account = await paperTradeDao.getAccount(this.futuresAccountId);
+    const account = await paperTradeDao.getAccount(targetAccId);
     if (account) {
       const newBalance = parseFloat(account.balance) + netPnl;
       const totalTrades = account.total_trades + 1;
@@ -270,7 +299,7 @@ class PaperTradeEngine {
       const losingTrades = netPnl <= 0 ? account.losing_trades + 1 : account.losing_trades;
       const realizedPnl = parseFloat(account.realized_pnl) + netPnl;
 
-      await paperTradeDao.updateAccount(this.futuresAccountId, {
+      await paperTradeDao.updateAccount(targetAccId, {
         balance: Number(newBalance.toFixed(2)),
         realized_pnl: Number(realizedPnl.toFixed(2)),
         total_trades: totalTrades,
@@ -281,13 +310,13 @@ class PaperTradeEngine {
 
     const icon = netPnl > 0 ? '🟢' : '🔴';
     await paperTradeDao.createLog(
-      this.futuresAccountId,
+      targetAccId,
       pos.symbol,
       netPnl > 0 ? 'SUCCESS' : 'WARN',
       `${icon} Đóng vị thế Futures ${pos.side} [${exitReason}] @ ${exitPrice}. Lãi/Lỗ ròng: ${netPnl >= 0 ? '+' : ''}$${netPnl.toFixed(2)} (${pnlPct.toFixed(1)}%)`
     );
 
-    await this.recordEquitySnapshot(this.futuresAccountId);
+    await this.recordEquitySnapshot(targetAccId);
   }
 
   /**
@@ -295,18 +324,25 @@ class PaperTradeEngine {
    */
   async handleCandleClosed(symbol, candles) {
     try {
-      // 1. Tính toán chỉ báo kỹ thuật
-      const signal = paperStrategyService.evaluateTrendPullbackStrategy(symbol, candles);
-      if (signal && signal.indicators) {
-        this.lastEvaluations[symbol] = signal;
+      // 1. Tính toán chỉ báo kỹ thuật Bot 1 (Trend Pullback) làm tham chiếu UI
+      const signalTrend = paperStrategyService.evaluateTrendPullbackStrategy(symbol, candles);
+      if (signalTrend && signalTrend.indicators) {
+        this.lastEvaluations[symbol] = signalTrend;
       }
 
-      // 2. THỰC THI CHIẾN LƯỢC FUTURES
-      await this.evaluateFuturesCandle(symbol, signal);
+      // 2. THỰC THI CHIẾN LƯỢC CHO TỪNG BOT FUTURES ĐỘC LẬP
+      for (const bot of this.futuresBots) {
+        try {
+          const botSignal = bot.evaluator(symbol, candles);
+          await this.evaluateFuturesCandleForBot(bot, symbol, botSignal);
+        } catch (botErr) {
+          console.error(`[PaperEngine-${bot.id}] Lỗi thực thi bot:`, botErr.message);
+        }
+      }
 
       // 3. THỰC THI CHIẾN LƯỢC SPOT (Smart RSI DCA)
-      if (signal && signal.indicators) {
-        await this.evaluateSpotCandle(symbol, signal.indicators);
+      if (signalTrend && signalTrend.indicators) {
+        await this.evaluateSpotCandle(symbol, signalTrend.indicators);
       }
     } catch (err) {
       console.error('[PaperEngine] Error in handleCandleClosed:', err.message);
@@ -314,14 +350,14 @@ class PaperTradeEngine {
   }
 
   /**
-   * Logic mở lệnh Futures khi có tín hiệu nến
+   * Logic mở lệnh Futures cho từng Bot độc lập
    */
-  async evaluateFuturesCandle(symbol, signal) {
-    const account = await paperTradeDao.getAccount(this.futuresAccountId);
+  async evaluateFuturesCandleForBot(bot, symbol, signal) {
+    const account = await paperTradeDao.getAccount(bot.id);
     if (!account || !account.is_bot_active) return;
     if (!signal || signal.action === 'HOLD') return;
 
-    const openPositions = await paperTradeDao.getOpenPositions(this.futuresAccountId);
+    const openPositions = await paperTradeDao.getOpenPositions(bot.id);
     const existingPos = openPositions.find((p) => p.symbol === symbol);
     if (existingPos || openPositions.length >= FUTURES_RISK.MAX_OPEN_POSITIONS) return;
 
@@ -345,7 +381,7 @@ class PaperTradeEngine {
 
     let margin = notional / leverage;
     
-    // Tính toán Free Margin khả dụng (Số dư trừ đi tổng margin các lệnh đang mở)
+    // Tính toán Free Margin khả dụng của Bot này
     let usedMargin = 0;
     for (const p of openPositions) {
       usedMargin += parseFloat(p.margin || 0);
@@ -372,12 +408,12 @@ class PaperTradeEngine {
     }
 
     if (margin > freeMargin || notional < 6.0 || margin < 3.0) {
-      console.warn(`[PaperEngine-Futures] Bỏ qua vào lệnh ${symbol}: Ký quỹ $${margin.toFixed(2)} vượt Free Margin $${freeMargin.toFixed(2)} hoặc không đủ min notional.`);
+      console.warn(`[PaperEngine-${bot.id}] Bỏ qua vào lệnh ${symbol}: Ký quỹ $${margin.toFixed(2)} vượt Free Margin $${freeMargin.toFixed(2)}.`);
       return;
     }
 
     await paperTradeDao.createPosition({
-      accountId: this.futuresAccountId,
+      accountId: bot.id,
       symbol,
       side: signal.action,
       entryPrice,
@@ -395,11 +431,21 @@ class PaperTradeEngine {
     });
 
     await paperTradeDao.createLog(
-      this.futuresAccountId,
+      bot.id,
       symbol,
       'INFO',
-      `🚀 Mở vị thế Futures [${signal.action}] ${symbol} @ ${entryPrice}. SL: ${stopLoss} | TP: ${takeProfit} | Ký quỹ: $${margin.toFixed(2)} (${leverage}x).`
+      `🚀 [${bot.name}] Mở vị thế Futures [${signal.action}] ${symbol} @ ${entryPrice}. SL: ${stopLoss} | TP: ${takeProfit} | Ký quỹ: $${margin.toFixed(2)} (${leverage}x). Lý do: ${signal.reason}`
     );
+
+    await this.recordEquitySnapshot(bot.id);
+  }
+
+  // Tương thích ngược với hàm cũ
+  async evaluateFuturesCandle(symbol, signal) {
+    const defaultBot = this.futuresBots[0];
+    if (defaultBot) {
+      await this.evaluateFuturesCandleForBot(defaultBot, symbol, signal);
+    }
   }
 
   /**
@@ -597,7 +643,9 @@ class PaperTradeEngine {
   }
 
   async recordEquitySnapshot(accountId = null) {
-    const accIds = accountId ? [accountId] : [this.futuresAccountId, this.spotAccountId];
+    const accIds = accountId 
+      ? [accountId] 
+      : [...this.futuresBots.map((b) => b.id), this.spotAccountId];
     for (const accId of accIds) {
       try {
         const account = await paperTradeDao.getAccount(accId);
@@ -614,28 +662,40 @@ class PaperTradeEngine {
 
   // --- API CONTROL METHODS (SUPPORT BOTH FUTURES & SPOT) ---
 
-  resolveAccountId(mode) {
-    return mode === 'spot' ? this.spotAccountId : this.futuresAccountId;
+  resolveAccountId(mode, botId = null) {
+    if (mode === 'spot') return this.spotAccountId;
+    if (botId && this.futuresBots.some((b) => b.id === botId)) return botId;
+    return this.futuresAccountId;
   }
 
-  async toggleBot(mode = 'futures', isActive) {
-    const accId = this.resolveAccountId(mode);
+  async toggleBot(mode = 'futures', isActive, botId = null) {
+    const accId = this.resolveAccountId(mode, botId);
     const account = await paperTradeDao.updateAccount(accId, {
       is_bot_active: isActive
     });
+    const botName = this.futuresBots.find((b) => b.id === accId)?.name || mode.toUpperCase();
     await paperTradeDao.createLog(
       accId,
       'SYSTEM',
       'INFO',
-      `Tài khoản [${mode.toUpperCase()}] đã ${isActive ? 'BẬT' : 'TẮT'} chế độ tự động.`
+      `Tài khoản [${botName}] đã ${isActive ? 'BẬT' : 'TẮT'} chế độ tự động.`
     );
 
     // Nếu vừa BẬT bot Futures, lập tức quét tín hiệu đang sẵn sàng để vào lệnh
     if (isActive && mode === 'futures') {
-      const symbols = account.tracked_symbols || ['PAXGUSDT', 'BTCUSDT', 'SOLUSDT', 'ETHUSDT', 'BNBUSDT'];
+      const symbols = account?.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
+      const botObj = this.futuresBots.find((b) => b.id === accId) || this.futuresBots[0];
       for (const sym of symbols) {
-        if (this.lastEvaluations[sym] && this.lastEvaluations[sym].action !== 'HOLD') {
-          await this.evaluateFuturesCandle(sym, this.lastEvaluations[sym]);
+        const candles = binanceWsService.getCandles(sym);
+        if (candles && candles.length >= 30) {
+          try {
+            const sig = botObj.evaluator(sym, candles);
+            if (sig && sig.action !== 'HOLD') {
+              await this.evaluateFuturesCandleForBot(botObj, sym, sig);
+            }
+          } catch (e) {
+            // ignore
+          }
         }
       }
     }
@@ -643,8 +703,8 @@ class PaperTradeEngine {
     return account;
   }
 
-  async resetAccount(mode = 'futures', initialBalance = 100.0, riskPerTrade = null, leverage = null) {
-    const accId = this.resolveAccountId(mode);
+  async resetAccount(mode = 'futures', initialBalance = 100.0, riskPerTrade = null, leverage = null, botId = null) {
+    const accId = this.resolveAccountId(mode, botId);
     const defaultLev = mode === 'spot' ? 1 : 3;
     const defaultRisk = mode === 'spot' ? initialBalance * 0.25 : initialBalance * 0.02;
 
@@ -654,17 +714,18 @@ class PaperTradeEngine {
       riskPerTrade || defaultRisk,
       leverage || defaultLev
     );
+    const botName = this.futuresBots.find((b) => b.id === accId)?.name || mode.toUpperCase();
     await paperTradeDao.createLog(
       accId,
       'SYSTEM',
       'INFO',
-      `Tài khoản [${mode.toUpperCase()}] đã được reset về mức vốn ban đầu: $${parseFloat(account.balance).toFixed(2)} USDT.`
+      `Tài khoản [${botName}] đã được reset về mức vốn ban đầu: $${parseFloat(account.balance).toFixed(2)} USDT.`
     );
     return account;
   }
 
-  async updateSettings(mode = 'futures', { balance, riskPerTrade, leverage }) {
-    const accId = this.resolveAccountId(mode);
+  async updateSettings(mode = 'futures', { balance, riskPerTrade, leverage }, botId = null) {
+    const accId = this.resolveAccountId(mode, botId);
     const updates = {};
     if (balance !== undefined && !isNaN(parseFloat(balance))) {
       const newBal = parseFloat(balance);
@@ -681,17 +742,18 @@ class PaperTradeEngine {
     }
 
     const account = await paperTradeDao.updateAccount(accId, updates);
+    const botName = this.futuresBots.find((b) => b.id === accId)?.name || mode.toUpperCase();
     await paperTradeDao.createLog(
       accId,
       'SYSTEM',
       'INFO',
-      `Cập nhật cài đặt [${mode.toUpperCase()}]: Vốn $${parseFloat(account.balance).toFixed(2)} | Tranche/Rủi ro: $${parseFloat(account.risk_per_trade).toFixed(2)}.`
+      `Cập nhật cài đặt [${botName}]: Vốn $${parseFloat(account.balance).toFixed(2)} | Tranche/Rủi ro: $${parseFloat(account.risk_per_trade).toFixed(2)}.`
     );
     return account;
   }
 
-  async withdrawProfit(mode = 'futures', amountToWithdraw) {
-    const accId = this.resolveAccountId(mode);
+  async withdrawProfit(mode = 'futures', amountToWithdraw, botId = null) {
+    const accId = this.resolveAccountId(mode, botId);
     const account = await paperTradeDao.getAccount(accId);
     if (!account) throw new Error('Không tìm thấy tài khoản');
 
@@ -749,8 +811,8 @@ class PaperTradeEngine {
   }
 
   async closeFuturesPositionManually(positionId) {
-    const openPositions = await paperTradeDao.getOpenPositions(this.futuresAccountId);
-    const pos = openPositions.find((p) => String(p.id) === String(positionId));
+    const allOpen = await paperTradeDao.getOpenPositions('ALL');
+    const pos = allOpen.find((p) => String(p.id) === String(positionId));
     if (!pos) throw new Error('Không tìm thấy vị thế mở');
     const currentPrice = binanceWsService.getPrice(pos.symbol) || parseFloat(pos.current_price);
     await this.closeFuturesPosition(pos, currentPrice, 'MANUAL_CLOSE');
@@ -771,14 +833,14 @@ class PaperTradeEngine {
     return { success: true };
   }
 
-  async addTrackedSymbol(mode = 'futures', symbol) {
+  async addTrackedSymbol(mode = 'futures', symbol, botId = null) {
     if (!symbol) throw new Error('Vui lòng nhập mã coin');
     let sym = symbol.toUpperCase().trim();
     if (sym === 'XAU' || sym === 'XAUUSD' || sym === 'GOLD' || sym === 'PAXG') sym = 'PAXGUSDT';
     if (sym === 'SOIL') sym = 'SOLUSDT';
     if (!sym.endsWith('USDT')) sym = `${sym}USDT`;
 
-    const accId = this.resolveAccountId(mode);
+    const accId = this.resolveAccountId(mode, botId);
     const updatedAccount = await paperTradeDao.addTrackedSymbol(accId, sym);
     await binanceWsService.addSymbol(sym);
 
@@ -791,10 +853,10 @@ class PaperTradeEngine {
     return updatedAccount;
   }
 
-  async removeTrackedSymbol(mode = 'futures', symbol) {
+  async removeTrackedSymbol(mode = 'futures', symbol, botId = null) {
     if (!symbol) throw new Error('Vui lòng chọn mã coin cần xóa');
     const sym = symbol.toUpperCase().trim();
-    const accId = this.resolveAccountId(mode);
+    const accId = this.resolveAccountId(mode, botId);
 
     const updatedAccount = await paperTradeDao.removeTrackedSymbol(accId, sym);
     await paperTradeDao.createLog(
@@ -806,8 +868,8 @@ class PaperTradeEngine {
     return updatedAccount;
   }
 
-  async getDashboardData(mode = 'futures') {
-    const accId = this.resolveAccountId(mode);
+  async getDashboardData(mode = 'futures', botId = null) {
+    const accId = this.resolveAccountId(mode, botId);
 
     const [account, orders, snapshots, logs] = await Promise.all([
       paperTradeDao.getAccount(accId),
@@ -820,6 +882,39 @@ class PaperTradeEngine {
     const winrate = account && account.total_trades > 0 
       ? Number(((account.winning_trades / account.total_trades) * 100).toFixed(1)) 
       : 0;
+
+    // Danh sách các Bot Futures cho UI hiển thị Bot Arena / Selector
+    let botList = [];
+    if (mode === 'futures') {
+      botList = await Promise.all(
+        this.futuresBots.map(async (b) => {
+          const acc = await paperTradeDao.getAccount(b.id);
+          const wr = acc && acc.total_trades > 0 
+            ? Number(((acc.winning_trades / acc.total_trades) * 100).toFixed(1)) 
+            : 0;
+          const bal = acc ? parseFloat(acc.balance) : 100;
+          const eq = acc ? parseFloat(acc.equity) : 100;
+          const initBal = acc ? parseFloat(acc.initial_balance) : 100;
+          const pnl = eq - initBal;
+          const pnlPct = initBal > 0 ? (pnl / initBal) * 100 : 0;
+          return {
+            id: b.id,
+            name: b.name,
+            desc: b.desc,
+            strategyKey: b.strategyKey,
+            balance: bal,
+            equity: eq,
+            initial_balance: initBal,
+            pnl: Number(pnl.toFixed(2)),
+            pnlPct: Number(pnlPct.toFixed(2)),
+            total_trades: acc ? acc.total_trades : 0,
+            winning_trades: acc ? acc.winning_trades : 0,
+            winrate: wr,
+            is_bot_active: acc ? acc.is_bot_active : true
+          };
+        })
+      );
+    }
 
     // Đảm bảo các chỉ báo kỹ thuật luôn có dữ liệu tức thì từ nến lịch sử
     const trackedList = account?.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
@@ -914,6 +1009,9 @@ class PaperTradeEngine {
     });
 
     return {
+      mode: 'futures',
+      botList,
+      currentBotId: accId,
       account: {
         ...account,
         equity: Number(currentEquity.toFixed(2)),

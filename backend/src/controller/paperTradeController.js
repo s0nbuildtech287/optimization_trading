@@ -4,7 +4,8 @@ const binanceWsService = require('../service/binanceWsService');
 async function getDashboardData(req, res) {
   try {
     const mode = req.query.mode || 'futures';
-    const data = await paperTradeEngine.getDashboardData(mode);
+    const botId = req.query.botId || null;
+    const data = await paperTradeEngine.getDashboardData(mode, botId);
     return res.status(200).json({
       success: true,
       data
@@ -19,8 +20,8 @@ async function getDashboardData(req, res) {
 
 async function toggleBot(req, res) {
   try {
-    const { isActive, mode = 'futures' } = req.body;
-    const account = await paperTradeEngine.toggleBot(mode, Boolean(isActive));
+    const { isActive, mode = 'futures', botId = null } = req.body;
+    const account = await paperTradeEngine.toggleBot(mode, Boolean(isActive), botId);
     return res.status(200).json({
       success: true,
       data: account
@@ -85,12 +86,13 @@ async function buySpotHolding(req, res) {
 
 async function resetAccount(req, res) {
   try {
-    const { initialBalance = 100.0, riskPerTrade = null, leverage = null, mode = 'futures' } = req.body;
+    const { initialBalance = 100.0, riskPerTrade = null, leverage = null, mode = 'futures', botId = null } = req.body;
     const account = await paperTradeEngine.resetAccount(
       mode,
       Number(initialBalance),
       riskPerTrade ? Number(riskPerTrade) : null,
-      leverage ? Number(leverage) : null
+      leverage ? Number(leverage) : null,
+      botId
     );
     return res.status(200).json({
       success: true,
@@ -107,8 +109,8 @@ async function resetAccount(req, res) {
 
 async function updateSettings(req, res) {
   try {
-    const { balance, riskPerTrade, leverage, mode = 'futures' } = req.body;
-    const account = await paperTradeEngine.updateSettings(mode, { balance, riskPerTrade, leverage });
+    const { balance, riskPerTrade, leverage, mode = 'futures', botId = null } = req.body;
+    const account = await paperTradeEngine.updateSettings(mode, { balance, riskPerTrade, leverage }, botId);
     return res.status(200).json({
       success: true,
       message: 'Cập nhật cài đặt thành công',
@@ -124,8 +126,8 @@ async function updateSettings(req, res) {
 
 async function addSymbol(req, res) {
   try {
-    const { symbol, mode = 'futures' } = req.body;
-    const account = await paperTradeEngine.addTrackedSymbol(mode, symbol);
+    const { symbol, mode = 'futures', botId = null } = req.body;
+    const account = await paperTradeEngine.addTrackedSymbol(mode, symbol, botId);
     return res.status(200).json({
       success: true,
       message: `Đã thêm ${symbol} thành công`,
@@ -141,8 +143,8 @@ async function addSymbol(req, res) {
 
 async function removeSymbol(req, res) {
   try {
-    const { symbol, mode = 'futures' } = req.body;
-    const account = await paperTradeEngine.removeTrackedSymbol(mode, symbol);
+    const { symbol, mode = 'futures', botId = null } = req.body;
+    const account = await paperTradeEngine.removeTrackedSymbol(mode, symbol, botId);
     return res.status(200).json({
       success: true,
       message: `Đã xóa ${symbol} thành công`,
@@ -158,8 +160,8 @@ async function removeSymbol(req, res) {
 
 async function withdrawProfit(req, res) {
   try {
-    const { amount, mode = 'futures' } = req.body;
-    const result = await paperTradeEngine.withdrawProfit(mode, amount);
+    const { amount, mode = 'futures', botId = null } = req.body;
+    const result = await paperTradeEngine.withdrawProfit(mode, amount, botId);
     return res.status(200).json({
       success: true,
       message: `Đã rút thành công $${result.withdrawnAmount.toFixed(2)} USDT về két an toàn`,

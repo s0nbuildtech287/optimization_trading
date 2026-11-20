@@ -109,9 +109,11 @@ async function initPaperTradeTables() {
     await client.query(`
       INSERT INTO paper_accounts (id, name, account_type, initial_balance, balance, equity, peak_equity, risk_per_trade, leverage)
       VALUES 
-        ('acc_binance_futures', 'Binance Futures Virtual Account', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
-        ('acc_binance_spot', 'Binance Spot Virtual Account', 'SPOT', 100.00, 100.00, 100.00, 100.00, 25.00, 1)
-      ON CONFLICT (id) DO NOTHING;
+        ('acc_binance_futures', 'Bot 1: Trend Pullback (EMA)', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
+        ('acc_futures_reversion', 'Bot 2: Bollinger Reversion', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
+        ('acc_futures_breakout', 'Bot 3: Breakout Momentum', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
+        ('acc_binance_spot', 'Binance Spot Paper (DCA)', 'SPOT', 100.00, 100.00, 100.00, 100.00, 25.00, 1)
+      ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;
     `);
 
     console.log('[DB] Paper Trading schema and default accounts initialized.');
@@ -197,6 +199,10 @@ async function resetAccount(accountId = 'acc_binance_futures', initialBalance = 
 }
 
 async function getOpenPositions(accountId = 'acc_binance_futures') {
+  if (accountId === 'ALL' || !accountId) {
+    const res = await pool.query('SELECT * FROM paper_positions ORDER BY opened_at DESC');
+    return res.rows;
+  }
   const res = await pool.query(
     'SELECT * FROM paper_positions WHERE account_id = $1 ORDER BY opened_at DESC',
     [accountId]
@@ -366,9 +372,15 @@ async function removeTrackedSymbol(accountId, symbol) {
   return res.rows[0] || (await getAccount(accountId));
 }
 
+async function getAllAccounts() {
+  const res = await pool.query('SELECT * FROM paper_accounts ORDER BY id ASC');
+  return res.rows;
+}
+
 module.exports = {
   initPaperTradeTables,
   getAccount,
+  getAllAccounts,
   updateAccount,
   resetAccount,
   getOpenPositions,
