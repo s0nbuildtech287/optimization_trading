@@ -276,7 +276,7 @@ async function createEquitySnapshot(accountId, balance, equity, drawdownPct) {
   return res.rows[0];
 }
 
-async function getEquityHistory(accountId = 'acc_binance_futures', limit = 500) {
+async function getEquityHistory(accountId = 'acc_binance_futures', limit = 3000) {
   const res = await pool.query(
     `SELECT * FROM (
       SELECT * FROM paper_equity_snapshots 

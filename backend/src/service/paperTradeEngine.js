@@ -812,7 +812,7 @@ class PaperTradeEngine {
     const [account, orders, snapshots, logs] = await Promise.all([
       paperTradeDao.getAccount(accId),
       paperTradeDao.getOrderHistory(accId, 50),
-      paperTradeDao.getEquityHistory(accId, 500),
+      paperTradeDao.getEquityHistory(accId, 3000),
       paperTradeDao.getLogs(accId, 40)
     ]);
 

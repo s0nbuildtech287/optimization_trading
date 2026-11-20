@@ -112,6 +112,9 @@ export default function SpotTradingPage() {
     severity: 'info'
   });
 
+  // Khoảng thời gian hiển thị biểu đồ Equity Curve ('24h', '3d', '7d', 'all')
+  const [chartTimeframe, setChartTimeframe] = useState('all');
+
   const fetchData = async (isInitial = false) => {
     try {
       if (isInitial) setLoading(true);
@@ -343,17 +346,31 @@ export default function SpotTradingPage() {
   const account = data?.account || {};
   const holdings = data?.holdings || [];
   const orders = data?.orders || [];
-  const snapshots = (data?.equitySnapshots || []).map((s) => {
-    const d = new Date(s.timestamp);
-    const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
-    const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    return {
-      time: `${dateStr} ${timeStr}`,
-      rawTime: s.timestamp,
-      equity: parseFloat(s.equity),
-      balance: parseFloat(s.balance)
-    };
-  });
+  const snapshots = React.useMemo(() => {
+    const raw = data?.equitySnapshots || [];
+    if (!raw.length) return [];
+
+    let cutoff = 0;
+    const now = Date.now();
+    if (chartTimeframe === '24h') cutoff = now - 24 * 60 * 60 * 1000;
+    else if (chartTimeframe === '3d') cutoff = now - 3 * 24 * 60 * 60 * 1000;
+    else if (chartTimeframe === '7d') cutoff = now - 7 * 24 * 60 * 60 * 1000;
+
+    const filtered = cutoff > 0 ? raw.filter((s) => new Date(s.timestamp).getTime() >= cutoff) : raw;
+    const listToMap = filtered.length > 0 ? filtered : raw;
+
+    return listToMap.map((s) => {
+      const d = new Date(s.timestamp);
+      const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
+      const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return {
+        time: `${dateStr} ${timeStr}`,
+        rawTime: s.timestamp,
+        equity: parseFloat(s.equity),
+        balance: parseFloat(s.balance)
+      };
+    });
+  }, [data?.equitySnapshots, chartTimeframe]);
   const livePrices = data?.livePrices || {};
   const logs = data?.logs || [];
   const lastEvaluations = data?.lastEvaluations || {};
@@ -937,6 +954,34 @@ export default function SpotTradingPage() {
           <Typography variant="subtitle1" fontWeight={700} color="text.primary">
             ĐƯỜNG CONG TĂNG TRƯỞNG TÀI SẢN SPOT (EQUITY CURVE)
           </Typography>
+        }
+        secondary={
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            {[
+              { key: '24h', label: '24H' },
+              { key: '3d', label: '3 Ngày' },
+              { key: '7d', label: '7 Ngày' },
+              { key: 'all', label: 'Tất cả' }
+            ].map((tf) => (
+              <Button
+                key={tf.key}
+                size="small"
+                variant={chartTimeframe === tf.key ? 'contained' : 'outlined'}
+                color={chartTimeframe === tf.key ? 'success' : 'inherit'}
+                onClick={() => setChartTimeframe(tf.key)}
+                sx={{
+                  minWidth: { xs: 36, sm: 46 },
+                  px: { xs: 0.8, sm: 1.2 },
+                  py: 0.25,
+                  fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                  fontWeight: chartTimeframe === tf.key ? 700 : 500,
+                  textTransform: 'none'
+                }}
+              >
+                {tf.label}
+              </Button>
+            ))}
+          </Stack>
         }
         sx={{ width: '100%' }}
       >
