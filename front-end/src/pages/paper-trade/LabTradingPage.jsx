@@ -125,7 +125,8 @@ export default function LabTradingPage() {
         marginPerTrade: Number(marginPerTrade),
         leverage: Number(leverage)
       });
-      setResult(data);
+      const backtestResult = data?.data || data;
+      setResult(backtestResult);
     } catch (err) {
       setError(err.message || 'Lỗi khi chạy backtest');
     } finally {
@@ -249,7 +250,7 @@ export default function LabTradingPage() {
           </Grid>
 
           {/* Duration selection */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
               3. Khoảng Thời Gian Backtest:
             </Typography>
@@ -270,7 +271,7 @@ export default function LabTradingPage() {
           </Grid>
 
           {/* Initial Balance */}
-          <Grid item xs={12} sm={4} md={2.5}>
+          <Grid item xs={12} sm={6} md={3}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
               4. Vốn Khởi Điểm:
             </Typography>
@@ -288,7 +289,7 @@ export default function LabTradingPage() {
           </Grid>
 
           {/* Margin Per Trade */}
-          <Grid item xs={12} sm={4} md={2.5}>
+          <Grid item xs={12} sm={6} md={3}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
               5. Ký Quỹ Mỗi Lệnh:
             </Typography>
@@ -306,7 +307,7 @@ export default function LabTradingPage() {
           </Grid>
 
           {/* Leverage */}
-          <Grid item xs={12} sm={4} md={3}>
+          <Grid item xs={12} sm={6} md={3}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
               6. Đòn Bẩy (Leverage):
             </Typography>
@@ -327,26 +328,41 @@ export default function LabTradingPage() {
 
           {/* Action button */}
           <Grid item xs={12}>
-            <Stack direction="row" spacing={2} alignItems="center">
+            <Divider sx={{ my: 1.5 }} />
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                pt: 1,
+                textAlign: 'center'
+              }}
+            >
               <Button
                 variant="contained"
                 size="large"
-                startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <ThunderboltOutlined />}
+                startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <ThunderboltOutlined style={{ fontSize: 18 }} />}
                 onClick={handleRunBacktest}
                 disabled={loading}
                 sx={{
-                  px: 4,
-                  py: 1.2,
+                  minWidth: { xs: '100%', sm: 300 },
+                  py: 1.4,
+                  fontSize: '1rem',
                   fontWeight: 700,
-                  boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)'
+                  borderRadius: 2,
+                  boxShadow: '0 6px 18px rgba(22, 119, 255, 0.35)',
+                  '&:hover': {
+                    boxShadow: '0 8px 24px rgba(22, 119, 255, 0.45)'
+                  }
                 }}
               >
                 {loading ? 'Đang Tải Nến & Chạy Mô Phỏng...' : 'Bắt Đầu Thử Nghiệm'}
               </Button>
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                Hệ thống sẽ tải toàn bộ nến M15 từ Binance, tính toán chỉ báo và mô phỏng từng nhịp khớp lệnh.
+              <Typography variant="caption" sx={{ color: 'text.secondary', mt: 1.2 }}>
+                ⚡ Tự động tải nến M15 Binance, tính toán chỉ báo và mô phỏng từng nhịp khớp lệnh (SL, TP 2R, BE).
               </Typography>
-            </Stack>
+            </Box>
           </Grid>
         </Grid>
       </MainCard>

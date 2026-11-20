@@ -105,5 +105,5 @@ export async function runPaperTradeBacktest(params) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Không thể chạy kiểm thử chiến lược');
-  return data;
+  return data.data || data;
 }
