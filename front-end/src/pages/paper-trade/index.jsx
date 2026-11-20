@@ -758,7 +758,7 @@ export default function PaperTradingPage() {
             <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
               <Box>
                 <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  TỶ LỆ THẮNG (5 LỆNH GẦN NHẤT)
+                  TỶ LỆ THẮNG (WIN RATE)
                 </Typography>
                 <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 0.75 }}>
                   {account.winrate || 0}%
@@ -781,7 +781,7 @@ export default function PaperTradingPage() {
             </Stack>
           </Box>
           <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
-            5 lệnh gần nhất: <b>{account.total_trades || 0}</b> lệnh ({account.winning_trades || 0} Thắng - {account.losing_trades || 0} Thua)
+            Tổng: <b>{account.total_trades || 0}</b> lệnh ({account.winning_trades || 0} Thắng - {account.losing_trades || 0} Thua)
           </Typography>
         </Card>
 
