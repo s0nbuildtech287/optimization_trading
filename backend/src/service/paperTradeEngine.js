@@ -44,16 +44,15 @@ class PaperTradeEngine {
     // 1. Khởi tạo bảng dữ liệu
     await paperTradeDao.initPaperTradeTables();
 
-    // Nạp danh sách symbol theo dõi từ DB cho cả 2 ví Futures & Spot
+    // Nạp danh sách symbol theo dõi từ DB cho tất cả các Bot Futures & Spot
     try {
-      const [futAcc, spotAcc] = await Promise.all([
-        paperTradeDao.getAccount(this.futuresAccountId),
-        paperTradeDao.getAccount(this.spotAccountId)
-      ]);
-      const allSymbols = new Set([
-        ...(futAcc?.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT']),
-        ...(spotAcc?.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'])
-      ]);
+      const allAccounts = await paperTradeDao.getAllAccounts();
+      const allSymbols = new Set(['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'PAXGUSDT']);
+      for (const acc of allAccounts) {
+        if (Array.isArray(acc.tracked_symbols)) {
+          acc.tracked_symbols.forEach((s) => allSymbols.add(s));
+        }
+      }
       binanceWsService.symbols = Array.from(allSymbols);
       console.log(`[PaperEngine] Loaded ${binanceWsService.symbols.length} tracked symbols:`, binanceWsService.symbols.join(', '));
     } catch (e) {
@@ -356,6 +355,10 @@ class PaperTradeEngine {
     const account = await paperTradeDao.getAccount(bot.id);
     if (!account || !account.is_bot_active) return;
     if (!signal || signal.action === 'HOLD') return;
+
+    // Chỉ thực thi lệnh nếu cặp tiền nằm trong danh sách theo dõi của Bot này
+    const tracked = account.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
+    if (!tracked.includes(symbol)) return;
 
     const openPositions = await paperTradeDao.getOpenPositions(bot.id);
     const existingPos = openPositions.find((p) => p.symbol === symbol);
