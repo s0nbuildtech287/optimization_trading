@@ -96,3 +96,14 @@ export async function removePaperTradeSymbol(symbol, mode = 'futures', botId = n
   if (!res.ok) throw new Error('Không thể xóa cặp coin');
   return res.json();
 }
+
+export async function runPaperTradeBacktest(params) {
+  const res = await authFetch('/api/paper-trade/lab/run', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Không thể chạy kiểm thử chiến lược');
+  return data;
+}

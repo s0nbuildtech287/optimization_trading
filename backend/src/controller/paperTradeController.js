@@ -1,5 +1,6 @@
 const paperTradeEngine = require('../service/paperTradeEngine');
 const binanceWsService = require('../service/binanceWsService');
+const paperBacktestService = require('../service/paperBacktestService');
 
 async function getDashboardData(req, res) {
   try {
@@ -190,6 +191,39 @@ async function getLivePrices(req, res) {
   }
 }
 
+async function runBacktest(req, res) {
+  try {
+    const {
+      strategyKey = 'TREND_PULLBACK',
+      symbol = 'BTCUSDT',
+      days = 30,
+      initialBalance = 100,
+      leverage = 3,
+      marginPerTrade = 15
+    } = req.body;
+
+    const result = await paperBacktestService.runBacktest({
+      strategyKey,
+      symbol,
+      days: parseInt(days, 10) || 30,
+      initialBalance: parseFloat(initialBalance) || 100,
+      leverage: parseInt(leverage, 10) || 3,
+      marginPerTrade: parseFloat(marginPerTrade) || 15
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Chạy kiểm thử chiến lược thành công',
+      data: result
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+}
+
 module.exports = {
   getDashboardData,
   toggleBot,
@@ -201,5 +235,6 @@ module.exports = {
   addSymbol,
   removeSymbol,
   withdrawProfit,
-  getLivePrices
+  getLivePrices,
+  runBacktest
 };

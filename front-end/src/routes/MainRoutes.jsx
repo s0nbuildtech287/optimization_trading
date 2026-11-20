@@ -43,6 +43,7 @@ const Mt5Optimization = Loadable(lazy(() => import('pages/optimization')));
 // render - Paper Trading page
 const PaperTradingPage = Loadable(lazy(() => import('pages/paper-trade')));
 const SpotTradingPage = Loadable(lazy(() => import('pages/paper-trade/SpotTradingPage')));
+const LabTradingPage = Loadable(lazy(() => import('pages/paper-trade/LabTradingPage')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -166,6 +167,10 @@ const MainRoutes = {
     {
       path: 'auto-trade/spot',
       element: <SpotTradingPage />
+    },
+    {
+      path: 'auto-trade/lab',
+      element: <LabTradingPage />
     }
   ]
 };

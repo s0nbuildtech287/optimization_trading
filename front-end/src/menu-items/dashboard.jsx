@@ -91,6 +91,14 @@ const dashboard = {
           url: '/auto-trade/spot',
           icon: icons.ShoppingOutlined,
           breadcrumbs: false
+        },
+        {
+          id: 'auto-trade-lab',
+          title: 'Lab',
+          type: 'item',
+          url: '/auto-trade/lab',
+          icon: icons.ExperimentOutlined,
+          breadcrumbs: false
         }
       ]
     },

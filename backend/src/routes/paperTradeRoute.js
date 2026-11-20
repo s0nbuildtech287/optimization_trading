@@ -35,4 +35,7 @@ router.post('/withdraw', controller.withdrawProfit);
 // Route xóa cặp coin theo dõi
 router.post('/symbols/remove', controller.removeSymbol);
 
+// Route chạy kiểm thử chiến lược (Strategy Lab / Backtest)
+router.post('/lab/run', controller.runBacktest);
+
 module.exports = router;
