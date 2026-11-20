@@ -368,6 +368,8 @@ export default function PaperTradingPage() {
   const totalPnL = equity - initialBalance;
   const totalPnLPct = initialBalance > 0 ? (totalPnL / initialBalance) * 100 : 0;
   const unrealizedPnL = parseFloat(account.unrealized_pnl || 0);
+  const usedMargin = positions.reduce((sum, p) => sum + parseFloat(p.margin || 0), 0);
+  const freeMargin = Math.max(0, balance - usedMargin);
   const totalWithdrawn = parseFloat(account.total_withdrawn_profit || 0);
 
   const kpiCardSx = {
@@ -693,7 +695,7 @@ export default function PaperTradingPage() {
             </Stack>
           </Box>
           <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
-            Số dư ví: <b>${balance.toFixed(2)}</b> • Khởi tạo: <b>${initialBalance.toFixed(2)}</b>
+            Ví: <b>${balance.toFixed(2)}</b> • Ký quỹ: <b>${usedMargin.toFixed(2)}</b> • Khả dụng: <b>${freeMargin.toFixed(2)}</b>
             {totalWithdrawn > 0 && (
               <span style={{ color: '#52c41a', marginLeft: 8, fontWeight: 700 }}>
                 • Đã rút két: +${totalWithdrawn.toFixed(2)}
