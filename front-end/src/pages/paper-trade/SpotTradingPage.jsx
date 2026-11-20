@@ -346,31 +346,27 @@ export default function SpotTradingPage() {
   const account = data?.account || {};
   const holdings = data?.holdings || [];
   const orders = data?.orders || [];
-  const snapshots = React.useMemo(() => {
-    const raw = data?.equitySnapshots || [];
-    if (!raw.length) return [];
+  const rawSnapshots = data?.equitySnapshots || [];
+  let cutoff = 0;
+  const now = Date.now();
+  if (chartTimeframe === '24h') cutoff = now - 24 * 60 * 60 * 1000;
+  else if (chartTimeframe === '3d') cutoff = now - 3 * 24 * 60 * 60 * 1000;
+  else if (chartTimeframe === '7d') cutoff = now - 7 * 24 * 60 * 60 * 1000;
 
-    let cutoff = 0;
-    const now = Date.now();
-    if (chartTimeframe === '24h') cutoff = now - 24 * 60 * 60 * 1000;
-    else if (chartTimeframe === '3d') cutoff = now - 3 * 24 * 60 * 60 * 1000;
-    else if (chartTimeframe === '7d') cutoff = now - 7 * 24 * 60 * 60 * 1000;
+  const filtered = cutoff > 0 ? rawSnapshots.filter((s) => new Date(s.timestamp).getTime() >= cutoff) : rawSnapshots;
+  const listToMap = filtered.length > 0 ? filtered : rawSnapshots;
 
-    const filtered = cutoff > 0 ? raw.filter((s) => new Date(s.timestamp).getTime() >= cutoff) : raw;
-    const listToMap = filtered.length > 0 ? filtered : raw;
-
-    return listToMap.map((s) => {
-      const d = new Date(s.timestamp);
-      const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
-      const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      return {
-        time: `${dateStr} ${timeStr}`,
-        rawTime: s.timestamp,
-        equity: parseFloat(s.equity),
-        balance: parseFloat(s.balance)
-      };
-    });
-  }, [data?.equitySnapshots, chartTimeframe]);
+  const snapshots = listToMap.map((s) => {
+    const d = new Date(s.timestamp);
+    const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
+    const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return {
+      time: `${dateStr} ${timeStr}`,
+      rawTime: s.timestamp,
+      equity: parseFloat(s.equity),
+      balance: parseFloat(s.balance)
+    };
+  });
   const livePrices = data?.livePrices || {};
   const logs = data?.logs || [];
   const lastEvaluations = data?.lastEvaluations || {};
