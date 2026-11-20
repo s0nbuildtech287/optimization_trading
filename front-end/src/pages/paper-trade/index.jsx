@@ -27,7 +27,8 @@ import {
   DialogActions,
   TextField,
   InputAdornment,
-  ButtonGroup
+  ButtonGroup,
+  Snackbar
 } from '@mui/material';
 import {
   ReloadOutlined,
@@ -96,6 +97,23 @@ export default function PaperTradingPage() {
   const [withdrawing, setWithdrawing] = useState(false);
   const [withdrawSuccessMsg, setWithdrawSuccessMsg] = useState('');
 
+  // Dialog xác nhận thao tác (thay thế window.confirm)
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    title: '',
+    content: '',
+    confirmText: 'Xác nhận',
+    confirmColor: 'primary',
+    onConfirm: null
+  });
+
+  // Thông báo Snackbar (thay thế window.alert)
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'info'
+  });
+
   const fetchData = async (isInitial = false) => {
     try {
       if (isInitial) setLoading(true);
@@ -128,25 +146,39 @@ export default function PaperTradingPage() {
       setToggling(true);
       const nextState = !data.account.is_bot_active;
       await togglePaperTradeBot(nextState);
+      setSnackbar({
+        open: true,
+        message: nextState ? 'Đã BẬT bot tự động quét tín hiệu!' : 'Đã TẮT bot tự động.',
+        severity: nextState ? 'success' : 'info'
+      });
       await fetchData(false);
     } catch (err) {
-      alert(err.message);
+      setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
       setToggling(false);
     }
   };
 
-  const handleClosePosition = async (positionId) => {
-    if (!window.confirm('Anh có chắc muốn đóng vị thế này bằng tay không?')) return;
-    try {
-      setClosingId(positionId);
-      await closePaperTradePosition(positionId);
-      await fetchData(false);
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setClosingId(null);
-    }
+  const handleClosePosition = (pos) => {
+    setConfirmDialog({
+      open: true,
+      title: `Đóng vị thế ${pos.symbol} (${pos.side})?`,
+      content: `Anh có chắc muốn đóng vị thế này bằng tay không? Lệnh sẽ được tất toán ngay lập tức theo giá thị trường hiện tại ($${parseFloat(pos.current_price).toFixed(2)}).`,
+      confirmText: 'Đóng vị thế ngay',
+      confirmColor: 'error',
+      onConfirm: async () => {
+        try {
+          setClosingId(pos.id);
+          await closePaperTradePosition(pos.id);
+          setSnackbar({ open: true, message: `Đã đóng vị thế ${pos.symbol} thành công!`, severity: 'success' });
+          await fetchData(false);
+        } catch (err) {
+          setSnackbar({ open: true, message: err.message, severity: 'error' });
+        } finally {
+          setClosingId(null);
+        }
+      }
+    });
   };
 
   // Mở modal cài đặt vốn
@@ -166,7 +198,7 @@ export default function PaperTradingPage() {
     const riskNum = parseFloat(customRisk);
     const levNum = parseInt(customLeverage, 10);
     if (isNaN(balNum) || balNum <= 0) {
-      alert('Vui lòng nhập mức vốn hợp lệ (> 0)');
+      setSnackbar({ open: true, message: 'Vui lòng nhập mức vốn hợp lệ (> 0)', severity: 'warning' });
       return;
     }
 
@@ -178,9 +210,10 @@ export default function PaperTradingPage() {
         leverage: levNum
       });
       setSettingsOpen(false);
+      setSnackbar({ open: true, message: 'Cập nhật cấu hình vốn thành công!', severity: 'success' });
       await fetchData(false);
     } catch (err) {
-      alert(err.message);
+      setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
       setSavingSettings(false);
     }
@@ -200,47 +233,52 @@ export default function PaperTradingPage() {
   const handleConfirmWithdraw = async () => {
     const amt = parseFloat(withdrawAmount);
     if (isNaN(amt) || amt <= 0) {
-      alert('Vui lòng nhập số tiền rút hợp lệ (> 0)');
+      setSnackbar({ open: true, message: 'Vui lòng nhập số tiền rút hợp lệ (> 0)', severity: 'warning' });
       return;
     }
     try {
       setWithdrawing(true);
       const res = await withdrawPaperTradeProfit({ amount: amt, mode: 'futures' });
       setWithdrawOpen(false);
-      setWithdrawSuccessMsg(`🎉 ${res.message || `Đã rút thành công $${amt.toFixed(2)} USDT về két!`}`);
-      setTimeout(() => setWithdrawSuccessMsg(''), 6000);
+      setSnackbar({ open: true, message: `🎉 ${res.message || `Đã rút thành công $${amt.toFixed(2)} USDT về két!`}`, severity: 'success' });
       await fetchData(false);
     } catch (err) {
-      alert(err.message);
+      setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
       setWithdrawing(false);
     }
   };
 
   // Reset tài khoản với số vốn mới
-  const handleResetWithCapital = async () => {
+  const handleResetWithCapital = () => {
     const balNum = parseFloat(customBalance);
     const riskNum = parseFloat(customRisk);
     const levNum = parseInt(customLeverage, 10);
     if (isNaN(balNum) || balNum <= 0) {
-      alert('Vui lòng nhập mức vốn hợp lệ (> 0)');
+      setSnackbar({ open: true, message: 'Vui lòng nhập mức vốn hợp lệ (> 0)', severity: 'warning' });
       return;
     }
 
-    if (!window.confirm(`Reset sẽ xóa toàn bộ vị thế và lịch sử lệnh, đưa vốn về lại $${balNum.toFixed(2)} USDT. Anh có chắc không?`)) {
-      return;
-    }
-
-    try {
-      setSavingSettings(true);
-      await resetPaperTradeAccount(balNum, riskNum, levNum);
-      setSettingsOpen(false);
-      await fetchData(false);
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setSavingSettings(false);
-    }
+    setConfirmDialog({
+      open: true,
+      title: '⚠️ Xác nhận Reset tài khoản Futures',
+      content: `Thao tác này sẽ xóa toàn bộ vị thế đang mở và lịch sử lệnh, đưa vốn về lại mốc $${balNum.toFixed(2)} USDT. Hành động này không thể hoàn tác!`,
+      confirmText: 'Xác nhận Reset',
+      confirmColor: 'error',
+      onConfirm: async () => {
+        try {
+          setSavingSettings(true);
+          await resetPaperTradeAccount(balNum, riskNum, levNum);
+          setSettingsOpen(false);
+          setSnackbar({ open: true, message: `Đã reset tài khoản về mức vốn $${balNum.toFixed(2)} USDT!`, severity: 'success' });
+          await fetchData(false);
+        } catch (err) {
+          setSnackbar({ open: true, message: err.message, severity: 'error' });
+        } finally {
+          setSavingSettings(false);
+        }
+      }
+    });
   };
 
   const handleAddSymbol = async (symToAdd) => {
@@ -251,22 +289,32 @@ export default function PaperTradingPage() {
       await addPaperTradeSymbol(sym, 'futures');
       setInputSymbol('');
       setAddSymbolOpen(false);
+      setSnackbar({ open: true, message: `Đã thêm cặp coin ${sym} theo dõi thành công!`, severity: 'success' });
       await fetchData(false);
     } catch (err) {
-      alert(err.message);
+      setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
       setAddingSymbol(false);
     }
   };
 
-  const handleRemoveSymbol = async (symToRemove) => {
-    if (!window.confirm(`Anh có muốn bỏ theo dõi cặp ${symToRemove} không?`)) return;
-    try {
-      await removePaperTradeSymbol(symToRemove, 'futures');
-      await fetchData(false);
-    } catch (err) {
-      alert(err.message);
-    }
+  const handleRemoveSymbol = (symToRemove) => {
+    setConfirmDialog({
+      open: true,
+      title: `Bỏ theo dõi ${symToRemove}?`,
+      content: `Hệ thống sẽ ngừng quét tín hiệu M15 và loại bỏ cặp ${symToRemove} khỏi danh sách theo dõi realtime.`,
+      confirmText: 'Bỏ theo dõi',
+      confirmColor: 'warning',
+      onConfirm: async () => {
+        try {
+          await removePaperTradeSymbol(symToRemove, 'futures');
+          setSnackbar({ open: true, message: `Đã bỏ theo dõi cặp ${symToRemove}`, severity: 'info' });
+          await fetchData(false);
+        } catch (err) {
+          setSnackbar({ open: true, message: err.message, severity: 'error' });
+        }
+      }
+    });
   };
 
   if (loading && !data) {
@@ -888,7 +936,7 @@ export default function PaperTradingPage() {
                           variant="contained"
                           size="small"
                           color="error"
-                          onClick={() => handleClosePosition(pos.id)}
+                          onClick={() => handleClosePosition(pos)}
                           disabled={closingId === pos.id}
                           sx={{ textTransform: 'none', py: 0.25, px: 1.25 }}
                         >
@@ -1426,6 +1474,72 @@ export default function PaperTradingPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Modal xác nhận thao tác chuẩn giao diện (thay thế window.confirm) */}
+      <Dialog
+        open={confirmDialog.open}
+        onClose={() => setConfirmDialog((prev) => ({ ...prev, open: false }))}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            bgcolor: 'background.paper',
+            backgroundImage: 'none',
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 2.5,
+            p: 0.5
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 800, fontSize: '1.1rem', pb: 1 }}>
+          {confirmDialog.title}
+        </DialogTitle>
+        <DialogContent sx={{ pt: 1 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+            {confirmDialog.content}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, pt: 1, gap: 1 }}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={() => setConfirmDialog((prev) => ({ ...prev, open: false }))}
+            sx={{ textTransform: 'none', fontWeight: 600 }}
+          >
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            color={confirmDialog.confirmColor || 'primary'}
+            onClick={() => {
+              const action = confirmDialog.onConfirm;
+              setConfirmDialog((prev) => ({ ...prev, open: false }));
+              if (action) action();
+            }}
+            sx={{ textTransform: 'none', fontWeight: 700 }}
+          >
+            {confirmDialog.confirmText || 'Xác nhận'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar thông báo hệ thống (thay thế window.alert) */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+          severity={snackbar.severity || 'info'}
+          variant="filled"
+          sx={{ width: '100%', fontWeight: 600, boxShadow: theme.customShadows?.z1 }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

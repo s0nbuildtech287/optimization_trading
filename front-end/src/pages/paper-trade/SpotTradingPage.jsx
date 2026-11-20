@@ -26,7 +26,8 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  InputAdornment
+  InputAdornment,
+  Snackbar
 } from '@mui/material';
 import {
   ReloadOutlined,
@@ -94,6 +95,23 @@ export default function SpotTradingPage() {
   const [withdrawing, setWithdrawing] = useState(false);
   const [withdrawSuccessMsg, setWithdrawSuccessMsg] = useState('');
 
+  // Dialog xác nhận thao tác (thay thế window.confirm)
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    title: '',
+    content: '',
+    confirmText: 'Xác nhận',
+    confirmColor: 'primary',
+    onConfirm: null
+  });
+
+  // Thông báo Snackbar (thay thế window.alert)
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'info'
+  });
+
   const fetchData = async (isInitial = false) => {
     try {
       if (isInitial) setLoading(true);
@@ -126,39 +144,62 @@ export default function SpotTradingPage() {
       setToggling(true);
       const nextState = !data.account.is_bot_active;
       await togglePaperTradeBot(nextState, 'spot');
+      setSnackbar({
+        open: true,
+        message: nextState ? 'Đã BẬT bot tự động gom Spot!' : 'Đã TẮT bot tự động.',
+        severity: nextState ? 'success' : 'info'
+      });
       await fetchData(false);
     } catch (err) {
-      alert(err.message);
+      setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
       setToggling(false);
     }
   };
 
-  const handleSell = async (symbol) => {
-    if (!window.confirm(`Anh có chắc muốn bán toàn bộ số coin ${symbol} đang nắm giữ để chốt lời về USDT?`)) return;
-    try {
-      setActionSymbol(symbol);
-      await sellSpotHolding(symbol);
-      await fetchData(false);
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setActionSymbol(null);
-    }
+  const handleSell = (symbol) => {
+    setConfirmDialog({
+      open: true,
+      title: `Bán chốt toàn bộ ${symbol}?`,
+      content: `Anh có chắc muốn bán toàn bộ số coin ${symbol} đang nắm giữ để chốt lời/cắt lỗ về ví USDT ngay lập tức theo giá thị trường?`,
+      confirmText: 'Bán chốt ngay',
+      confirmColor: 'error',
+      onConfirm: async () => {
+        try {
+          setActionSymbol(symbol);
+          await sellSpotHolding(symbol);
+          setSnackbar({ open: true, message: `Đã bán chốt ${symbol} thành công!`, severity: 'success' });
+          await fetchData(false);
+        } catch (err) {
+          setSnackbar({ open: true, message: err.message, severity: 'error' });
+        } finally {
+          setActionSymbol(null);
+        }
+      }
+    });
   };
 
-  const handleBuyTranche = async (symbol) => {
+  const handleBuyTranche = (symbol) => {
     const tranche = parseFloat(data?.account?.risk_per_trade || 25);
-    if (!window.confirm(`Mua gom 1 phần ${symbol} trị giá $${tranche} USDT?`)) return;
-    try {
-      setActionSymbol(symbol);
-      await buySpotHolding(symbol, tranche);
-      await fetchData(false);
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setActionSymbol(null);
-    }
+    setConfirmDialog({
+      open: true,
+      title: `Mua gom Spot ${symbol}?`,
+      content: `Mua gom thêm 1 phần (tranche) $${tranche.toFixed(0)} USDT cặp ${symbol} theo giá thị trường hiện tại?`,
+      confirmText: 'Xác nhận mua gom',
+      confirmColor: 'primary',
+      onConfirm: async () => {
+        try {
+          setActionSymbol(symbol);
+          await buySpotHolding(symbol, tranche);
+          setSnackbar({ open: true, message: `Đã mua gom $${tranche.toFixed(0)} USDT ${symbol}!`, severity: 'success' });
+          await fetchData(false);
+        } catch (err) {
+          setSnackbar({ open: true, message: err.message, severity: 'error' });
+        } finally {
+          setActionSymbol(null);
+        }
+      }
+    });
   };
 
   const handleAddSymbol = async (symToAdd) => {
@@ -169,22 +210,32 @@ export default function SpotTradingPage() {
       await addPaperTradeSymbol(sym, 'spot');
       setInputSymbol('');
       setAddSymbolOpen(false);
+      setSnackbar({ open: true, message: `Đã thêm cặp coin ${sym} vào danh mục Spot!`, severity: 'success' });
       await fetchData(false);
     } catch (err) {
-      alert(err.message);
+      setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
       setAddingSymbol(false);
     }
   };
 
-  const handleRemoveSymbol = async (symToRemove) => {
-    if (!window.confirm(`Anh có muốn bỏ theo dõi cặp ${symToRemove} không?`)) return;
-    try {
-      await removePaperTradeSymbol(symToRemove, 'spot');
-      await fetchData(false);
-    } catch (err) {
-      alert(err.message);
-    }
+  const handleRemoveSymbol = (symToRemove) => {
+    setConfirmDialog({
+      open: true,
+      title: `Bỏ theo dõi ${symToRemove}?`,
+      content: `Anh có chắc muốn ngừng quét tín hiệu RSI DCA cho cặp ${symToRemove} không?`,
+      confirmText: 'Bỏ theo dõi',
+      confirmColor: 'warning',
+      onConfirm: async () => {
+        try {
+          await removePaperTradeSymbol(symToRemove, 'spot');
+          setSnackbar({ open: true, message: `Đã bỏ theo dõi cặp ${symToRemove}`, severity: 'info' });
+          await fetchData(false);
+        } catch (err) {
+          setSnackbar({ open: true, message: err.message, severity: 'error' });
+        }
+      }
+    });
   };
 
   const handleOpenSettings = () => {
@@ -200,7 +251,7 @@ export default function SpotTradingPage() {
     const balNum = parseFloat(customBalance);
     const trancheNum = parseFloat(customTranche);
     if (isNaN(balNum) || balNum <= 0) {
-      alert('Vui lòng nhập mức vốn hợp lệ (> 0)');
+      setSnackbar({ open: true, message: 'Vui lòng nhập mức vốn hợp lệ (> 0)', severity: 'warning' });
       return;
     }
 
@@ -213,9 +264,10 @@ export default function SpotTradingPage() {
         mode: 'spot'
       });
       setSettingsOpen(false);
+      setSnackbar({ open: true, message: 'Cập nhật cài đặt Spot thành công!', severity: 'success' });
       await fetchData(false);
     } catch (err) {
-      alert(err.message);
+      setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
       setSavingSettings(false);
     }
@@ -234,45 +286,50 @@ export default function SpotTradingPage() {
   const handleConfirmWithdraw = async () => {
     const amt = parseFloat(withdrawAmount);
     if (isNaN(amt) || amt <= 0) {
-      alert('Vui lòng nhập số tiền rút hợp lệ (> 0)');
+      setSnackbar({ open: true, message: 'Vui lòng nhập số tiền rút hợp lệ (> 0)', severity: 'warning' });
       return;
     }
     try {
       setWithdrawing(true);
       const res = await withdrawPaperTradeProfit({ amount: amt, mode: 'spot' });
       setWithdrawOpen(false);
-      setWithdrawSuccessMsg(`🎉 ${res.message || `Đã rút thành công $${amt.toFixed(2)} USDT về két!`}`);
-      setTimeout(() => setWithdrawSuccessMsg(''), 6000);
+      setSnackbar({ open: true, message: `🎉 ${res.message || `Đã rút thành công $${amt.toFixed(2)} USDT về két!`}`, severity: 'success' });
       await fetchData(false);
     } catch (err) {
-      alert(err.message);
+      setSnackbar({ open: true, message: err.message, severity: 'error' });
     } finally {
       setWithdrawing(false);
     }
   };
 
-  const handleResetWithCapital = async () => {
+  const handleResetWithCapital = () => {
     const balNum = parseFloat(customBalance);
     const trancheNum = parseFloat(customTranche);
     if (isNaN(balNum) || balNum <= 0) {
-      alert('Vui lòng nhập mức vốn hợp lệ (> 0)');
+      setSnackbar({ open: true, message: 'Vui lòng nhập mức vốn hợp lệ (> 0)', severity: 'warning' });
       return;
     }
 
-    if (!window.confirm(`Reset sẽ xóa toàn bộ danh mục coin Spot và lịch sử lệnh, đưa vốn USDT về lại $${balNum.toFixed(2)}. Anh có chắc không?`)) {
-      return;
-    }
-
-    try {
-      setSavingSettings(true);
-      await resetPaperTradeAccount(balNum, trancheNum, 1, 'spot');
-      setSettingsOpen(false);
-      await fetchData(false);
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setSavingSettings(false);
-    }
+    setConfirmDialog({
+      open: true,
+      title: '⚠️ Xác nhận Reset danh mục Spot',
+      content: `Reset sẽ xóa toàn bộ danh mục coin Spot và lịch sử lệnh, đưa vốn USDT về lại mốc $${balNum.toFixed(2)}. Hành động này không thể hoàn tác!`,
+      confirmText: 'Xác nhận Reset',
+      confirmColor: 'error',
+      onConfirm: async () => {
+        try {
+          setSavingSettings(true);
+          await resetPaperTradeAccount(balNum, trancheNum, 1, 'spot');
+          setSettingsOpen(false);
+          setSnackbar({ open: true, message: `Đã reset danh mục Spot về $${balNum.toFixed(2)} USDT!`, severity: 'success' });
+          await fetchData(false);
+        } catch (err) {
+          setSnackbar({ open: true, message: err.message, severity: 'error' });
+        } finally {
+          setSavingSettings(false);
+        }
+      }
+    });
   };
 
   if (loading && !data) {
@@ -1377,6 +1434,72 @@ export default function SpotTradingPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Modal xác nhận thao tác (thay thế window.confirm) */}
+      <Dialog
+        open={confirmDialog.open}
+        onClose={() => setConfirmDialog((prev) => ({ ...prev, open: false }))}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            bgcolor: 'background.paper',
+            backgroundImage: 'none',
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 2.5,
+            p: 0.5
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 800, fontSize: '1.1rem', pb: 1 }}>
+          {confirmDialog.title}
+        </DialogTitle>
+        <DialogContent sx={{ pt: 1 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+            {confirmDialog.content}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ p: 2, pt: 1, gap: 1 }}>
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={() => setConfirmDialog((prev) => ({ ...prev, open: false }))}
+            sx={{ textTransform: 'none', fontWeight: 600 }}
+          >
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            color={confirmDialog.confirmColor || 'primary'}
+            onClick={() => {
+              const action = confirmDialog.onConfirm;
+              setConfirmDialog((prev) => ({ ...prev, open: false }));
+              if (action) action();
+            }}
+            sx={{ textTransform: 'none', fontWeight: 700 }}
+          >
+            {confirmDialog.confirmText || 'Xác nhận'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar thông báo hệ thống (thay thế window.alert) */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+          severity={snackbar.severity || 'info'}
+          variant="filled"
+          sx={{ width: '100%', fontWeight: 600, boxShadow: theme.customShadows?.z1 }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
