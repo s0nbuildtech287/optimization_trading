@@ -90,7 +90,9 @@ exports.SPOT_RISK = Object.freeze({
 });
 
 exports.FUTURES_RISK = Object.freeze({
-  MAX_OPEN_POSITIONS: 3
+  MAX_OPEN_POSITIONS: 5,
+  TARGET_MIN_MARGIN: 10.0,
+  TARGET_MAX_MARGIN: 15.0
 });
 
 exports.MT5 = Object.freeze({

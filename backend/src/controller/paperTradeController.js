@@ -156,6 +156,23 @@ async function removeSymbol(req, res) {
   }
 }
 
+async function withdrawProfit(req, res) {
+  try {
+    const { amount, mode = 'futures' } = req.body;
+    const result = await paperTradeEngine.withdrawProfit(mode, amount);
+    return res.status(200).json({
+      success: true,
+      message: `Đã rút thành công $${result.withdrawnAmount.toFixed(2)} USDT về két an toàn`,
+      data: result
+    });
+  } catch (err) {
+    return res.status(400).json({
+      success: false,
+      message: err.message
+    });
+  }
+}
+
 async function getLivePrices(req, res) {
   try {
     const prices = binanceWsService.getAllPrices();
@@ -181,5 +198,6 @@ module.exports = {
   updateSettings,
   addSymbol,
   removeSymbol,
+  withdrawProfit,
   getLivePrices
 };

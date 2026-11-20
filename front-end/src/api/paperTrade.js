@@ -64,6 +64,17 @@ export async function updatePaperTradeSettings({ balance, riskPerTrade, leverage
   return res.json();
 }
 
+export async function withdrawPaperTradeProfit({ amount, mode = 'futures' }) {
+  const res = await authFetch('/api/paper-trade/withdraw', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ amount, mode })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Không thể rút tiền lãi');
+  return data;
+}
+
 export async function addPaperTradeSymbol(symbol, mode = 'futures') {
   const res = await authFetch('/api/paper-trade/symbols/add', {
     method: 'POST',

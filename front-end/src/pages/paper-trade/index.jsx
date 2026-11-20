@@ -63,7 +63,8 @@ import {
   resetPaperTradeAccount,
   updatePaperTradeSettings,
   addPaperTradeSymbol,
-  removePaperTradeSymbol
+  removePaperTradeSymbol,
+  withdrawPaperTradeProfit
 } from 'api/paperTrade';
 
 export default function PaperTradingPage() {
@@ -88,6 +89,12 @@ export default function PaperTradingPage() {
   const [addSymbolOpen, setAddSymbolOpen] = useState(false);
   const [inputSymbol, setInputSymbol] = useState('');
   const [addingSymbol, setAddingSymbol] = useState(false);
+
+  // Modal rút tiền lãi về két
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [withdrawing, setWithdrawing] = useState(false);
+  const [withdrawSuccessMsg, setWithdrawSuccessMsg] = useState('');
 
   const fetchData = async (isInitial = false) => {
     try {
@@ -179,6 +186,37 @@ export default function PaperTradingPage() {
     }
   };
 
+  // Rút tiền lãi về két an toàn
+  const handleOpenWithdraw = () => {
+    const curBal = parseFloat(data?.account?.balance || 100);
+    const initBal = parseFloat(data?.account?.initial_balance || 100);
+    const profitAboveInit = Math.max(0, curBal - initBal);
+    setWithdrawAmount(profitAboveInit > 0 ? profitAbove100Formatted(profitAboveInit) : '');
+    setWithdrawOpen(true);
+  };
+
+  const profitAbove100Formatted = (val) => Number(val).toFixed(2);
+
+  const handleConfirmWithdraw = async () => {
+    const amt = parseFloat(withdrawAmount);
+    if (isNaN(amt) || amt <= 0) {
+      alert('Vui lòng nhập số tiền rút hợp lệ (> 0)');
+      return;
+    }
+    try {
+      setWithdrawing(true);
+      const res = await withdrawPaperTradeProfit({ amount: amt, mode: 'futures' });
+      setWithdrawOpen(false);
+      setWithdrawSuccessMsg(`🎉 ${res.message || `Đã rút thành công $${amt.toFixed(2)} USDT về két!`}`);
+      setTimeout(() => setWithdrawSuccessMsg(''), 6000);
+      await fetchData(false);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setWithdrawing(false);
+    }
+  };
+
   // Reset tài khoản với số vốn mới
   const handleResetWithCapital = async () => {
     const balNum = parseFloat(customBalance);
@@ -263,6 +301,7 @@ export default function PaperTradingPage() {
   const totalPnL = equity - initialBalance;
   const totalPnLPct = initialBalance > 0 ? (totalPnL / initialBalance) * 100 : 0;
   const unrealizedPnL = parseFloat(account.unrealized_pnl || 0);
+  const totalWithdrawn = parseFloat(account.total_withdrawn_profit || 0);
 
   const kpiCardSx = {
     p: 2.25,
@@ -373,6 +412,17 @@ export default function PaperTradingPage() {
             />
 
             <Button
+              variant="contained"
+              size="small"
+              color="success"
+              onClick={handleOpenWithdraw}
+              startIcon={<DollarCircleOutlined />}
+              sx={{ textTransform: 'none', fontWeight: 700 }}
+            >
+              💰 Rút lãi {totalWithdrawn > 0 ? `(Đã rút $${totalWithdrawn.toFixed(0)})` : ''}
+            </Button>
+
+            <Button
               variant="outlined"
               size="small"
               color="primary"
@@ -399,6 +449,12 @@ export default function PaperTradingPage() {
           </Stack>
         </Stack>
       </MainCard>
+
+      {withdrawSuccessMsg && (
+        <Alert severity="success" onClose={() => setWithdrawSuccessMsg('')} sx={{ fontWeight: 600 }}>
+          {withdrawSuccessMsg}
+        </Alert>
+      )}
 
       {errorMsg && (
         <Alert severity="error" onClose={() => setErrorMsg('')}>
@@ -449,6 +505,11 @@ export default function PaperTradingPage() {
           </Box>
           <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
             Số dư ví: <b>${balance.toFixed(2)}</b> • Khởi tạo: <b>${initialBalance.toFixed(2)}</b>
+            {totalWithdrawn > 0 && (
+              <span style={{ color: '#52c41a', marginLeft: 8, fontWeight: 700 }}>
+                • Đã rút két: +${totalWithdrawn.toFixed(2)}
+              </span>
+            )}
           </Typography>
         </Card>
 
@@ -777,8 +838,22 @@ export default function PaperTradingPage() {
                           ${parseFloat(pos.current_price).toFixed(2)}
                         </Typography>
                       </TableCell>
-                      <TableCell align="right">{parseFloat(pos.quantity).toFixed(4)}</TableCell>
-                      <TableCell align="right">${parseFloat(pos.margin).toFixed(2)} ({pos.leverage}x)</TableCell>
+                      <TableCell align="right">
+                        <Typography variant="body2" fontWeight={600} color="text.primary">
+                          {parseFloat(pos.quantity).toFixed(4)}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                          ~${(parseFloat(pos.quantity) * parseFloat(pos.entry_price)).toFixed(2)} USDT
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography variant="body2" fontWeight={700} color="primary.main">
+                          ${parseFloat(pos.margin).toFixed(2)} ({pos.leverage}x)
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                          Vốn ví: ${parseFloat(pos.margin).toFixed(2)}
+                        </Typography>
+                      </TableCell>
                       <TableCell align="right" sx={{ color: 'error.main', fontWeight: 600 }}>
                         ${parseFloat(pos.stop_loss).toFixed(2)}
                       </TableCell>
@@ -1254,6 +1329,100 @@ export default function PaperTradingPage() {
             sx={{ textTransform: 'none', fontWeight: 600 }}
           >
             {addingSymbol ? 'Đang thêm...' : 'Thêm cặp Coin'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Modal Rút tiền lãi về két an toàn */}
+      <Dialog
+        open={withdrawOpen}
+        onClose={() => setWithdrawOpen(false)}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            bgcolor: 'background.paper',
+            backgroundImage: 'none',
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 2
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 700, pb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+          💰 Rút tiền lời về két an toàn
+        </DialogTitle>
+        <DialogContent sx={{ pt: 1 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Bảo toàn thành quả lợi nhuận: Rút tiền lãi ra khỏi tài khoản giao dịch về két sắt, giữ mốc vốn gốc ổn định để tiếp tục giao dịch an toàn.
+          </Typography>
+
+          <Box sx={{ p: 2, mb: 2, bgcolor: isDark ? 'background.default' : 'grey.50', borderRadius: 1.5, border: '1px solid', borderColor: 'divider' }}>
+            <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
+              <Typography variant="body2" color="text.secondary">Số dư ví hiện tại:</Typography>
+              <Typography variant="body2" fontWeight={700}>${balance.toFixed(2)} USDT</Typography>
+            </Stack>
+            <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
+              <Typography variant="body2" color="text.secondary">Mức vốn gốc chuẩn:</Typography>
+              <Typography variant="body2" fontWeight={600}>${initialBalance.toFixed(2)} USDT</Typography>
+            </Stack>
+            <Divider sx={{ my: 1 }} />
+            <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
+              <Typography variant="body2" color="text.secondary">Tiền lãi vượt mức vốn:</Typography>
+              <Typography variant="body2" fontWeight={800} color={balance > initialBalance ? 'success.main' : 'text.secondary'}>
+                {balance > initialBalance ? `+$${(balance - initialBalance).toFixed(2)} USDT` : '$0.00 USDT'}
+              </Typography>
+            </Stack>
+            {totalWithdrawn > 0 && (
+              <Stack direction="row" justifyContent="space-between">
+                <Typography variant="caption" color="text.secondary">Tổng lãi đã rút trước đó:</Typography>
+                <Typography variant="caption" fontWeight={700} color="success.main">
+                  +${totalWithdrawn.toFixed(2)} USDT
+                </Typography>
+              </Stack>
+            )}
+          </Box>
+
+          {balance > initialBalance && (
+            <Button
+              variant="outlined"
+              color="success"
+              size="small"
+              fullWidth
+              onClick={() => setWithdrawAmount((balance - initialBalance).toFixed(2))}
+              sx={{ mb: 2, textTransform: 'none', fontWeight: 600 }}
+            >
+              Rút toàn bộ lãi vượt mốc (+${(balance - initialBalance).toFixed(2)} USDT)
+            </Button>
+          )}
+
+          <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
+            Số tiền USDT muốn rút:
+          </Typography>
+          <TextField
+            fullWidth
+            type="number"
+            placeholder="0.00"
+            value={withdrawAmount}
+            onChange={(e) => setWithdrawAmount(e.target.value)}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              endAdornment: <InputAdornment position="end">USDT</InputAdornment>
+            }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ p: 2.5, pt: 0, gap: 1 }}>
+          <Button variant="outlined" color="inherit" onClick={() => setWithdrawOpen(false)} disabled={withdrawing}>
+            Hủy
+          </Button>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleConfirmWithdraw}
+            disabled={withdrawing || !withdrawAmount || parseFloat(withdrawAmount) <= 0}
+            sx={{ textTransform: 'none', fontWeight: 700 }}
+          >
+            {withdrawing ? 'Đang rút...' : 'Xác nhận rút về két'}
           </Button>
         </DialogActions>
       </Dialog>

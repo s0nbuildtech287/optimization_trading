@@ -345,16 +345,34 @@ class PaperTradeEngine {
 
     let margin = notional / leverage;
     
-    // Tự động co quy mô lệnh để vừa với ngân sách ký quỹ an toàn (tối đa 35% vốn khả dụng, ~$35)
-    const maxMarginAllowed = Math.min(currentBalance * 0.35, currentBalance - 5);
+    // Tính toán Free Margin khả dụng (Số dư trừ đi tổng margin các lệnh đang mở)
+    let usedMargin = 0;
+    for (const p of openPositions) {
+      usedMargin += parseFloat(p.margin || 0);
+    }
+    const freeMargin = Math.max(0, currentBalance - usedMargin);
+
+    // Giới hạn ký quỹ mỗi lệnh trong khoảng $10 - $15 để chia đều vốn cho nhiều lệnh
+    const TARGET_MIN_MARGIN = FUTURES_RISK.TARGET_MIN_MARGIN || 10.0;
+    const TARGET_MAX_MARGIN = FUTURES_RISK.TARGET_MAX_MARGIN || 15.0;
+
+    // Giới hạn trần mỗi lệnh là $15, nhưng không vượt quá Free Margin - $3 tiền đệm
+    const maxMarginAllowed = Math.min(TARGET_MAX_MARGIN, Math.max(TARGET_MIN_MARGIN, freeMargin - 3.0));
     if (margin > maxMarginAllowed) {
       margin = maxMarginAllowed;
       notional = margin * leverage;
       quantity = notional / entryPrice;
     }
 
-    if (margin <= 0 || margin > currentBalance) {
-      console.warn(`[PaperEngine-Futures] Số dư ký quỹ không đủ ($${margin} > $${currentBalance})`);
+    // Nếu margin nhỏ hơn $10 mà Free Margin vẫn còn đủ, nâng lên $10 để đạt kích thước chuẩn
+    if (margin < TARGET_MIN_MARGIN && freeMargin >= TARGET_MIN_MARGIN + 3.0) {
+      margin = TARGET_MIN_MARGIN;
+      notional = margin * leverage;
+      quantity = notional / entryPrice;
+    }
+
+    if (margin > freeMargin || notional < 6.0 || margin < 3.0) {
+      console.warn(`[PaperEngine-Futures] Bỏ qua vào lệnh ${symbol}: Ký quỹ $${margin.toFixed(2)} vượt Free Margin $${freeMargin.toFixed(2)} hoặc không đủ min notional.`);
       return;
     }
 
@@ -670,6 +688,64 @@ class PaperTradeEngine {
       `Cập nhật cài đặt [${mode.toUpperCase()}]: Vốn $${parseFloat(account.balance).toFixed(2)} | Tranche/Rủi ro: $${parseFloat(account.risk_per_trade).toFixed(2)}.`
     );
     return account;
+  }
+
+  async withdrawProfit(mode = 'futures', amountToWithdraw) {
+    const accId = this.resolveAccountId(mode);
+    const account = await paperTradeDao.getAccount(accId);
+    if (!account) throw new Error('Không tìm thấy tài khoản');
+
+    const amount = parseFloat(amountToWithdraw);
+    if (isNaN(amount) || amount <= 0) {
+      throw new Error('Số tiền rút không hợp lệ (phải > 0)');
+    }
+
+    const currentBalance = parseFloat(account.balance);
+    const currentEquity = parseFloat(account.equity);
+
+    // Kiểm tra số dư khả dụng (Free Margin) nếu là Futures
+    if (mode === 'futures') {
+      const openPositions = await paperTradeDao.getOpenPositions(accId);
+      let usedMargin = 0;
+      for (const p of openPositions) {
+        usedMargin += parseFloat(p.margin || 0);
+      }
+      const freeMargin = Math.max(0, currentBalance - usedMargin);
+      if (amount > freeMargin) {
+        throw new Error(`Số dư khả dụng (Free Margin) không đủ. Tối đa có thể rút: $${freeMargin.toFixed(2)} USDT (Đang có $${usedMargin.toFixed(2)} ký quỹ trong các vị thế mở).`);
+      }
+    } else {
+      if (amount > currentBalance) {
+        throw new Error(`Số dư USDT khả dụng không đủ. Tối đa có thể rút: $${currentBalance.toFixed(2)} USDT.`);
+      }
+    }
+
+    const newBalance = Math.max(0, currentBalance - amount);
+    const newEquity = Math.max(0, currentEquity - amount);
+    const currentWithdrawn = parseFloat(account.total_withdrawn_profit || 0);
+    const newWithdrawn = currentWithdrawn + amount;
+
+    const updatedAccount = await paperTradeDao.updateAccount(accId, {
+      balance: Number(newBalance.toFixed(2)),
+      equity: Number(newEquity.toFixed(2)),
+      total_withdrawn_profit: Number(newWithdrawn.toFixed(2))
+    });
+
+    await paperTradeDao.createLog(
+      accId,
+      'SYSTEM',
+      'SUCCESS',
+      `💰 [RÚT LÃI VỀ KÉT] Đã rút thành công $${amount.toFixed(2)} USDT về két an toàn. Số dư ví còn lại: $${newBalance.toFixed(2)} USDT (Lũy kế đã rút két: $${newWithdrawn.toFixed(2)} USDT).`
+    );
+
+    await this.recordEquitySnapshot(accId);
+
+    return {
+      account: updatedAccount,
+      withdrawnAmount: amount,
+      totalWithdrawn: newWithdrawn,
+      remainingBalance: newBalance
+    };
   }
 
   async closeFuturesPositionManually(positionId) {

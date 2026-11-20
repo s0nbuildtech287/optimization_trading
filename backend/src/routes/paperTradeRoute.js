@@ -29,6 +29,9 @@ router.post('/settings', controller.updateSettings);
 // Route thêm cặp coin theo dõi
 router.post('/symbols/add', controller.addSymbol);
 
+// Route rút tiền lời về két sắt an toàn (Futures / Spot)
+router.post('/withdraw', controller.withdrawProfit);
+
 // Route xóa cặp coin theo dõi
 router.post('/symbols/remove', controller.removeSymbol);
 
