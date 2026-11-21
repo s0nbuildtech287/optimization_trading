@@ -536,7 +536,7 @@ export default function PaperTradingPage() {
               ĐẤU TRƯỜNG CHIẾN LƯỢC ĐA BOT ($100 / BOT)
             </Typography>
             <Chip
-              label="3 BOTS LIVE"
+              label={`${data?.botList ? data.botList.filter((b) => b.is_bot_active).length : 4} BOTS LIVE`}
               size="small"
               color="primary"
               sx={{ height: 22, fontSize: 10, fontWeight: 700 }}
