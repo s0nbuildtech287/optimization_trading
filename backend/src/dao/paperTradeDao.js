@@ -107,15 +107,15 @@ async function initPaperTradeTables() {
 
     // Seed tài khoản mặc định $100 nếu chưa có
     await client.query(`
-      INSERT INTO paper_accounts (id, name, account_type, initial_balance, balance, equity, peak_equity, risk_per_trade, leverage)
+      INSERT INTO paper_accounts (id, name, account_type, initial_balance, balance, equity, peak_equity, risk_per_trade, leverage, tracked_symbols)
       VALUES 
-        ('acc_binance_futures', 'Bot 1: Trend Pullback (EMA)', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
-        ('acc_futures_reversion', 'Bot 2: Bollinger Reversion', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
-        ('acc_futures_breakout', 'Bot 3: Breakout Momentum', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
-        ('acc_futures_h4_trend', 'Bot 4: H4 Trend Sniper', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
-        ('acc_futures_ttm_squeeze', 'Bot 5: TTM Squeeze Breakout', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
-        ('acc_futures_momentum_leader', 'Bot 6: Momentum Leader', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
-        ('acc_binance_spot', 'Binance Spot Paper (DCA)', 'SPOT', 100.00, 100.00, 100.00, 100.00, 25.00, 1)
+        ('acc_binance_futures', 'Bot 1: Trend Pullback (EMA)', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3, ARRAY['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'PAXGUSDT']),
+        ('acc_futures_reversion', 'Bot 2: Bollinger Reversion', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3, ARRAY['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'PAXGUSDT']),
+        ('acc_futures_breakout', 'Bot 3: Breakout Momentum', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3, ARRAY['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'PAXGUSDT', 'DOGEUSDT', 'NEARUSDT', 'AVAXUSDT']),
+        ('acc_futures_h4_trend', 'Bot 4: H4 Trend Sniper', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3, ARRAY['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'NEARUSDT', 'AVAXUSDT']),
+        ('acc_futures_ttm_squeeze', 'Bot 5: TTM Squeeze Breakout', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3, ARRAY['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'DOGEUSDT', 'NEARUSDT', 'AVAXUSDT', 'XRPUSDT']),
+        ('acc_futures_momentum_leader', 'Bot 6: Momentum Leader', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3, ARRAY['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'DOGEUSDT', 'NEARUSDT', 'AVAXUSDT', 'XRPUSDT', 'SUIUSDT', 'LINKUSDT']),
+        ('acc_binance_spot', 'Binance Spot Paper (DCA)', 'SPOT', 100.00, 100.00, 100.00, 100.00, 25.00, 1, ARRAY['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'PAXGUSDT'])
       ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;
     `);
 
