@@ -142,10 +142,13 @@ class PaperTradeEngine {
           }
           const pnlPct = margin > 0 ? (pnl / margin) * 100 : 0;
 
-          // Dời SL về Breakeven khi lãi >= $2 (1R)
-          if (!isBreakeven && pnl >= 2.00) {
+          // Dời SL về Breakeven khi lãi >= 1.4R ($2.80)
+          // Khóa thêm 0.05% để bảo toàn phí giao dịch sàn
+          const beThreshold = 2.80; // 1.4R
+          if (!isBreakeven && pnl >= beThreshold) {
+            const lockedSl = pos.side === 'LONG' ? entryPrice * 1.0005 : entryPrice * 0.9995;
             await paperTradeDao.updatePosition(pos.id, {
-              stop_loss: entryPrice,
+              stop_loss: lockedSl,
               is_breakeven_triggered: true,
               current_price: currentPrice,
               unrealized_pnl: pnl,
@@ -155,7 +158,7 @@ class PaperTradeEngine {
               bot.id,
               symbol,
               'INFO',
-              `🛡️ Dời Stop Loss về hòa vốn (Breakeven @ ${entryPrice}) cho vị thế ${pos.side} [${bot.name}] khi đạt lãi +$${pnl.toFixed(2)}`
+              `🛡️ Dời Stop Loss về hòa vốn an toàn (Breakeven @ ${lockedSl.toFixed(4)}) cho vị thế ${pos.side} [${bot.name}] khi đạt lãi +$${pnl.toFixed(2)} (>= 1.4R)`
             );
             continue;
           }
@@ -363,6 +366,25 @@ class PaperTradeEngine {
     const openPositions = await paperTradeDao.getOpenPositions(bot.id);
     const existingPos = openPositions.find((p) => p.symbol === symbol);
     if (existingPos || openPositions.length >= FUTURES_RISK.MAX_OPEN_POSITIONS) return;
+
+    // 1. CIRCUIT BREAKER: Kiểm tra ngưỡng sụt giảm tối đa 15%
+    if (parseFloat(account.max_drawdown_pct || 0) >= 15.0) {
+      console.warn(`[PaperEngine-${bot.id}] TẠM DỪNG MỞ LỆNH: Sụt giảm tài khoản đã chạm ngưỡng an toàn 15% (Max DD: ${account.max_drawdown_pct}%).`);
+      return;
+    }
+
+    // 2. GIỚI HẠN TƯƠNG QUAN (CORRELATION): Nhóm coin lớn (BTC, ETH, SOL, BNB)
+    // Tối đa không quá 2 vị thế cùng chiều trên nhóm này để tránh rủi ro hệ thống
+    const HIGH_CORRELATION_GROUP = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT'];
+    if (HIGH_CORRELATION_GROUP.includes(symbol)) {
+      const sameDirectionCount = openPositions.filter(
+        (p) => HIGH_CORRELATION_GROUP.includes(p.symbol) && p.side === signal.action
+      ).length;
+      if (sameDirectionCount >= 2) {
+        console.warn(`[PaperEngine-${bot.id}] Bỏ qua lệnh ${signal.action} ${symbol}: Đã có ${sameDirectionCount} vị thế ${signal.action} trong nhóm coin tương quan cao.`);
+        return;
+      }
+    }
 
     const currentBalance = parseFloat(account.balance);
     const riskPerTrade = parseFloat(account.risk_per_trade) || 2.0;

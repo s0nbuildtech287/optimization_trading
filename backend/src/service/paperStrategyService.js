@@ -74,6 +74,62 @@ function calculateATR(candles, period = 14) {
   return atr;
 }
 
+// Hàm tính Average Directional Index (ADX) - Đo lường độ mạnh xu hướng
+function calculateADX(candles, period = 14) {
+  if (!candles || candles.length < period * 2) return 20; // Giá trị trung tính mặc định
+
+  const plusDM = [];
+  const minusDM = [];
+  const trs = [];
+
+  for (let i = 1; i < candles.length; i++) {
+    const curr = candles[i];
+    const prev = candles[i - 1];
+
+    const upMove = curr.high - prev.high;
+    const downMove = prev.low - curr.low;
+
+    plusDM.push(upMove > downMove && upMove > 0 ? upMove : 0);
+    minusDM.push(downMove > upMove && downMove > 0 ? downMove : 0);
+
+    const hl = curr.high - curr.low;
+    const hpc = Math.abs(curr.high - prev.close);
+    const lpc = Math.abs(curr.low - prev.close);
+    trs.push(Math.max(hl, hpc, lpc));
+  }
+
+  if (trs.length < period) return 20;
+
+  // Wilder's smoothing ban đầu
+  let smoothedTR = trs.slice(0, period).reduce((a, b) => a + b, 0);
+  let smoothedPlusDM = plusDM.slice(0, period).reduce((a, b) => a + b, 0);
+  let smoothedMinusDM = minusDM.slice(0, period).reduce((a, b) => a + b, 0);
+
+  const dxList = [];
+
+  for (let i = period; i < trs.length; i++) {
+    smoothedTR = smoothedTR - smoothedTR / period + trs[i];
+    smoothedPlusDM = smoothedPlusDM - smoothedPlusDM / period + plusDM[i];
+    smoothedMinusDM = smoothedMinusDM - smoothedMinusDM / period + minusDM[i];
+
+    const plusDI = smoothedTR > 0 ? (smoothedPlusDM / smoothedTR) * 100 : 0;
+    const minusDI = smoothedTR > 0 ? (smoothedMinusDM / smoothedTR) * 100 : 0;
+    const diSum = plusDI + minusDI;
+    const dx = diSum > 0 ? (Math.abs(plusDI - minusDI) / diSum) * 100 : 0;
+    dxList.push(dx);
+  }
+
+  if (dxList.length < period) return dxList[dxList.length - 1] || 20;
+
+  // Tính ADX bằng Wilder's smoothing trên mảng DX
+  let adx = dxList.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  for (let i = period; i < dxList.length; i++) {
+    adx = (adx * (period - 1) + dxList[i]) / period;
+  }
+
+  return Number(adx.toFixed(1));
+}
+
 /**
  * Đánh giá chiến lược Trend Following + Pullback (M15 / H1)
  * @param {Array} candles Danh sách nến [ { open, high, low, close, volume } ]
@@ -107,17 +163,23 @@ function evaluateTrendPullbackStrategy(symbol, candles) {
 
   // 1. KỊCH BẢN LONG (BUY)
   // - Xu hướng chính tăng: Giá > EMA200 và EMA50 > EMA200
+  // - Độ dốc EMA200 hướng lên (Higher Timeframe alignment)
   // - Giá hồi về (pullback) gần đường EMA 21 (trong phạm vi 0.4% quanh EMA21)
   // - RSI ở vùng lành mạnh (từ 40 đến 65), chưa bị quá mua (>70)
-  const isUpTrend = currentClose > ema200 && ema50 > ema200;
+  const prevEma200 = calculateEMA(closes.slice(0, -4), 200) || ema200;
+  const isEma200Up = ema200 >= prevEma200 * 0.9998;
+  const isUpTrend = currentClose > ema200 && ema50 > ema200 && isEma200Up;
   const isLongPullback = currentCandle.low <= ema21 * 1.004 && currentClose >= ema21 * 0.996;
   const isRsiHealthyLong = rsi >= 40 && rsi <= 65;
 
+  const isPaxg = symbol && symbol.includes('PAXG');
+  const minSlPct = isPaxg ? 0.0035 : 0.008;
+
   if (isUpTrend && isLongPullback && isRsiHealthyLong) {
-    // Đặt SL dưới đáy nến trước hoặc 1.5 * ATR
-    const slDistance = Math.max(1.5 * atr, currentClose * 0.008);
+    // Đặt SL động theo ATR (1.5 * ATR, với PAXG SL hẹp theo độ biến động thực tế)
+    const slDistance = Math.max(1.5 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose - slDistance).toFixed(4));
-    const takeProfit = Number((currentClose + slDistance * 1.8).toFixed(4)); // Tỷ lệ R:R = 1:1.8
+    const takeProfit = Number((currentClose + slDistance * 2.0).toFixed(4)); // Tỷ lệ R:R = 1:2.0
 
     return {
       action: 'LONG',
@@ -126,24 +188,26 @@ function evaluateTrendPullbackStrategy(symbol, candles) {
       stopLoss,
       takeProfit,
       riskDistance: slDistance,
-      rrRatio: 1.8,
-      reason: `EMA200 UpTrend (EMA50 > EMA200), Pullback EMA21, RSI=${rsi.toFixed(1)}`,
+      rrRatio: 2.0,
+      reason: `EMA200 UpTrend (EMA50 > EMA200 & Slope Up), Pullback EMA21, RSI=${rsi.toFixed(1)}`,
       indicators
     };
   }
 
   // 2. KỊCH BẢN SHORT (SELL)
   // - Xu hướng chính giảm: Giá < EMA200 và EMA50 < EMA200
+  // - Độ dốc EMA200 hướng xuống
   // - Giá hồi lên gần đường EMA 21
   // - RSI ở vùng lành mạnh (từ 35 đến 60), chưa bị quá bán (<30)
-  const isDownTrend = currentClose < ema200 && ema50 < ema200;
+  const isEma200Down = ema200 <= prevEma200 * 1.0002;
+  const isDownTrend = currentClose < ema200 && ema50 < ema200 && isEma200Down;
   const isShortPullback = currentCandle.high >= ema21 * 0.996 && currentClose <= ema21 * 1.004;
   const isRsiHealthyShort = rsi <= 60 && rsi >= 35;
 
   if (isDownTrend && isShortPullback && isRsiHealthyShort) {
-    const slDistance = Math.max(1.5 * atr, currentClose * 0.008);
+    const slDistance = Math.max(1.5 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose + slDistance).toFixed(4));
-    const takeProfit = Number((currentClose - slDistance * 1.8).toFixed(4)); // Tỷ lệ R:R = 1:1.8
+    const takeProfit = Number((currentClose - slDistance * 2.0).toFixed(4)); // Tỷ lệ R:R = 1:2.0
 
     return {
       action: 'SHORT',
@@ -152,8 +216,8 @@ function evaluateTrendPullbackStrategy(symbol, candles) {
       stopLoss,
       takeProfit,
       riskDistance: slDistance,
-      rrRatio: 1.8,
-      reason: `EMA200 DownTrend (EMA50 < EMA200), Pullback EMA21, RSI=${rsi.toFixed(1)}`,
+      rrRatio: 2.0,
+      reason: `EMA200 DownTrend (EMA50 < EMA200 & Slope Down), Pullback EMA21, RSI=${rsi.toFixed(1)}`,
       indicators
     };
   }
@@ -197,6 +261,7 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
   const bb = calculateBollingerBands(closes, 20, 2);
   const rsi = calculateRSI(closes, 14);
   const atr = calculateATR(candles, 14);
+  const adx = calculateADX(candles, 14);
 
   if (!bb || !atr) return null;
 
@@ -209,20 +274,34 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
     bbMiddle: Number(bb.middle.toFixed(2)),
     bbLower: Number(bb.lower.toFixed(2)),
     rsi: Number(rsi.toFixed(1)),
-    atr: Number(atr.toFixed(2))
+    atr: Number(atr.toFixed(2)),
+    adx
   };
 
-  // 1. KỊCH BẢN LONG (Bắt bật hồi từ dải dưới)
+  // BỘ LỌC BẮT BUỘC: Nếu ADX >= 23, thị trường đang có Trend mạnh (Downtrend/Uptrend dốc) -> KHÔNG bắt đảo chiều
+  if (adx >= 23) {
+    return {
+      action: 'HOLD',
+      symbol,
+      reason: `Bỏ qua: ADX=${adx} >= 23 (Thị trường có xu hướng mạnh, tránh bắt dao rơi)`,
+      indicators
+    };
+  }
+
+  const isPaxg = symbol && symbol.includes('PAXG');
+  const minSlPct = isPaxg ? 0.003 : 0.007;
+
+  // 1. KỊCH BẢN LONG (Bắt bật hồi từ dải dưới khi Sideway)
   const isLowerTouch = prevCandle.low <= bb.lower || currentCandle.low <= bb.lower;
   const isBouncingUp = currentClose > bb.lower;
   const isOversold = rsi <= 38;
 
   if (isLowerTouch && isBouncingUp && isOversold) {
-    const slDistance = Math.max(1.2 * atr, currentClose * 0.007);
+    const slDistance = Math.max(1.2 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose - slDistance).toFixed(4));
-    // Mục tiêu TP là trục giữa Bollinger Bands hoặc tối thiểu 1.6R
-    const targetTp = Math.min(bb.middle, currentClose + slDistance * 1.6);
-    const takeProfit = Number(Math.max(targetTp, currentClose + slDistance * 1.2).toFixed(4));
+    // Mục tiêu TP là trục giữa SMA 20 (Mean-Reversion) hoặc tối thiểu 1.4R
+    const targetTp = Math.max(bb.middle, currentClose + slDistance * 1.4);
+    const takeProfit = Number(targetTp.toFixed(4));
 
     return {
       action: 'LONG',
@@ -232,22 +311,22 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
       takeProfit,
       riskDistance: slDistance,
       rrRatio: 1.5,
-      reason: `Bollinger Lower Bounce, RSI=${rsi.toFixed(1)} <= 38 (Oversold)`,
+      reason: `Bollinger Lower Bounce (Sideway ADX=${adx}), RSI=${rsi.toFixed(1)} <= 38`,
       indicators
     };
   }
 
-  // 2. KỊCH BẢN SHORT (Bắt đảo chiều từ dải trên)
+  // 2. KỊCH BẢN SHORT (Bắt đảo chiều từ dải trên khi Sideway)
   const isUpperTouch = prevCandle.high >= bb.upper || currentCandle.high >= bb.upper;
   const isRejectionDown = currentClose < bb.upper;
   const isOverbought = rsi >= 62;
 
   if (isUpperTouch && isRejectionDown && isOverbought) {
-    const slDistance = Math.max(1.2 * atr, currentClose * 0.007);
+    const slDistance = Math.max(1.2 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose + slDistance).toFixed(4));
-    // Mục tiêu TP là trục giữa Bollinger Bands hoặc tối thiểu 1.6R
-    const targetTp = Math.max(bb.middle, currentClose - slDistance * 1.6);
-    const takeProfit = Number(Math.min(targetTp, currentClose - slDistance * 1.2).toFixed(4));
+    // Mục tiêu TP là trục giữa SMA 20 hoặc tối thiểu 1.4R
+    const targetTp = Math.min(bb.middle, currentClose - slDistance * 1.4);
+    const takeProfit = Number(targetTp.toFixed(4));
 
     return {
       action: 'SHORT',
@@ -257,7 +336,7 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
       takeProfit,
       riskDistance: slDistance,
       rrRatio: 1.5,
-      reason: `Bollinger Upper Rejection, RSI=${rsi.toFixed(1)} >= 62 (Overbought)`,
+      reason: `Bollinger Upper Rejection (Sideway ADX=${adx}), RSI=${rsi.toFixed(1)} >= 62`,
       indicators
     };
   }
@@ -293,11 +372,18 @@ function evaluateBreakoutMomentumStrategy(symbol, candles) {
     atr: Number(atr.toFixed(2))
   };
 
-  // 1. KỊCH BẢN LONG (Breakout phá đỉnh + Volume lớn)
-  if (currentClose > highestHigh && isVolumeSpike) {
-    const slDistance = Math.max(1.4 * atr, currentClose * 0.008);
+  const isPaxg = symbol && symbol.includes('PAXG');
+  const minSlPct = isPaxg ? 0.0035 : 0.008;
+
+  // Lọc False Breakout: Nến phá đỉnh phải là nến xanh đóng gần đỉnh (upper 45% của nến)
+  const candleRange = currentCandle.high - currentCandle.low;
+  const isDecisiveBullish = candleRange > 0 && currentClose > currentCandle.open && ((currentClose - currentCandle.low) / candleRange) >= 0.55;
+
+  // 1. KỊCH BẢN LONG (Breakout phá đỉnh + Volume lớn + Nến dứt khoát)
+  if (currentClose > highestHigh && isVolumeSpike && isDecisiveBullish) {
+    const slDistance = Math.max(1.4 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose - slDistance).toFixed(4));
-    const takeProfit = Number((currentClose + slDistance * 1.8).toFixed(4));
+    const takeProfit = Number((currentClose + slDistance * 2.0).toFixed(4));
 
     return {
       action: 'LONG',
@@ -306,17 +392,20 @@ function evaluateBreakoutMomentumStrategy(symbol, candles) {
       stopLoss,
       takeProfit,
       riskDistance: slDistance,
-      rrRatio: 1.8,
-      reason: `Donchian Breakout High (${highestHigh}), Volume Spike x${(currentVolume / volumeSMA20).toFixed(1)}`,
+      rrRatio: 2.0,
+      reason: `Donchian Breakout High (${highestHigh}), Vol Spike x${(currentVolume / volumeSMA20).toFixed(1)}, Bullish Close`,
       indicators
     };
   }
 
-  // 2. KỊCH BẢN SHORT (Breakdown phá đáy + Volume lớn)
-  if (currentClose < lowestLow && isVolumeSpike) {
-    const slDistance = Math.max(1.4 * atr, currentClose * 0.008);
+  // Lọc False Breakdown: Nến phá đáy phải là nến đỏ đóng gần đáy (lower 45% của nến)
+  const isDecisiveBearish = candleRange > 0 && currentClose < currentCandle.open && ((currentCandle.high - currentClose) / candleRange) >= 0.55;
+
+  // 2. KỊCH BẢN SHORT (Breakdown phá đáy + Volume lớn + Nến dứt khoát)
+  if (currentClose < lowestLow && isVolumeSpike && isDecisiveBearish) {
+    const slDistance = Math.max(1.4 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose + slDistance).toFixed(4));
-    const takeProfit = Number((currentClose - slDistance * 1.8).toFixed(4));
+    const takeProfit = Number((currentClose - slDistance * 2.0).toFixed(4));
 
     return {
       action: 'SHORT',
@@ -325,8 +414,8 @@ function evaluateBreakoutMomentumStrategy(symbol, candles) {
       stopLoss,
       takeProfit,
       riskDistance: slDistance,
-      rrRatio: 1.8,
-      reason: `Donchian Breakdown Low (${lowestLow}), Volume Spike x${(currentVolume / volumeSMA20).toFixed(1)}`,
+      rrRatio: 2.0,
+      reason: `Donchian Breakdown Low (${lowestLow}), Vol Spike x${(currentVolume / volumeSMA20).toFixed(1)}, Bearish Close`,
       indicators
     };
   }
@@ -338,6 +427,7 @@ module.exports = {
   calculateEMA,
   calculateRSI,
   calculateATR,
+  calculateADX,
   calculateSMA,
   calculateBollingerBands,
   evaluateTrendPullbackStrategy,

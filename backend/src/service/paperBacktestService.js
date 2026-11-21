@@ -139,11 +139,14 @@ async function runBacktest({
       const takeProfit = currentPos.takeProfit;
       const margin = currentPos.margin;
 
-      // 1.1 Kiểm tra Dời Stop Loss về Hòa Vốn (Breakeven) khi nến có lúc lãi >= $2 (1R)
+      // 1.1 Kiểm tra Dời Stop Loss về Hòa Vốn (Breakeven):
+      // Nâng ngưỡng từ 1.0R ($2.0) lên 1.4R ($2.80) để giá có không gian thở, tránh bị quét ra sớm
+      // Khóa thêm 0.05% để bảo toàn phí giao dịch sàn
       if (!currentPos.isBreakeven) {
         const bestPnl = isLong ? (candle.high - entryPrice) * quantity : (entryPrice - candle.low) * quantity;
-        if (bestPnl >= 2.0) {
-          currentPos.stopLoss = entryPrice;
+        const beTriggerThreshold = 2.80; // 1.4R
+        if (bestPnl >= beTriggerThreshold) {
+          currentPos.stopLoss = isLong ? entryPrice * 1.0005 : entryPrice * 0.9995;
           currentPos.isBreakeven = true;
         }
       }
