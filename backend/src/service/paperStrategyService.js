@@ -620,6 +620,99 @@ function evaluateTTMSqueezeStrategy(symbol, candles) {
   return { action: 'HOLD', symbol, indicators };
 }
 
+/**
+ * CHIẾN LƯỢC 6: Momentum Leader Scanner (Xoay trục dòng tiền & Đón đầu Coin dẫn dắt)
+ * - Tốc độ thay đổi giá 24h & 6h (ROC - Rate of Change)
+ * - Xác nhận gia tốc giá kèm bùng nổ khối lượng (Volume MA10 > 1.05x MA50)
+ * - Đường xu hướng EMA 20 & EMA 50
+ * - Quản trị rủi ro: SL 1.6 * ATR, TP 2.5R (R:R 1:2.5), Breakeven 1.4R
+ */
+function evaluateMomentumLeaderStrategy(symbol, candles) {
+  if (!candles || candles.length < 96) return null; // 96 nến 15m = 24 giờ
+
+  const closes = candles.map((c) => c.close);
+  const currentCandle = candles[candles.length - 1];
+  const currentClose = currentCandle.close;
+
+  // 1. Tốc độ thay đổi giá (Rate of Change - 24h ROC)
+  const close24hAgo = candles[candles.length - 96].close;
+  const roc24h = ((currentClose - close24hAgo) / close24hAgo) * 100;
+
+  // 2. Tốc độ thay đổi giá ngắn hạn (6h ROC - 24 nến)
+  const close6hAgo = candles[candles.length - 24].close;
+  const roc6h = ((currentClose - close6hAgo) / close6hAgo) * 100;
+
+  // 3. Khối lượng giao dịch bùng nổ (Volume Ratio: MA10 vs MA50)
+  const volumes = candles.map((c) => c.volume);
+  const vol10 = volumes.slice(-10).reduce((a, b) => a + b, 0) / 10;
+  const vol50 = volumes.slice(-50).reduce((a, b) => a + b, 0) / 50;
+  const volumeRatio = vol50 > 0 ? vol10 / vol50 : 1;
+
+  // 4. Đường trung bình xu hướng EMA 20 & EMA 50
+  const ema20 = calculateEMA(closes, 20);
+  const ema50 = calculateEMA(closes, 50);
+  const atr = calculateATR(candles, 14);
+
+  if (!ema20 || !ema50 || !atr || atr <= 0) return null;
+
+  const isPaxg = symbol && symbol.includes('PAXG');
+  const minSlPct = isPaxg ? 0.003 : 0.008;
+  const slDistance = Math.max(1.6 * atr, currentClose * minSlPct);
+
+  const indicators = {
+    roc24h: Number(roc24h.toFixed(2)),
+    roc6h: Number(roc6h.toFixed(2)),
+    volumeRatio: Number(volumeRatio.toFixed(2)),
+    ema20: Number(ema20.toFixed(2)),
+    ema50: Number(ema50.toFixed(2)),
+    atr: Number(atr.toFixed(2))
+  };
+
+  // KỊCH BẢN LONG: Momentum dẫn đầu (ROC 24h > 1.2%, ROC 6h > 0.4%, Vol bùng nổ > 1.05x, giá trên EMA20 > EMA50)
+  const isStrongUptrend = currentClose > ema20 && ema20 > ema50;
+  const isMomentumLeaderLong = roc24h >= 1.2 && roc6h >= 0.4 && volumeRatio >= 1.05 && currentClose > currentCandle.open;
+
+  if (isStrongUptrend && isMomentumLeaderLong) {
+    const stopLoss = Number((currentClose - slDistance).toFixed(4));
+    const takeProfit = Number((currentClose + slDistance * 2.5).toFixed(4));
+
+    return {
+      action: 'LONG',
+      symbol,
+      entryPrice: currentClose,
+      stopLoss,
+      takeProfit,
+      riskDistance: slDistance,
+      rrRatio: 2.5,
+      reason: `Momentum Leader Long (ROC24h=+${roc24h.toFixed(1)}%, Vol=${volumeRatio.toFixed(1)}x, EMA20>50)`,
+      indicators
+    };
+  }
+
+  // KỊCH BẢN SHORT: Momentum suy yếu xả mạnh (ROC 24h < -1.2%, ROC 6h < -0.4%, Vol bùng nổ, giá dưới EMA20 < EMA50)
+  const isStrongDowntrend = currentClose < ema20 && ema20 < ema50;
+  const isMomentumLeaderShort = roc24h <= -1.2 && roc6h <= -0.4 && volumeRatio >= 1.05 && currentClose < currentCandle.open;
+
+  if (isStrongDowntrend && isMomentumLeaderShort) {
+    const stopLoss = Number((currentClose + slDistance).toFixed(4));
+    const takeProfit = Number((currentClose - slDistance * 2.5).toFixed(4));
+
+    return {
+      action: 'SHORT',
+      symbol,
+      entryPrice: currentClose,
+      stopLoss,
+      takeProfit,
+      riskDistance: slDistance,
+      rrRatio: 2.5,
+      reason: `Momentum Leader Short (ROC24h=${roc24h.toFixed(1)}%, Vol=${volumeRatio.toFixed(1)}x, EMA20<50)`,
+      indicators
+    };
+  }
+
+  return { action: 'HOLD', symbol, indicators };
+}
+
 module.exports = {
   calculateEMA,
   calculateRSI,
@@ -631,6 +724,7 @@ module.exports = {
   evaluateBollingerMeanReversionStrategy,
   evaluateBreakoutMomentumStrategy,
   evaluateH4TrendSniperStrategy,
-  evaluateTTMSqueezeStrategy
+  evaluateTTMSqueezeStrategy,
+  evaluateMomentumLeaderStrategy
 };
 

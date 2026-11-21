@@ -44,6 +44,14 @@ const FUTURES_BOTS = [
     strategyKey: 'TTM_SQUEEZE',
     interval: '15m',
     evaluator: paperStrategyService.evaluateTTMSqueezeStrategy
+  },
+  {
+    id: 'acc_futures_momentum_leader',
+    name: 'Bot 6: Momentum Leader',
+    desc: 'Xoay trục dòng tiền (24h/6h ROC + Volume) đón đầu coin dẫn dắt',
+    strategyKey: 'MOMENTUM_LEADER',
+    interval: '15m',
+    evaluator: paperStrategyService.evaluateMomentumLeaderStrategy
   }
 ];
 

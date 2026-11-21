@@ -114,6 +114,7 @@ async function initPaperTradeTables() {
         ('acc_futures_breakout', 'Bot 3: Breakout Momentum', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
         ('acc_futures_h4_trend', 'Bot 4: H4 Trend Sniper', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
         ('acc_futures_ttm_squeeze', 'Bot 5: TTM Squeeze Breakout', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
+        ('acc_futures_momentum_leader', 'Bot 6: Momentum Leader', 'FUTURES', 100.00, 100.00, 100.00, 100.00, 2.00, 3),
         ('acc_binance_spot', 'Binance Spot Paper (DCA)', 'SPOT', 100.00, 100.00, 100.00, 100.00, 25.00, 1)
       ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;
     `);

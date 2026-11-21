@@ -101,6 +101,16 @@ const STRATEGIES = [
     desc: 'Bắt điểm nổ biến động khi dải Bollinger nén chặt trong Keltner Channel. Cắt lỗ siêu ngắn 1.5 ATR, chốt lời 2.5R, loại bỏ 80% bẫy giả.',
     color: '#fa541c',
     icon: <ThunderboltOutlined style={{ fontSize: 22 }} />
+  },
+  {
+    key: 'MOMENTUM_LEADER',
+    bot: 'Bot 6',
+    name: 'Momentum Leader',
+    badge: 'ROC 24h/6h + Vol Surge',
+    market: 'Dòng Tiền Dẫn Đầu (Leader)',
+    desc: 'Đo lường gia tốc giá (ROC 24h/6h) kèm khối lượng đột biến để săn coin dẫn dắt thị trường. Đánh theo đà quán tính.',
+    color: '#13c2c2',
+    icon: <RiseOutlined style={{ fontSize: 22 }} />
   }
 ];
 
@@ -299,7 +309,7 @@ export default function LabTradingPage() {
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', xl: 'repeat(5, 1fr)' },
+                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', xl: 'repeat(6, 1fr)' },
                 gap: 2
               }}
             >
@@ -557,7 +567,9 @@ export default function LabTradingPage() {
                     ? '⚡ Nến H4 Binance thật, kênh Donchian 55 + EMA 50/200, SL ATR, TP 2.5R, BE'
                     : (strategyKey === 'TTM_SQUEEZE'
                       ? '⚡ Nến M15 Binance thật, dải Bollinger nén trong Keltner Channel, SL 1.5 ATR, TP 2.5R, BE'
-                      : '⚡ Nến M15 Binance thật, khớp lệnh theo nến đóng, SL, TP 2R, BE')}
+                      : (strategyKey === 'MOMENTUM_LEADER'
+                        ? '⚡ Nến M15 Binance thật, ROC 24h & 6h + Volume Surge dẫn sóng, SL 1.5 ATR, TP 2.5R, BE'
+                        : '⚡ Nến M15 Binance thật, khớp lệnh theo nến đóng, SL, TP 2R, BE'))}
                 </Typography>
               </Box>
             </Box>
