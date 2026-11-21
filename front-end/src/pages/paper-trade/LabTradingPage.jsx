@@ -91,6 +91,16 @@ const STRATEGIES = [
     desc: 'Chiến lược Rùa Biển (Turtle Trading) nến H4. Phá vỡ đỉnh/đáy 55 nến kèm xác nhận EMA 50/200. Sóng dài 5%-15%, phí sàn cực thấp.',
     color: '#00b96b',
     icon: <RiseOutlined style={{ fontSize: 22 }} />
+  },
+  {
+    key: 'TTM_SQUEEZE',
+    bot: 'Bot 5',
+    name: 'TTM Squeeze Breakout',
+    badge: 'BB (20, 2) + Keltner (20, 1.5)',
+    market: 'Nén Biến Động (Lò xo bung)',
+    desc: 'Bắt điểm nổ biến động khi dải Bollinger nén chặt trong Keltner Channel. Cắt lỗ siêu ngắn 1.5 ATR, chốt lời 2.5R, loại bỏ 80% bẫy giả.',
+    color: '#fa541c',
+    icon: <ThunderboltOutlined style={{ fontSize: 22 }} />
   }
 ];
 
@@ -289,7 +299,7 @@ export default function LabTradingPage() {
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
+                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', xl: 'repeat(5, 1fr)' },
                 gap: 2
               }}
             >
@@ -545,7 +555,9 @@ export default function LabTradingPage() {
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', mt: 0.8, fontSize: 11 }}>
                   {isH4Strategy
                     ? '⚡ Nến H4 Binance thật, kênh Donchian 55 + EMA 50/200, SL ATR, TP 2.5R, BE'
-                    : '⚡ Nến M15 Binance thật, khớp lệnh theo nến đóng, SL, TP 2R, BE'}
+                    : (strategyKey === 'TTM_SQUEEZE'
+                      ? '⚡ Nến M15 Binance thật, dải Bollinger nén trong Keltner Channel, SL 1.5 ATR, TP 2.5R, BE'
+                      : '⚡ Nến M15 Binance thật, khớp lệnh theo nến đóng, SL, TP 2R, BE')}
                 </Typography>
               </Box>
             </Box>

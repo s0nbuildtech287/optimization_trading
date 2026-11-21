@@ -90,7 +90,7 @@ async function runBacktest({
   const isH4 = strategyKey === 'H4_TREND_SNIPER';
   const interval = isH4 ? '4h' : '15m';
   const queryDays = isH4 ? Math.max(days, 60) : days;
-  const minCandles = isH4 ? 60 : 210;
+  const minCandles = isH4 ? 60 : (strategyKey === 'TTM_SQUEEZE' ? 60 : 210);
 
   const candles = await fetchBinanceKlines(symbol, interval, queryDays);
   if (!candles || candles.length < minCandles) {
@@ -109,6 +109,9 @@ async function runBacktest({
   } else if (strategyKey === 'H4_TREND_SNIPER') {
     evaluator = paperStrategyService.evaluateH4TrendSniperStrategy;
     strategyName = 'H4 Trend Sniper (Donchian 55)';
+  } else if (strategyKey === 'TTM_SQUEEZE') {
+    evaluator = paperStrategyService.evaluateTTMSqueezeStrategy;
+    strategyName = 'TTM Squeeze Breakout (BB + Keltner)';
   } else {
     evaluator = paperStrategyService.evaluateTrendPullbackStrategy;
     strategyName = 'Trend Pullback (EMA 200 + EMA 21)';

@@ -505,6 +505,121 @@ function evaluateH4TrendSniperStrategy(symbol, candles) {
   return { action: 'HOLD', symbol, indicators };
 }
 
+/**
+ * CHIẾN LƯỢC 5: TTM Squeeze Breakout (Bollinger Bands + Keltner Channel)
+ * - Phát hiện giai đoạn thị trường nén năng lượng (Squeeze ON: BB nằm lọt trong Keltner Channel)
+ * - Tín hiệu LONG: Squeeze vừa bung ra (Fire) + Momentum > 0 + Nến đóng vượt Keltner Upper
+ * - Tín hiệu SHORT: Squeeze vừa bung ra (Fire) + Momentum < 0 + Nến đóng thủng Keltner Lower
+ * - R:R: Cắt lỗ chặt 1.5 * ATR, Chốt lời 2.5R (R:R 1:2.5)
+ */
+function evaluateTTMSqueezeStrategy(symbol, candles) {
+  if (!candles || candles.length < 50) return null;
+
+  const period = 20;
+  const closes = candles.map((c) => c.close);
+  const currentCandle = candles[candles.length - 1];
+  const currentClose = currentCandle.close;
+
+  const bb = calculateBollingerBands(closes, period, 2.0);
+  const atr = calculateATR(candles, period);
+  const ema20 = calculateEMA(closes, period);
+
+  if (!bb || !atr || !ema20) return null;
+
+  const kcUpper = ema20 + 1.5 * atr;
+  const kcLower = ema20 - 1.5 * atr;
+
+  // Kiểm tra trạng thái nén Squeeze hiện tại
+  const isCurrentSqueezed = bb.lower > kcLower && bb.upper < kcUpper;
+
+  // Kiểm tra trong 1-5 nến trước có Squeeze hay không
+  let wasSqueezedRecently = false;
+  for (let offset = 2; offset <= 5; offset++) {
+    if (candles.length < offset + period) break;
+    const subCandles = candles.slice(0, candles.length - offset + 1);
+    const subCloses = subCandles.map((c) => c.close);
+    const subBB = calculateBollingerBands(subCloses, period, 2.0);
+    const subAtr = calculateATR(subCandles, period);
+    const subEma20 = calculateEMA(subCloses, period);
+    if (subBB && subAtr && subEma20) {
+      const subKcUpper = subEma20 + 1.5 * subAtr;
+      const subKcLower = subEma20 - 1.5 * subAtr;
+      if (subBB.lower > subKcLower && subBB.upper < subKcUpper) {
+        wasSqueezedRecently = true;
+        break;
+      }
+    }
+  }
+
+  // Squeeze bung nén (Release / Fire)
+  const isSqueezeFired = wasSqueezedRecently && !isCurrentSqueezed;
+
+  // John Carter Momentum: Close so với trung bình (Donchian Mid + SMA20)
+  const slice20 = candles.slice(-period);
+  const high20 = Math.max(...slice20.map((c) => c.high));
+  const low20 = Math.min(...slice20.map((c) => c.low));
+  const sma20 = closes.slice(-period).reduce((a, b) => a + b, 0) / period;
+  const pivot = ((high20 + low20) / 2 + sma20) / 2;
+  const momentum = Number((currentClose - pivot).toFixed(2));
+
+  const indicators = {
+    bbUpper: Number(bb.upper.toFixed(2)),
+    bbLower: Number(bb.lower.toFixed(2)),
+    kcUpper: Number(kcUpper.toFixed(2)),
+    kcLower: Number(kcLower.toFixed(2)),
+    isSqueeze: isCurrentSqueezed,
+    isSqueezeFired,
+    momentum,
+    atr: Number(atr.toFixed(2))
+  };
+
+  if (!isSqueezeFired) {
+    return { action: 'HOLD', symbol, indicators };
+  }
+
+  const isPaxg = symbol && symbol.includes('PAXG');
+  const minSlPct = isPaxg ? 0.003 : 0.008;
+  const slDistance = Math.max(1.5 * atr, currentClose * minSlPct);
+
+  // Kịch bản LONG: Nổ bung lên trên + Momentum dương
+  if (currentClose > kcUpper && momentum > 0 && currentClose > currentCandle.open) {
+    const stopLoss = Number((currentClose - slDistance).toFixed(4));
+    const takeProfit = Number((currentClose + slDistance * 2.5).toFixed(4));
+
+    return {
+      action: 'LONG',
+      symbol,
+      entryPrice: currentClose,
+      stopLoss,
+      takeProfit,
+      riskDistance: slDistance,
+      rrRatio: 2.5,
+      reason: `TTM Squeeze Bullish Fire (BB broke KC upper, Mom=+${momentum})`,
+      indicators
+    };
+  }
+
+  // Kịch bản SHORT: Nổ bung xuống dưới + Momentum âm
+  if (currentClose < kcLower && momentum < 0 && currentClose < currentCandle.open) {
+    const stopLoss = Number((currentClose + slDistance).toFixed(4));
+    const takeProfit = Number((currentClose - slDistance * 2.5).toFixed(4));
+
+    return {
+      action: 'SHORT',
+      symbol,
+      entryPrice: currentClose,
+      stopLoss,
+      takeProfit,
+      riskDistance: slDistance,
+      rrRatio: 2.5,
+      reason: `TTM Squeeze Bearish Fire (BB broke KC lower, Mom=${momentum})`,
+      indicators
+    };
+  }
+
+  return { action: 'HOLD', symbol, indicators };
+}
+
 module.exports = {
   calculateEMA,
   calculateRSI,
@@ -515,6 +630,7 @@ module.exports = {
   evaluateTrendPullbackStrategy,
   evaluateBollingerMeanReversionStrategy,
   evaluateBreakoutMomentumStrategy,
-  evaluateH4TrendSniperStrategy
+  evaluateH4TrendSniperStrategy,
+  evaluateTTMSqueezeStrategy
 };
 
