@@ -36,6 +36,14 @@ const FUTURES_BOTS = [
     strategyKey: 'H4_TREND_SNIPER',
     interval: '4h',
     evaluator: paperStrategyService.evaluateH4TrendSniperStrategy
+  },
+  {
+    id: 'acc_futures_ttm_squeeze',
+    name: 'Bot 5: TTM Squeeze Breakout',
+    desc: 'Nén biến động Bollinger Bands + Keltner Channel (Lò xo bung)',
+    strategyKey: 'TTM_SQUEEZE',
+    interval: '15m',
+    evaluator: paperStrategyService.evaluateTTMSqueezeStrategy
   }
 ];
 
@@ -385,9 +393,6 @@ class PaperTradeEngine {
     } catch (err) {
       console.error('[PaperEngine] Error in handleCandleClosedH4:', err.message);
     }
-  }
-      console.error('[PaperEngine] Error in handleCandleClosed:', err.message);
-}
   }
 
   /**
