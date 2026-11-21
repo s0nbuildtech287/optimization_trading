@@ -562,7 +562,7 @@ export default function PaperTradingPage() {
             { id: 'acc_futures_h4_trend', name: 'Bot 4: H4 Trend Sniper', desc: 'Kênh Donchian 55 + EMA 50/200 khung H4 (Turtle Trend)', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true },
             { id: 'acc_futures_ttm_squeeze', name: 'Bot 5: TTM Squeeze Breakout', desc: 'Nén biến động Bollinger Bands + Keltner Channel (Lò xo bung)', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true },
             { id: 'acc_futures_momentum_leader', name: 'Bot 6: Momentum Leader', desc: 'Xoay trục dòng tiền (24h/6h ROC + Volume) đón đầu coin dẫn dắt', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true }
-          ]).map((bot) => {
+          ]).map((bot, bIdx) => {
             const isSelected = selectedBotId === bot.id;
             const isPnlPositive = (bot.pnl || 0) >= 0;
 
@@ -571,7 +571,7 @@ export default function PaperTradingPage() {
                 key={bot.id}
                 onClick={() => setSelectedBotId(bot.id)}
                 sx={{
-                  p: 2,
+                  p: 1.75,
                   borderRadius: 2,
                   cursor: 'pointer',
                   border: '2px solid',
@@ -587,68 +587,87 @@ export default function PaperTradingPage() {
                   }
                 }}
               >
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
-                  <Tooltip
-                    title={
-                      <Box sx={{ p: 0.5, maxWidth: 260 }}>
-                        <Typography variant="caption" fontWeight={700} sx={{ display: 'block', color: 'primary.light', mb: 0.3 }}>
-                          {bot.name}
-                        </Typography>
-                        <Typography variant="caption" sx={{ display: 'block', lineHeight: 1.4 }}>
-                          {bot.desc}
-                        </Typography>
-                      </Box>
-                    }
-                    arrow
-                    placement="top"
-                    enterDelay={100}
-                  >
-                    <Stack direction="row" alignItems="center" spacing={0.6} sx={{ cursor: 'pointer', maxWidth: 'calc(100% - 70px)' }}>
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight={800}
-                        color={isSelected ? 'primary.main' : 'text.primary'}
-                        sx={{
-                          textDecoration: 'underline dotted 1px',
-                          textUnderlineOffset: '3px',
-                          display: 'inline-block',
-                          transition: 'color 0.2s',
-                          '&:hover': {
-                            color: 'primary.main'
-                          }
-                        }}
-                      >
+                {/* Dòng 1: Huy hiệu trạng thái & badge tách biệt lên hàng trên */}
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.75, minHeight: 20 }}>
+                  {isSelected ? (
+                    <Chip
+                      label="ĐANG XEM"
+                      size="small"
+                      color="primary"
+                      sx={{ height: 18, fontSize: 9.5, fontWeight: 700, px: 0.5 }}
+                    />
+                  ) : (
+                    <Typography variant="caption" sx={{ fontSize: 10, fontWeight: 700, color: 'text.secondary', letterSpacing: 0.5 }}>
+                      BOT #{bIdx + 1}
+                    </Typography>
+                  )}
+                  <Chip
+                    label={bot.is_bot_active ? 'BẬT' : 'TẮT'}
+                    size="small"
+                    color={bot.is_bot_active ? 'success' : 'default'}
+                    variant={bot.is_bot_active ? 'filled' : 'outlined'}
+                    sx={{ height: 18, fontSize: 9.5, fontWeight: 700, px: 0.5 }}
+                  />
+                </Stack>
+
+                {/* Dòng 2: Tiêu đề Bot chiếm toàn bộ chiều ngang, có Tooltip khi hover */}
+                <Tooltip
+                  title={
+                    <Box sx={{ p: 0.5, maxWidth: 280 }}>
+                      <Typography variant="subtitle2" fontWeight={800} sx={{ display: 'block', color: 'primary.light', mb: 0.3 }}>
                         {bot.name}
                       </Typography>
-                      <InfoCircleOutlined
-                        style={{
-                          fontSize: 12,
-                          color: isSelected ? theme.palette.primary.main : theme.palette.text.secondary,
-                          opacity: 0.75,
-                          flexShrink: 0
-                        }}
-                      />
-                    </Stack>
-                  </Tooltip>
-
-                  <Stack direction="row" spacing={0.6} alignItems="center">
-                    {isSelected && (
-                      <Chip
-                        label="ĐANG XEM"
-                        size="small"
-                        color="primary"
-                        sx={{ height: 20, fontSize: 9.5, fontWeight: 700, px: 0.5 }}
-                      />
-                    )}
-                    <Chip
-                      label={bot.is_bot_active ? 'BẬT' : 'TẮT'}
-                      size="small"
-                      color={bot.is_bot_active ? 'success' : 'default'}
-                      variant={bot.is_bot_active ? 'filled' : 'outlined'}
-                      sx={{ height: 20, fontSize: 10, fontWeight: 700, px: 0.5 }}
+                      <Typography variant="caption" sx={{ display: 'block', lineHeight: 1.45 }}>
+                        {bot.desc}
+                      </Typography>
+                    </Box>
+                  }
+                  arrow
+                  placement="top"
+                  enterDelay={100}
+                >
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={0.5}
+                    sx={{
+                      cursor: 'pointer',
+                      mb: 1,
+                      minHeight: 22,
+                      width: '100%'
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle2"
+                      fontWeight={800}
+                      color={isSelected ? 'primary.main' : 'text.primary'}
+                      noWrap
+                      sx={{
+                        textDecoration: 'underline dotted 1px',
+                        textUnderlineOffset: '3px',
+                        fontSize: '0.84rem',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        flex: 1,
+                        transition: 'color 0.2s',
+                        '&:hover': {
+                          color: 'primary.main'
+                        }
+                      }}
+                    >
+                      {bot.name}
+                    </Typography>
+                    <InfoCircleOutlined
+                      style={{
+                        fontSize: 12,
+                        color: isSelected ? theme.palette.primary.main : theme.palette.text.secondary,
+                        opacity: 0.75,
+                        flexShrink: 0
+                      }}
                     />
                   </Stack>
-                </Stack>
+                </Tooltip>
 
                 <Divider sx={{ my: 1, borderColor: 'divider' }} />
 
