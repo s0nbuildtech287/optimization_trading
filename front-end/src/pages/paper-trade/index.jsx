@@ -44,7 +44,8 @@ import {
   SettingOutlined,
   CheckCircleOutlined,
   PlusOutlined,
-  CloseOutlined
+  CloseOutlined,
+  InfoCircleOutlined
 } from '@ant-design/icons';
 import {
   ResponsiveContainer,
@@ -586,27 +587,67 @@ export default function PaperTradingPage() {
                   }
                 }}
               >
-                <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 1 }}>
-                  <Box sx={{ pr: 1 }}>
-                    <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap">
-                      <Typography variant="subtitle2" fontWeight={800} color={isSelected ? 'primary.main' : 'text.primary'}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                  <Tooltip
+                    title={
+                      <Box sx={{ p: 0.5, maxWidth: 260 }}>
+                        <Typography variant="caption" fontWeight={700} sx={{ display: 'block', color: 'primary.light', mb: 0.3 }}>
+                          {bot.name}
+                        </Typography>
+                        <Typography variant="caption" sx={{ display: 'block', lineHeight: 1.4 }}>
+                          {bot.desc}
+                        </Typography>
+                      </Box>
+                    }
+                    arrow
+                    placement="top"
+                    enterDelay={100}
+                  >
+                    <Stack direction="row" alignItems="center" spacing={0.6} sx={{ cursor: 'pointer', maxWidth: 'calc(100% - 70px)' }}>
+                      <Typography
+                        variant="subtitle2"
+                        fontWeight={800}
+                        color={isSelected ? 'primary.main' : 'text.primary'}
+                        sx={{
+                          textDecoration: 'underline dotted 1px',
+                          textUnderlineOffset: '3px',
+                          display: 'inline-block',
+                          transition: 'color 0.2s',
+                          '&:hover': {
+                            color: 'primary.main'
+                          }
+                        }}
+                      >
                         {bot.name}
                       </Typography>
-                      {isSelected && (
-                        <Chip label="ĐANG XEM" size="small" color="primary" sx={{ height: 20, fontSize: 10, fontWeight: 700 }} />
-                      )}
+                      <InfoCircleOutlined
+                        style={{
+                          fontSize: 12,
+                          color: isSelected ? theme.palette.primary.main : theme.palette.text.secondary,
+                          opacity: 0.75,
+                          flexShrink: 0
+                        }}
+                      />
                     </Stack>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.3, lineHeight: 1.3 }}>
-                      {bot.desc}
-                    </Typography>
-                  </Box>
-                  <Chip
-                    label={bot.is_bot_active ? 'BẬT' : 'TẮT'}
-                    size="small"
-                    color={bot.is_bot_active ? 'success' : 'default'}
-                    variant={bot.is_bot_active ? 'filled' : 'outlined'}
-                    sx={{ height: 20, fontSize: 10, fontWeight: 700 }}
-                  />
+                  </Tooltip>
+
+                  <Stack direction="row" spacing={0.6} alignItems="center">
+                    {isSelected && (
+                      <Chip
+                        label="ĐANG XEM"
+                        size="small"
+                        color="primary"
+                        sx={{ height: 20, fontSize: 9.5, fontWeight: 700, px: 0.5 }}
+                      />
+                    )}
+                    <Chip
+                      label={bot.is_bot_active ? 'BẬT' : 'TẮT'}
+                      size="small"
+                      color={bot.is_bot_active ? 'success' : 'default'}
+                      variant={bot.is_bot_active ? 'filled' : 'outlined'}
+                      sx={{ height: 20, fontSize: 10, fontWeight: 700, px: 0.5 }}
+                    />
+                  </Stack>
                 </Stack>
 
                 <Divider sx={{ my: 1, borderColor: 'divider' }} />
