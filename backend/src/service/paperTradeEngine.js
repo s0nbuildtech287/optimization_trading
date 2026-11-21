@@ -876,33 +876,29 @@ class PaperTradeEngine {
 
     const [account, orders, snapshots, logs] = await Promise.all([
       paperTradeDao.getAccount(accId),
-      paperTradeDao.getOrderHistory(accId, 50),
+      paperTradeDao.getOrderHistory(accId, 100),
       paperTradeDao.getEquityHistory(accId, 3000),
       paperTradeDao.getLogs(accId, 40)
     ]);
 
     const livePrices = binanceWsService.getAllPrices();
     
-    // Tính toán Tỷ lệ thắng (Win Rate) dựa trên 5 lệnh gần nhất theo yêu cầu
-    const recentOrders = (orders || []).slice(0, 5);
-    const recentTotal = recentOrders.length;
-    const recentWins = recentOrders.filter((o) => parseFloat(o.realized_pnl) > 0).length;
-    const recentLosses = recentTotal - recentWins;
-    const winrate = recentTotal > 0 ? Number(((recentWins / recentTotal) * 100).toFixed(1)) : 0;
+    // Tính toán Tỷ lệ thắng (Win Rate) dựa trên toàn bộ lệnh thực tế của tài khoản
+    const totalTrades = parseInt(account?.total_trades || 0, 10);
+    const winningTrades = parseInt(account?.winning_trades || 0, 10);
+    const losingTrades = parseInt(account?.losing_trades || 0, 10);
+    const winrate = totalTrades > 0 ? Number(((winningTrades / totalTrades) * 100).toFixed(1)) : 0;
 
     // Danh sách các Bot Futures cho UI hiển thị Bot Arena / Selector
     let botList = [];
     if (mode === 'futures') {
       botList = await Promise.all(
         this.futuresBots.map(async (b) => {
-          const [acc, botOrders] = await Promise.all([
-            paperTradeDao.getAccount(b.id),
-            paperTradeDao.getOrderHistory(b.id, 5)
-          ]);
-          const botRecentOrders = (botOrders || []).slice(0, 5);
-          const botRecentWins = botRecentOrders.filter((o) => parseFloat(o.realized_pnl) > 0).length;
-          const botRecentTotal = botRecentOrders.length;
-          const wr = botRecentTotal > 0 ? Number(((botRecentWins / botRecentTotal) * 100).toFixed(1)) : 0;
+          const acc = await paperTradeDao.getAccount(b.id);
+          const botTotalTrades = parseInt(acc?.total_trades || 0, 10);
+          const botWinningTrades = parseInt(acc?.winning_trades || 0, 10);
+          const botLosingTrades = parseInt(acc?.losing_trades || 0, 10);
+          const wr = botTotalTrades > 0 ? Number(((botWinningTrades / botTotalTrades) * 100).toFixed(1)) : 0;
           const bal = acc ? parseFloat(acc.balance) : 100;
           const eq = acc ? parseFloat(acc.equity) : 100;
           const initBal = acc ? parseFloat(acc.initial_balance) : 100;
@@ -918,8 +914,9 @@ class PaperTradeEngine {
             initial_balance: initBal,
             pnl: Number(pnl.toFixed(2)),
             pnlPct: Number(pnlPct.toFixed(2)),
-            total_trades: botRecentTotal,
-            winning_trades: botRecentWins,
+            total_trades: botTotalTrades,
+            winning_trades: botWinningTrades,
+            losing_trades: botLosingTrades,
             winrate: wr,
             is_bot_active: acc ? acc.is_bot_active : true
           };
@@ -986,9 +983,9 @@ class PaperTradeEngine {
           equity: Number(currentEquity.toFixed(2)),
           unrealized_pnl: Number(unrealizedPnl.toFixed(2)),
           winrate,
-          total_trades: recentTotal,
-          winning_trades: recentWins,
-          losing_trades: recentLosses
+          total_trades: totalTrades,
+          winning_trades: winningTrades,
+          losing_trades: losingTrades
         },
         trackedSymbols: account.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'],
         holdings,
@@ -1031,9 +1028,9 @@ class PaperTradeEngine {
         equity: Number(currentEquity.toFixed(2)),
         unrealized_pnl: Number(totalUnrealized.toFixed(2)),
         winrate,
-        total_trades: recentTotal,
-        winning_trades: recentWins,
-        losing_trades: recentLosses
+        total_trades: totalTrades,
+        winning_trades: winningTrades,
+        losing_trades: losingTrades
       },
       trackedSymbols: account.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'],
       positions,
