@@ -327,7 +327,13 @@ async function runBacktest({
     days,
     totalCandles: candles.length,
     summary: {
+      strategyKey,
+      strategyName,
+      symbol,
+      days,
+      totalCandles: candles.length,
       initialBalance: parseFloat(initialBalance),
+      finalBalance: Number(balance.toFixed(2)),
       finalEquity: Number(balance.toFixed(2)),
       netProfit,
       netProfitPct,

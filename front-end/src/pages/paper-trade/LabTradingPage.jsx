@@ -21,7 +21,6 @@ import {
   TextField,
   InputAdornment,
   MenuItem,
-  Grid,
   Paper
 } from '@mui/material';
 import {
@@ -37,7 +36,7 @@ import {
   CheckCircleOutlined,
   InfoCircleOutlined,
   ClockCircleOutlined,
-  WarningOutlined
+  SafetyCertificateOutlined
 } from '@ant-design/icons';
 import {
   ResponsiveContainer,
@@ -56,35 +55,44 @@ const STRATEGIES = [
   {
     key: 'TREND_PULLBACK',
     bot: 'Bot 1',
-    name: 'Trend Pullback (EMA 200 + EMA 21 & RSI)',
-    desc: 'Đánh theo xu hướng chính EMA 200, bắt nhịp hồi về EMA 21 và RSI đảo chiều. Phù hợp thị trường có sóng dài.',
-    color: '#1677ff'
+    name: 'Trend Pullback (EMA)',
+    badge: 'EMA 200 + 21 & RSI',
+    market: 'Trending Market (Có xu hướng)',
+    desc: 'Thuận theo xu hướng dài hạn EMA 200, bắt nhịp hồi về EMA 21 và RSI xác nhận đảo chiều.',
+    color: '#1677ff',
+    icon: <RiseOutlined style={{ fontSize: 22 }} />
   },
   {
     key: 'BOLLINGER_REVERSION',
     bot: 'Bot 2',
-    name: 'Bollinger Mean-Reversion (BB 20, 2 + RSI)',
-    desc: 'Bắt đỉnh/đáy khi giá vượt dải Bollinger Bands kết hợp RSI quá mua (>70) hoặc quá bán (<30). Tối ưu thị trường đi ngang (Sideway).',
-    color: '#722ed1'
+    name: 'Bollinger Reversion',
+    badge: 'BB (20, 2) + RSI',
+    market: 'Sideway Market (Đi ngang)',
+    desc: 'Bắt đỉnh/đáy khi nến chạm dải trên/dưới Bollinger Bands kết hợp RSI quá mua (>70) hoặc quá bán (<30).',
+    color: '#722ed1',
+    icon: <SafetyCertificateOutlined style={{ fontSize: 22 }} />
   },
   {
     key: 'BREAKOUT_MOMENTUM',
     bot: 'Bot 3',
-    name: 'Breakout Momentum (Donchian 20 + Vol Spike)',
-    desc: 'Bắt điểm phá vỡ đỉnh/đáy 20 nến kèm khối lượng giao dịch đột biến (Vol > 1.5x MA20). Bắt sóng bùng nổ mạnh mẽ.',
-    color: '#fa8c16'
+    name: 'Breakout Momentum',
+    badge: 'Donchian 20 + Vol Spike',
+    market: 'Volatility Breakout (Bùng nổ)',
+    desc: 'Bắt điểm phá vỡ đỉnh/đáy 20 nến Donchian Channel kèm khối lượng giao dịch đột biến (> 1.5x MA20).',
+    color: '#fa8c16',
+    icon: <ThunderboltOutlined style={{ fontSize: 22 }} />
   }
 ];
 
 const POPULAR_SYMBOLS = [
-  { symbol: 'BTCUSDT', name: 'Bitcoin' },
-  { symbol: 'ETHUSDT', name: 'Ethereum' },
-  { symbol: 'SOLUSDT', name: 'Solana' },
-  { symbol: 'BNBUSDT', name: 'Binance Coin' },
-  { symbol: 'PAXGUSDT', name: 'Gold (PAXG)' },
-  { symbol: 'DOGEUSDT', name: 'Dogecoin' },
-  { symbol: 'NEARUSDT', name: 'NEAR Protocol' },
-  { symbol: 'AVAXUSDT', name: 'Avalanche' }
+  { symbol: 'BTCUSDT', label: 'BTC' },
+  { symbol: 'ETHUSDT', label: 'ETH' },
+  { symbol: 'SOLUSDT', label: 'SOL' },
+  { symbol: 'BNBUSDT', label: 'BNB' },
+  { symbol: 'PAXGUSDT', label: 'PAXG' },
+  { symbol: 'DOGEUSDT', label: 'DOGE' },
+  { symbol: 'NEARUSDT', label: 'NEAR' },
+  { symbol: 'AVAXUSDT', label: 'AVAX' }
 ];
 
 const DURATION_OPTIONS = [
@@ -97,13 +105,14 @@ const DURATION_OPTIONS = [
 
 export default function LabTradingPage() {
   const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
 
   // Form states
   const [strategyKey, setStrategyKey] = useState('TREND_PULLBACK');
   const [symbol, setSymbol] = useState('BTCUSDT');
   const [days, setDays] = useState(30);
-  const [initialBalance, setInitialBalance] = useState(100);
-  const [marginPerTrade, setMarginPerTrade] = useState(15);
+  const [initialBalance, setInitialBalance] = useState('100');
+  const [marginPerTrade, setMarginPerTrade] = useState('15');
   const [leverage, setLeverage] = useState(3);
 
   // Execution states
@@ -121,9 +130,9 @@ export default function LabTradingPage() {
         strategyKey,
         symbol,
         days: Number(days),
-        initialBalance: Number(initialBalance),
-        marginPerTrade: Number(marginPerTrade),
-        leverage: Number(leverage)
+        initialBalance: Number(initialBalance) || 100,
+        marginPerTrade: Number(marginPerTrade) || 15,
+        leverage: Number(leverage) || 3
       });
       const backtestResult = data?.data || data;
       setResult(backtestResult);
@@ -134,401 +143,586 @@ export default function LabTradingPage() {
     }
   };
 
-  const isProfitable = result && result.summary && result.summary.netProfit >= 0;
+  const summary = result?.summary || {};
+  const isProfitable = summary?.netProfit >= 0;
   const chartStroke = isProfitable ? '#52c41a' : '#ff4d4f';
   const chartFill = isProfitable ? '#52c41a' : '#ff4d4f';
 
+  const kpiCardSx = {
+    p: 2.25,
+    height: '100%',
+    width: '100%',
+    bgcolor: 'background.paper',
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 2,
+    transition: 'all 0.2s ease-in-out',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    '&:hover': {
+      boxShadow: theme.customShadows?.z1 || 1,
+      transform: 'translateY(-2px)',
+      borderColor: 'primary.main'
+    }
+  };
+
   return (
-    <Box sx={{ p: { xs: 1.5, md: 3 } }}>
-      {/* Header Banner */}
-      <Box
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, width: '100%', pb: 4 }}>
+      {/* 1. Header Banner */}
+      <MainCard
+        border
         sx={{
-          mb: 3,
-          p: 3,
-          borderRadius: 2.5,
-          background: 'linear-gradient(135deg, #091a2e 0%, #172a45 100%)',
-          color: '#fff',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'space-between',
-          alignItems: { xs: 'flex-start', md: 'center' },
-          gap: 2
+          bgcolor: isDark ? 'background.paper' : '#f8fafc',
+          borderColor: 'divider',
+          width: '100%'
         }}
       >
-        <Box>
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
-            <Box
-              sx={{
-                width: 42,
-                height: 42,
-                borderRadius: 2,
-                bgcolor: 'rgba(22, 119, 255, 0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#1677ff'
-              }}
-            >
-              <ExperimentOutlined style={{ fontSize: 24 }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 700, color: '#fff', m: 0 }}>
-              Trading Strategy Lab
-            </Typography>
-            <Chip
-              label="Binance 15m Engine"
-              size="small"
-              sx={{ bgcolor: 'rgba(82, 196, 26, 0.2)', color: '#52c41a', fontWeight: 600 }}
-            />
-          </Stack>
-          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', maxWidth: 820 }}>
-            Phòng thí nghiệm kiểm định hiệu quả chiến lược trên dữ liệu nến 15 phút thực tế từ Binance.
-            Mô phỏng đầy đủ quy tắc Quản lý vốn, Cắt lỗ (SL), Chốt lời (TP 2R), Dời hòa vốn (Breakeven) và Phí giao dịch sàn.
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* Control Card */}
-      <MainCard title="Cấu Hình Tham Số Kiểm Thử" sx={{ mb: 3 }}>
-        <Grid container spacing={2.5}>
-          {/* Strategy selection */}
-          <Grid item xs={12} md={6}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-              1. Chọn Chiến Lược Giao Dịch:
-            </Typography>
-            <TextField
-              select
-              fullWidth
-              size="small"
-              value={strategyKey}
-              onChange={(e) => setStrategyKey(e.target.value)}
-              disabled={loading}
-            >
-              {STRATEGIES.map((s) => (
-                <MenuItem key={s.key} value={s.key}>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <Chip
-                      label={s.bot}
-                      size="small"
-                      sx={{ bgcolor: alpha(s.color, 0.15), color: s.color, fontWeight: 700, height: 22 }}
-                    />
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                      {s.name}
-                    </Typography>
-                  </Stack>
-                </MenuItem>
-              ))}
-            </TextField>
-            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 0.8 }}>
-              {selectedStrategy.desc}
-            </Typography>
-          </Grid>
-
-          {/* Symbol selection */}
-          <Grid item xs={12} md={6}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-              2. Cặp Tiền Giao Dịch (Symbol):
-            </Typography>
-            <Stack direction="row" spacing={0.8} flexWrap="wrap" useFlexGap sx={{ mb: 1 }}>
-              {POPULAR_SYMBOLS.map((s) => (
-                <Chip
-                  key={s.symbol}
-                  label={s.symbol.replace('USDT', '')}
-                  clickable
-                  disabled={loading}
-                  color={symbol === s.symbol ? 'primary' : 'default'}
-                  variant={symbol === s.symbol ? 'filled' : 'outlined'}
-                  onClick={() => setSymbol(s.symbol)}
-                  sx={{ fontWeight: symbol === s.symbol ? 700 : 500 }}
-                />
-              ))}
-            </Stack>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-
-          {/* Duration selection */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-              3. Khoảng Thời Gian Backtest:
-            </Typography>
-            <TextField
-              select
-              fullWidth
-              size="small"
-              value={days}
-              onChange={(e) => setDays(Number(e.target.value))}
-              disabled={loading}
-            >
-              {DURATION_OPTIONS.map((d) => (
-                <MenuItem key={d.days} value={d.days}>
-                  {d.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-
-          {/* Initial Balance */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-              4. Vốn Khởi Điểm:
-            </Typography>
-            <TextField
-              fullWidth
-              size="small"
-              type="number"
-              value={initialBalance}
-              onChange={(e) => setInitialBalance(e.target.value)}
-              disabled={loading}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>
-              }}
-            />
-          </Grid>
-
-          {/* Margin Per Trade */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-              5. Ký Quỹ Mỗi Lệnh:
-            </Typography>
-            <TextField
-              fullWidth
-              size="small"
-              type="number"
-              value={marginPerTrade}
-              onChange={(e) => setMarginPerTrade(e.target.value)}
-              disabled={loading}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>
-              }}
-            />
-          </Grid>
-
-          {/* Leverage */}
-          <Grid item xs={12} sm={6} md={3}>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-              6. Đòn Bẩy (Leverage):
-            </Typography>
-            <TextField
-              select
-              fullWidth
-              size="small"
-              value={leverage}
-              onChange={(e) => setLeverage(Number(e.target.value))}
-              disabled={loading}
-            >
-              <MenuItem value={1}>1x (Không đòn bẩy)</MenuItem>
-              <MenuItem value={2}>2x</MenuItem>
-              <MenuItem value={3}>3x (Mặc định Bot)</MenuItem>
-              <MenuItem value={5}>5x</MenuItem>
-            </TextField>
-          </Grid>
-
-          {/* Action button */}
-          <Grid item xs={12}>
-            <Divider sx={{ my: 1.5 }} />
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                pt: 1,
-                textAlign: 'center'
-              }}
-            >
-              <Button
-                variant="contained"
-                size="large"
-                startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <ThunderboltOutlined style={{ fontSize: 18 }} />}
-                onClick={handleRunBacktest}
-                disabled={loading}
+        <Stack
+          direction={{ xs: 'column', md: 'row' }}
+          justifyContent="space-between"
+          alignItems={{ xs: 'flex-start', md: 'center' }}
+          spacing={2}
+          sx={{ width: '100%' }}
+        >
+          <Box>
+            <Stack direction="row" alignItems="center" spacing={1.5} flexWrap="wrap">
+              <Box
                 sx={{
-                  minWidth: { xs: '100%', sm: 300 },
-                  py: 1.4,
-                  fontSize: '1rem',
-                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 44,
+                  height: 44,
                   borderRadius: 2,
-                  boxShadow: '0 6px 18px rgba(22, 119, 255, 0.35)',
-                  '&:hover': {
-                    boxShadow: '0 8px 24px rgba(22, 119, 255, 0.45)'
-                  }
+                  bgcolor: isDark ? alpha(theme.palette.primary.main, 0.15) : alpha(theme.palette.primary.main, 0.1),
+                  color: 'primary.main'
                 }}
               >
-                {loading ? 'Đang Tải Nến & Chạy Mô Phỏng...' : 'Bắt Đầu Thử Nghiệm'}
-              </Button>
-              <Typography variant="caption" sx={{ color: 'text.secondary', mt: 1.2 }}>
-                ⚡ Tự động tải nến M15 Binance, tính toán chỉ báo và mô phỏng từng nhịp khớp lệnh (SL, TP 2R, BE).
+                <ExperimentOutlined style={{ fontSize: 24 }} />
+              </Box>
+              <Box>
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <Typography variant="h4" fontWeight={800} color="text.primary">
+                    Chiến Lược Trading Lab (Backtest)
+                  </Typography>
+                  <Chip
+                    icon={
+                      <Box
+                        component="span"
+                        sx={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          bgcolor: 'success.main',
+                          boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)'
+                        }}
+                      />
+                    }
+                    label="Binance 15m Engine"
+                    size="small"
+                    variant="outlined"
+                    color="success"
+                    sx={{ fontWeight: 600, height: 24 }}
+                  />
+                </Stack>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                  Kiểm thử thuật toán tự động trên nến M15 Binance thật. Mô phỏng đầy đủ SL, TP 2R, Dời hòa vốn (Breakeven) và Phí sàn 0.04%/chiều.
+                </Typography>
+              </Box>
+            </Stack>
+          </Box>
+        </Stack>
+      </MainCard>
+
+      {/* 2. Cấu Hình Tham Số Kiểm Thử */}
+      <MainCard
+        border
+        sx={{
+          bgcolor: isDark ? 'background.paper' : '#ffffff',
+          borderColor: 'divider',
+          width: '100%'
+        }}
+      >
+        <Stack spacing={3}>
+          {/* 2.1 Chọn Chiến Lược (3 Cards dạng Lưới) */}
+          <Box>
+            <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
+              <Typography variant="subtitle1" fontWeight={700} color="text.primary">
+                1. Chọn Chiến Lược Thuật Toán:
               </Typography>
+              <Typography variant="caption" color="text.secondary">
+                (Nhấp để chọn bot muốn kiểm nghiệm)
+              </Typography>
+            </Stack>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+                gap: 2
+              }}
+            >
+              {STRATEGIES.map((s) => {
+                const isSelected = strategyKey === s.key;
+                return (
+                  <Box
+                    key={s.key}
+                    onClick={() => !loading && setStrategyKey(s.key)}
+                    sx={{
+                      p: 2.25,
+                      borderRadius: 2,
+                      cursor: loading ? 'not-allowed' : 'pointer',
+                      border: '2px solid',
+                      borderColor: isSelected ? s.color : 'divider',
+                      bgcolor: isSelected
+                        ? (isDark ? alpha(s.color, 0.15) : alpha(s.color, 0.05))
+                        : (isDark ? 'background.default' : '#fcfcfc'),
+                      boxShadow: isSelected ? `0 4px 16px ${alpha(s.color, 0.2)}` : 'none',
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        borderColor: s.color,
+                        transform: loading ? 'none' : 'translateY(-2px)'
+                      }
+                    }}
+                  >
+                    <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                      <Stack direction="row" spacing={1.2} alignItems="center">
+                        <Box sx={{ color: s.color, display: 'flex', alignItems: 'center' }}>
+                          {s.icon}
+                        </Box>
+                        <Box>
+                          <Typography variant="subtitle2" fontWeight={800} color={isSelected ? s.color : 'text.primary'}>
+                            {s.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                            {s.bot}
+                          </Typography>
+                        </Box>
+                      </Stack>
+                      {isSelected ? (
+                        <Chip
+                          label="ĐANG CHỌN"
+                          size="small"
+                          sx={{
+                            bgcolor: s.color,
+                            color: '#fff',
+                            fontWeight: 700,
+                            height: 22,
+                            fontSize: 10
+                          }}
+                        />
+                      ) : (
+                        <Chip
+                          label={s.badge}
+                          size="small"
+                          variant="outlined"
+                          sx={{ height: 22, fontSize: 10, fontWeight: 600 }}
+                        />
+                      )}
+                    </Stack>
+
+                    <Divider sx={{ my: 1, borderColor: 'divider' }} />
+
+                    <Typography variant="body2" color="text.secondary" sx={{ minHeight: 40, fontSize: 12.5, lineHeight: 1.45 }}>
+                      {s.desc}
+                    </Typography>
+
+                    <Box sx={{ mt: 1.2 }}>
+                      <Chip
+                        label={s.market}
+                        size="small"
+                        sx={{
+                          height: 20,
+                          fontSize: 10,
+                          fontWeight: 600,
+                          bgcolor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
+                          color: 'text.secondary'
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                );
+              })}
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+
+          <Divider sx={{ borderColor: 'divider' }} />
+
+          {/* 2.2 Cặp Tiền & Thời Gian */}
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', lg: '1.4fr 1fr' },
+              gap: 3
+            }}
+          >
+            {/* Cặp tiền */}
+            <Box>
+              <Typography variant="subtitle1" fontWeight={700} color="text.primary" sx={{ mb: 1.2 }}>
+                2. Cặp Tiền Giao Dịch (Symbol):
+              </Typography>
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                {POPULAR_SYMBOLS.map((s) => {
+                  const isSelected = symbol === s.symbol;
+                  return (
+                    <Chip
+                      key={s.symbol}
+                      label={s.label}
+                      clickable
+                      disabled={loading}
+                      color={isSelected ? 'primary' : 'default'}
+                      variant={isSelected ? 'filled' : 'outlined'}
+                      onClick={() => setSymbol(s.symbol)}
+                      sx={{
+                        fontWeight: isSelected ? 800 : 500,
+                        px: 1.2,
+                        py: 2,
+                        fontSize: '0.875rem',
+                        borderRadius: 1.5,
+                        borderColor: isSelected ? 'primary.main' : 'divider'
+                      }}
+                    />
+                  );
+                })}
+              </Stack>
+            </Box>
+
+            {/* Khoảng thời gian */}
+            <Box>
+              <Typography variant="subtitle1" fontWeight={700} color="text.primary" sx={{ mb: 1.2 }}>
+                3. Khoảng Thời Gian Backtest:
+              </Typography>
+              <TextField
+                select
+                fullWidth
+                size="small"
+                value={days}
+                onChange={(e) => setDays(Number(e.target.value))}
+                disabled={loading}
+                sx={{ bgcolor: isDark ? 'background.default' : '#fcfcfc' }}
+              >
+                {DURATION_OPTIONS.map((d) => (
+                  <MenuItem key={d.days} value={d.days}>
+                    {d.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+          </Box>
+
+          <Divider sx={{ borderColor: 'divider' }} />
+
+          {/* 2.3 Quản Lý Vốn & Nút Thực Thi */}
+          <Box>
+            <Typography variant="subtitle1" fontWeight={700} color="text.primary" sx={{ mb: 1.5 }}>
+              4. Quản Lý Vốn & Thực Thi:
+            </Typography>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: {
+                  xs: '1fr',
+                  sm: 'repeat(2, 1fr)',
+                  md: 'repeat(3, 1fr) 1.2fr'
+                },
+                gap: 2,
+                alignItems: 'center'
+              }}
+            >
+              {/* Vốn khởi điểm */}
+              <Box>
+                <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.5 }}>
+                  VỐN KHỞI ĐIỂM (USDT)
+                </Typography>
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="number"
+                  value={initialBalance}
+                  onChange={(e) => setInitialBalance(e.target.value)}
+                  disabled={loading}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>
+                  }}
+                  sx={{ bgcolor: isDark ? 'background.default' : '#fcfcfc' }}
+                />
+              </Box>
+
+              {/* Ký quỹ mỗi lệnh */}
+              <Box>
+                <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.5 }}>
+                  KÝ QUỸ / LỆNH (MARGIN)
+                </Typography>
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="number"
+                  value={marginPerTrade}
+                  onChange={(e) => setMarginPerTrade(e.target.value)}
+                  disabled={loading}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>
+                  }}
+                  sx={{ bgcolor: isDark ? 'background.default' : '#fcfcfc' }}
+                />
+              </Box>
+
+              {/* Đòn bẩy */}
+              <Box>
+                <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.5 }}>
+                  ĐÒN BẨY (LEVERAGE)
+                </Typography>
+                <TextField
+                  select
+                  fullWidth
+                  size="small"
+                  value={leverage}
+                  onChange={(e) => setLeverage(Number(e.target.value))}
+                  disabled={loading}
+                  sx={{ bgcolor: isDark ? 'background.default' : '#fcfcfc' }}
+                >
+                  <MenuItem value={1}>1x (Không đòn bẩy)</MenuItem>
+                  <MenuItem value={2}>2x</MenuItem>
+                  <MenuItem value={3}>3x (Khuyên dùng Bot)</MenuItem>
+                  <MenuItem value={5}>5x</MenuItem>
+                </TextField>
+              </Box>
+
+              {/* Nút Run Backtest */}
+              <Box sx={{ pt: { xs: 1, md: 2.2 } }}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <ThunderboltOutlined style={{ fontSize: 18 }} />}
+                  onClick={handleRunBacktest}
+                  disabled={loading}
+                  sx={{
+                    height: 40,
+                    fontWeight: 700,
+                    fontSize: '0.95rem',
+                    borderRadius: 1.5,
+                    boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)',
+                    '&:hover': {
+                      boxShadow: '0 6px 20px rgba(22, 119, 255, 0.45)'
+                    }
+                  }}
+                >
+                  {loading ? 'Đang Chạy Mô Phỏng...' : 'Bắt Đầu Thử Nghiệm'}
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+        </Stack>
       </MainCard>
 
       {/* Error notification */}
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity="error" onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
 
-      {/* Results Section */}
+      {/* 3. Kết Quả Kiểm Thử (Hiển Thị Khi Đã Chạy Xong) */}
       {result && result.summary && (
-        <Box sx={{ animation: 'fadeIn 0.5s ease-in-out' }}>
-          {/* 4 Main KPI Cards */}
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            {/* KPI 1: Net Profit */}
-            <Grid item xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  p: 2.5,
-                  borderRadius: 2,
-                  boxShadow: theme.shadows[1],
-                  borderTop: `4px solid ${isProfitable ? '#52c41a' : '#ff4d4f'}`
-                }}
-              >
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
-                    Lợi Nhuận Ròng (PnL)
-                  </Typography>
-                  <DollarCircleOutlined style={{ fontSize: 20, color: isProfitable ? '#52c41a' : '#ff4d4f' }} />
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, width: '100%' }}>
+          {/* 3.1. 4 Thẻ KPI - Chuẩn CSS Grid như Tab Futures */}
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(2, 1fr)',
+                md: 'repeat(4, 1fr)'
+              },
+              gap: 2,
+              width: '100%'
+            }}
+          >
+            {/* KPI 1: Lợi nhuận ròng */}
+            <Card sx={kpiCardSx}>
+              <Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      LỢI NHUẬN RÒNG (TOTAL PNL)
+                    </Typography>
+                    <Typography
+                      variant="h3"
+                      fontWeight={700}
+                      sx={{
+                        mt: 0.75,
+                        color: isProfitable ? 'success.main' : 'error.main'
+                      }}
+                    >
+                      {summary.netProfit >= 0 ? `+$${summary.netProfit}` : `-$${Math.abs(summary.netProfit)}`}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 38,
+                      height: 38,
+                      borderRadius: '50%',
+                      bgcolor: isProfitable 
+                        ? (isDark ? alpha(theme.palette.success.main, 0.15) : '#f6ffed') 
+                        : (isDark ? alpha(theme.palette.error.main, 0.15) : '#fff1f0'),
+                      color: isProfitable ? 'success.main' : 'error.main'
+                    }}
+                  >
+                    {isProfitable ? <RiseOutlined style={{ fontSize: 20 }} /> : <FallOutlined style={{ fontSize: 20 }} />}
+                  </Box>
                 </Stack>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontWeight: 700,
-                    my: 1,
-                    color: isProfitable ? '#52c41a' : '#ff4d4f'
-                  }}
-                >
-                  {result.summary.netProfit >= 0 ? `+$${result.summary.netProfit}` : `-$${Math.abs(result.summary.netProfit)}`}
-                  <Typography component="span" variant="body1" sx={{ ml: 1, fontWeight: 600 }}>
-                    ({result.summary.netProfitPct >= 0 ? `+${result.summary.netProfitPct}%` : `${result.summary.netProfitPct}%`})
-                  </Typography>
-                </Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  Vốn cuối: <strong>${result.summary.finalBalance}</strong> (Khởi điểm: ${result.summary.initialBalance})
-                </Typography>
-              </Card>
-            </Grid>
+              </Box>
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
+                Vốn cuối: <b>${summary.finalEquity || summary.finalBalance}</b> • Khởi điểm: <b>${summary.initialBalance}</b> (
+                <span style={{ color: isProfitable ? '#52c41a' : '#ff4d4f', fontWeight: 700 }}>
+                  {summary.netProfitPct >= 0 ? `+${summary.netProfitPct}%` : `${summary.netProfitPct}%`}
+                </span>)
+              </Typography>
+            </Card>
 
-            {/* KPI 2: Win Rate */}
-            <Grid item xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  p: 2.5,
-                  borderRadius: 2,
-                  boxShadow: theme.shadows[1],
-                  borderTop: '4px solid #1677ff'
-                }}
-              >
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
-                    Tỉ Lệ Thắng (Winrate)
-                  </Typography>
-                  <TrophyOutlined style={{ fontSize: 20, color: '#1677ff' }} />
+            {/* KPI 2: Tỉ lệ thắng */}
+            <Card sx={kpiCardSx}>
+              <Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      TỶ LỆ THẮNG (WIN RATE)
+                    </Typography>
+                    <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 0.75 }}>
+                      {summary.winRate}%
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 38,
+                      height: 38,
+                      borderRadius: '50%',
+                      bgcolor: isDark ? alpha(theme.palette.primary.main, 0.15) : '#e6f7ff',
+                      color: 'primary.main'
+                    }}
+                  >
+                    <TrophyOutlined style={{ fontSize: 20 }} />
+                  </Box>
                 </Stack>
-                <Typography variant="h4" sx={{ fontWeight: 700, my: 1, color: '#1677ff' }}>
-                  {result.summary.winRate}%
-                  <Typography component="span" variant="body2" sx={{ ml: 1, color: 'text.secondary', fontWeight: 500 }}>
-                    ({result.summary.totalTrades} lệnh)
-                  </Typography>
-                </Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  Thắng: <strong>{result.summary.winningTrades}</strong> • Thua: <strong>{result.summary.losingTrades}</strong> • Hòa: <strong>{result.summary.breakevenTrades}</strong>
-                </Typography>
-              </Card>
-            </Grid>
+              </Box>
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
+                Tổng: <b>{summary.totalTrades}</b> lệnh (Thắng: <b style={{ color: '#52c41a' }}>{summary.winningTrades}</b> • Thua: <b style={{ color: '#ff4d4f' }}>{summary.losingTrades}</b> • Hòa: <b>{summary.breakevenTrades || 0}</b>)
+              </Typography>
+            </Card>
 
             {/* KPI 3: Profit Factor */}
-            <Grid item xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  p: 2.5,
-                  borderRadius: 2,
-                  boxShadow: theme.shadows[1],
-                  borderTop: '4px solid #722ed1'
-                }}
-              >
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
-                    Profit Factor (Lãi/Lỗ)
-                  </Typography>
-                  <SafetyOutlined style={{ fontSize: 20, color: '#722ed1' }} />
+            <Card sx={kpiCardSx}>
+              <Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      PROFIT FACTOR (LÃI/LỖ)
+                    </Typography>
+                    <Typography variant="h3" fontWeight={700} color="#722ed1" sx={{ mt: 0.75 }}>
+                      {summary.profitFactor}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 38,
+                      height: 38,
+                      borderRadius: '50%',
+                      bgcolor: isDark ? alpha('#722ed1', 0.15) : '#f9f0ff',
+                      color: '#722ed1'
+                    }}
+                  >
+                    <SafetyOutlined style={{ fontSize: 20 }} />
+                  </Box>
                 </Stack>
-                <Typography variant="h4" sx={{ fontWeight: 700, my: 1, color: '#722ed1' }}>
-                  {result.summary.profitFactor}
-                  <Typography component="span" variant="body2" sx={{ ml: 1, color: 'text.secondary' }}>
-                    {result.summary.profitFactor >= 1.5 ? '🔥 Ổn định' : result.summary.profitFactor >= 1 ? '⚠️ Cân bằng' : '❌ Kém'}
-                  </Typography>
-                </Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  Lệnh tốt nhất: <strong>+${result.summary.bestTrade}</strong> | Tệ nhất: <strong>${result.summary.worstTrade}</strong>
-                </Typography>
-              </Card>
-            </Grid>
+              </Box>
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
+                Lệnh max: <b style={{ color: '#52c41a' }}>+${summary.bestTrade}</b> • Lệnh min: <b style={{ color: '#ff4d4f' }}>${summary.worstTrade}</b>
+              </Typography>
+            </Card>
 
             {/* KPI 4: Max Drawdown */}
-            <Grid item xs={12} sm={6} md={3}>
-              <Card
-                sx={{
-                  p: 2.5,
-                  borderRadius: 2,
-                  boxShadow: theme.shadows[1],
-                  borderTop: '4px solid #fa8c16'
-                }}
-              >
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
-                    Max Drawdown (Sụt Giảm Max)
-                  </Typography>
-                  <FallOutlined style={{ fontSize: 20, color: '#fa8c16' }} />
+            <Card sx={kpiCardSx}>
+              <Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      SỤT GIẢM TỐI ĐA (MAX DD)
+                    </Typography>
+                    <Typography
+                      variant="h3"
+                      fontWeight={700}
+                      sx={{
+                        mt: 0.75,
+                        color: summary.maxDrawdownPct > 10 ? 'error.main' : 'warning.main'
+                      }}
+                    >
+                      {summary.maxDrawdownPct}%
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 38,
+                      height: 38,
+                      borderRadius: '50%',
+                      bgcolor: isDark ? alpha(theme.palette.warning.main, 0.15) : '#fffbe6',
+                      color: 'warning.main'
+                    }}
+                  >
+                    <FallOutlined style={{ fontSize: 20 }} />
+                  </Box>
                 </Stack>
-                <Typography variant="h4" sx={{ fontWeight: 700, my: 1, color: '#fa8c16' }}>
-                  {result.summary.maxDrawdownPct}%
-                  <Typography component="span" variant="body2" sx={{ ml: 1, color: 'text.secondary' }}>
-                    (-${result.summary.maxDrawdownUsd})
-                  </Typography>
-                </Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  Dữ liệu: <strong>{result.summary.totalCandles}</strong> nến M15 ({result.summary.days} ngày)
-                </Typography>
-              </Card>
-            </Grid>
-          </Grid>
+              </Box>
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
+                Sụt giảm: <b>-${summary.maxDrawdownUsd}</b> • Dữ liệu: <b>{summary.totalCandles || result.totalCandles}</b> nến M15 ({summary.days || result.days} ngày)
+              </Typography>
+            </Card>
+          </Box>
 
-          {/* Equity Curve Chart */}
+          {/* 3.2. Biểu Đồ Tăng Trưởng Vốn (Equity Curve) */}
           <MainCard
+            border
             title={
               <Stack direction="row" spacing={1} alignItems="center">
-                <LineChartOutlined style={{ color: '#1677ff' }} />
-                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                  Biểu Đồ Tăng Trưởng Vốn (Equity Curve) — {result.summary.symbol} ({result.summary.days} Ngày)
+                <LineChartOutlined style={{ color: '#1677ff', fontSize: 18 }} />
+                <Typography variant="subtitle1" fontWeight={700} color="text.primary">
+                  Biểu Đồ Tăng Trưởng Vốn (Equity Curve) — {summary.symbol || result.symbol} ({summary.days || result.days} Ngày)
                 </Typography>
               </Stack>
             }
-            sx={{ mb: 3 }}
           >
-            <Box sx={{ width: '100%', height: 320, mt: 1 }}>
+            <Box sx={{ width: '100%', height: 340, mt: 1 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={result.equityCurve || []} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
                   <defs>
                     <linearGradient id="labEquityGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={chartFill} stopOpacity={0.4} />
+                      <stop offset="5%" stopColor={chartFill} stopOpacity={0.35} />
                       <stop offset="95%" stopColor={chartFill} stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.06)" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'} />
                   <XAxis
                     dataKey="time"
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 11, fill: theme.palette.text.secondary }}
                     minTickGap={45}
                   />
                   <YAxis
                     domain={['auto', 'auto']}
-                    tick={{ fontSize: 11 }}
+                    tick={{ fontSize: 11, fill: theme.palette.text.secondary }}
                     tickFormatter={(val) => `$${val}`}
                   />
                   <ChartTooltip
@@ -536,7 +730,7 @@ export default function LabTradingPage() {
                       if (active && payload && payload.length) {
                         const pt = payload[0].payload;
                         return (
-                          <Paper sx={{ p: 1.5, boxShadow: 3, borderRadius: 1.5 }}>
+                          <Paper sx={{ p: 1.5, boxShadow: 3, borderRadius: 1.5, bgcolor: isDark ? 'background.paper' : '#ffffff' }}>
                             <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary', mb: 0.5 }}>
                               {pt.time}
                             </Typography>
@@ -544,7 +738,7 @@ export default function LabTradingPage() {
                               Tài Sản (Equity): ${pt.equity}
                             </Typography>
                             <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary' }}>
-                              Số dư: ${pt.balance} | Sụt giảm: {pt.drawdownPct}%
+                              Số dư: ${pt.balance} • Sụt giảm: {pt.drawdownPct}%
                             </Typography>
                           </Paper>
                         );
@@ -565,26 +759,27 @@ export default function LabTradingPage() {
             </Box>
           </MainCard>
 
-          {/* Trade Execution History Table */}
+          {/* 3.3. Bảng Lịch Sử Lệnh Chi Tiết */}
           <MainCard
+            border
             title={
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <HistoryOutlined style={{ color: '#1677ff' }} />
-                  <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                  <HistoryOutlined style={{ color: '#1677ff', fontSize: 18 }} />
+                  <Typography variant="subtitle1" fontWeight={700} color="text.primary">
                     Chi Tiết Lệnh Đã Thực Hiện ({result.trades ? result.trades.length : 0} Lệnh)
                   </Typography>
                 </Stack>
                 <Chip
-                  label={`${result.summary.strategyName}`}
+                  label={`${summary.strategyName || result.strategyName}`}
                   size="small"
-                  sx={{ bgcolor: 'rgba(22, 119, 255, 0.1)', color: '#1677ff', fontWeight: 600 }}
+                  sx={{ bgcolor: alpha('#1677ff', 0.12), color: '#1677ff', fontWeight: 700 }}
                 />
               </Stack>
             }
           >
             {result.trades && result.trades.length > 0 ? (
-              <TableContainer sx={{ maxHeight: 420 }}>
+              <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader size="small">
                   <TableHead>
                     <TableRow>
@@ -618,19 +813,19 @@ export default function LabTradingPage() {
                         reasonLabel = '⚖️ Hòa Vốn (BE)';
                       } else if (tr.exitReason === 'END_OF_DATA') {
                         reasonColor = 'warning';
-                        reasonLabel = '⏱️ Kết Thúc Dữ Liệu';
+                        reasonLabel = '⏱️ Hết Dữ Liệu';
                       }
 
                       return (
                         <TableRow key={tr.id} hover>
                           <TableCell sx={{ color: 'text.secondary' }}>{tr.id}</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>{tr.symbol}</TableCell>
+                          <TableCell sx={{ fontWeight: 700 }}>{tr.symbol}</TableCell>
                           <TableCell>
                             <Chip
                               label={tr.side}
                               size="small"
                               sx={{
-                                fontWeight: 700,
+                                fontWeight: 800,
                                 bgcolor: tr.side === 'LONG' ? 'rgba(82, 196, 26, 0.15)' : 'rgba(255, 77, 79, 0.15)',
                                 color: tr.side === 'LONG' ? '#52c41a' : '#ff4d4f'
                               }}
@@ -643,7 +838,7 @@ export default function LabTradingPage() {
                             align="right"
                             sx={{
                               fontWeight: 700,
-                              color: isWin ? '#52c41a' : isLoss ? '#ff4d4f' : 'text.primary'
+                              color: isWin ? 'success.main' : isLoss ? 'error.main' : 'text.primary'
                             }}
                           >
                             {tr.netPnl >= 0 ? `+$${tr.netPnl}` : `-$${Math.abs(tr.netPnl)}`}
@@ -675,7 +870,7 @@ export default function LabTradingPage() {
               <Box sx={{ p: 4, textAlign: 'center', color: 'text.secondary' }}>
                 <InfoCircleOutlined style={{ fontSize: 32, marginBottom: 8 }} />
                 <Typography variant="body1">
-                  Không có lệnh nào được kích hoạt trong khoảng thời gian {result.summary.days} ngày này với điều kiện vào lệnh của chiến lược.
+                  Không có lệnh nào được kích hoạt trong khoảng thời gian {summary.days || result.days} ngày này với điều kiện vào lệnh của chiến lược.
                 </Typography>
               </Box>
             )}
@@ -685,4 +880,3 @@ export default function LabTradingPage() {
     </Box>
   );
 }
-
