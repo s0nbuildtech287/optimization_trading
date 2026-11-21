@@ -1076,9 +1076,10 @@ export default function SpotTradingPage() {
                     <TableCell><b>Thời gian</b></TableCell>
                     <TableCell><b>Loại</b></TableCell>
                     <TableCell><b>Cặp coin</b></TableCell>
-                    <TableCell align="right"><b>Giá khớp</b></TableCell>
+                    <TableCell align="right"><b>Giá vào/ra</b></TableCell>
                     <TableCell align="right"><b>Khối lượng</b></TableCell>
-                    <TableCell align="right"><b>Giá trị</b></TableCell>
+                    <TableCell align="right"><b>Giá trị lệnh</b></TableCell>
+                    <TableCell align="right"><b>Lãi/Lỗ ròng</b></TableCell>
                     <TableCell align="center"><b>Lý do</b></TableCell>
                   </TableRow>
                 </TableHead>
@@ -1086,6 +1087,8 @@ export default function SpotTradingPage() {
                   {orders.map((o) => {
                     const isBuy = o.side === 'BUY';
                     const pnl = parseFloat(o.realized_pnl || 0);
+                    const pnlPct = parseFloat(o.realized_pnl_pct || 0);
+                    const isWin = pnl >= 0;
                     return (
                       <TableRow key={o.id} hover>
                         <TableCell sx={{ fontSize: 12 }}>
@@ -1101,7 +1104,11 @@ export default function SpotTradingPage() {
                         </TableCell>
                         <TableCell><b>{o.symbol}</b></TableCell>
                         <TableCell align="right" sx={{ fontSize: 12 }}>
-                          ${parseFloat(o.exit_price || o.entry_price).toFixed(2)}
+                          {isBuy ? (
+                            `$${parseFloat(o.entry_price).toFixed(2)}`
+                          ) : (
+                            `$${parseFloat(o.entry_price).toFixed(2)} → $${parseFloat(o.exit_price || o.entry_price).toFixed(2)}`
+                          )}
                         </TableCell>
                         <TableCell align="right">{parseFloat(o.quantity).toFixed(4)}</TableCell>
                         <TableCell align="right">
@@ -1109,11 +1116,25 @@ export default function SpotTradingPage() {
                             ${parseFloat(o.margin).toFixed(2)}
                           </Typography>
                         </TableCell>
+                        <TableCell align="right">
+                          {isBuy ? (
+                            <Typography variant="caption" color="text.secondary">-</Typography>
+                          ) : (
+                            <Typography
+                              variant="body2"
+                              fontWeight={700}
+                              sx={{ color: isWin ? 'success.main' : 'error.main' }}
+                            >
+                              {isWin ? `+$${pnl.toFixed(2)}` : `-$${Math.abs(pnl).toFixed(2)}`} ({isWin ? '+' : ''}{pnlPct.toFixed(1)}%)
+                            </Typography>
+                          )}
+                        </TableCell>
                         <TableCell align="center">
                           <Chip
                             label={o.exit_reason}
                             size="small"
                             variant="outlined"
+                            color={isBuy ? 'default' : (isWin ? 'success' : 'error')}
                             sx={{ fontSize: 10, height: 20 }}
                           />
                         </TableCell>
