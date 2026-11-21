@@ -423,6 +423,88 @@ function evaluateBreakoutMomentumStrategy(symbol, candles) {
   return { action: 'HOLD', symbol, indicators };
 }
 
+/**
+ * CHIẾN LƯỢC 4: H4 Trend Sniper (Donchian 55 + EMA 50/200 - Rùa Biển Turtle Trading)
+ * - Khung nến H4: Bắt các con sóng vĩ mô kéo dài nhiều ngày/tuần
+ * - Tín hiệu LONG: Giá phá vỡ đỉnh 55 nến H4 kèm xác nhận EMA 50 >= EMA 200
+ * - Tín hiệu SHORT: Giá phá vỡ đáy 55 nến H4 kèm xác nhận EMA 50 <= EMA 200
+ * - Quản trị rủi ro: SL theo 1.8 * ATR(14) khung H4, TP theo 2.5R (R:R = 1:2.5)
+ */
+function evaluateH4TrendSniperStrategy(symbol, candles) {
+  if (!candles || candles.length < 60) return null;
+
+  const closes = candles.map((c) => c.close);
+  const currentCandle = candles[candles.length - 1];
+  const currentClose = currentCandle.close;
+
+  // Donchian 55 trên nến H4 (loại trừ nến hiện tại đang chạy)
+  const past55 = candles.slice(-56, -1);
+  const highestHigh55 = Math.max(...past55.map((c) => c.high));
+  const lowestLow55 = Math.min(...past55.map((c) => c.low));
+
+  const ema50 = calculateEMA(closes, 50);
+  const ema200 = calculateEMA(closes, 200) || calculateEMA(closes, 100);
+  const atr = calculateATR(candles, 14);
+
+  if (!ema50 || !atr || atr <= 0) return null;
+
+  const isPaxg = symbol && symbol.includes('PAXG');
+  const minSlPct = isPaxg ? 0.006 : 0.015;
+  const slDistance = Math.max(1.8 * atr, currentClose * minSlPct);
+
+  const indicators = {
+    highestHigh55: Number(highestHigh55.toFixed(2)),
+    lowestLow55: Number(lowestLow55.toFixed(2)),
+    ema50: Number(ema50.toFixed(2)),
+    ema200: ema200 ? Number(ema200.toFixed(2)) : null,
+    atr: Number(atr.toFixed(2))
+  };
+
+  // 1. KỊCH BẢN LONG: Phá vỡ đỉnh 55 nến H4 + Xu hướng tăng
+  const isUpTrend = ema200 ? (ema50 >= ema200 * 0.998 && currentClose > ema50) : (currentClose > ema50);
+  const isBreakoutHigh = currentClose > highestHigh55 && currentClose > currentCandle.open;
+
+  if (isUpTrend && isBreakoutHigh) {
+    const stopLoss = Number((currentClose - slDistance).toFixed(4));
+    const takeProfit = Number((currentClose + slDistance * 2.5).toFixed(4)); // R:R 1:2.5
+
+    return {
+      action: 'LONG',
+      symbol,
+      entryPrice: currentClose,
+      stopLoss,
+      takeProfit,
+      riskDistance: slDistance,
+      rrRatio: 2.5,
+      reason: `H4 Donchian 55 Breakout (${highestHigh55}), EMA50 > EMA200 Macro Trend`,
+      indicators
+    };
+  }
+
+  // 2. KỊCH BẢN SHORT: Phá vỡ đáy 55 nến H4 + Xu hướng giảm
+  const isDownTrend = ema200 ? (ema50 <= ema200 * 1.002 && currentClose < ema50) : (currentClose < ema50);
+  const isBreakdownLow = currentClose < lowestLow55 && currentClose < currentCandle.open;
+
+  if (isDownTrend && isBreakdownLow) {
+    const stopLoss = Number((currentClose + slDistance).toFixed(4));
+    const takeProfit = Number((currentClose - slDistance * 2.5).toFixed(4)); // R:R 1:2.5
+
+    return {
+      action: 'SHORT',
+      symbol,
+      entryPrice: currentClose,
+      stopLoss,
+      takeProfit,
+      riskDistance: slDistance,
+      rrRatio: 2.5,
+      reason: `H4 Donchian 55 Breakdown (${lowestLow55}), EMA50 < EMA200 Macro Trend`,
+      indicators
+    };
+  }
+
+  return { action: 'HOLD', symbol, indicators };
+}
+
 module.exports = {
   calculateEMA,
   calculateRSI,
@@ -432,6 +514,7 @@ module.exports = {
   calculateBollingerBands,
   evaluateTrendPullbackStrategy,
   evaluateBollingerMeanReversionStrategy,
-  evaluateBreakoutMomentumStrategy
+  evaluateBreakoutMomentumStrategy,
+  evaluateH4TrendSniperStrategy
 };
 

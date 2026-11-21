@@ -7,7 +7,8 @@ class BinanceWsService extends EventEmitter {
     super();
     this.symbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
     this.prices = {}; // { 'BTCUSDT': 95000, 'ETHUSDT': 3400 }
-    this.candles = {}; // { 'ETHUSDT': [ { open, high, low, close, volume, time } ] }
+    this.candles = {}; // 15m: { 'ETHUSDT': [ { open, high, low, close, volume, time } ] }
+    this.candlesH4 = {}; // 4h: { 'ETHUSDT': [ { open, high, low, close, volume, time } ] }
     this.ws = null;
     this.pingInterval = null;
     this.reconnectTimer = null;
@@ -25,7 +26,7 @@ class BinanceWsService extends EventEmitter {
         const url = `${baseUrl}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
         const response = await axios.get(url, { timeout: 6000 });
         if (response.data && Array.isArray(response.data)) {
-          this.candles[symbol] = response.data.map((k) => ({
+          const parsedCandles = response.data.map((k) => ({
             time: k[0],
             open: parseFloat(k[1]),
             high: parseFloat(k[2]),
@@ -34,9 +35,16 @@ class BinanceWsService extends EventEmitter {
             volume: parseFloat(k[5]),
             isClosed: true
           }));
-          const latestClose = this.candles[symbol][this.candles[symbol].length - 1].close;
+
+          if (interval === '4h') {
+            this.candlesH4[symbol] = parsedCandles;
+          } else {
+            this.candles[symbol] = parsedCandles;
+          }
+
+          const latestClose = parsedCandles[parsedCandles.length - 1].close;
           this.prices[symbol] = latestClose;
-          console.log(`[BinanceWS] Loaded ${this.candles[symbol].length} initial ${interval} candles for ${symbol}. Latest price: ${latestClose}`);
+          console.log(`[BinanceWS] Loaded ${parsedCandles.length} initial ${interval} candles for ${symbol}. Latest price: ${latestClose}`);
           return;
         }
       } catch (err) {
@@ -48,9 +56,10 @@ class BinanceWsService extends EventEmitter {
   async start() {
     console.log('[BinanceWS] Initializing Binance Market Data Ingestion...');
     
-    // 1. Tải trước 250 nến lịch sử cho các cặp để thuật toán EMA/RSI có đủ dữ liệu tính ngay lập tức
+    // 1. Tải trước 250 nến 15m và 100 nến 4h cho các cặp
     for (const sym of this.symbols) {
       await this.fetchInitialCandles(sym, '15m', 250);
+      await this.fetchInitialCandles(sym, '4h', 100);
     }
 
     // 2. Kết nối WebSocket Binance Public Stream
@@ -61,12 +70,13 @@ class BinanceWsService extends EventEmitter {
     if (this.isConnecting) return;
     this.isConnecting = true;
 
-    // Stream ticker & klines của BTC, ETH, SOL
+    // Stream ticker & klines (15m & 4h) của các cặp coin
     const streamNames = [];
     this.symbols.forEach((s) => {
       const lower = s.toLowerCase();
       streamNames.push(`${lower}@ticker`);
       streamNames.push(`${lower}@kline_15m`);
+      streamNames.push(`${lower}@kline_4h`);
     });
 
     const wsUrl = `wss://data-stream.binance.vision/stream?streams=${streamNames.join('/')}`;
@@ -138,8 +148,33 @@ class BinanceWsService extends EventEmitter {
       }
     }
 
-    // 2. Kline Stream (cập nhật nến 15m)
-    if (stream.includes('@kline_')) {
+    // 2. Kline Stream (cập nhật nến 15m & 4h)
+    if (stream.includes('@kline_4h')) {
+      const k = data.k;
+      const symbol = k.s;
+      const candle = {
+        time: k.t,
+        open: parseFloat(k.o),
+        high: parseFloat(k.h),
+        low: parseFloat(k.l),
+        close: parseFloat(k.c),
+        volume: parseFloat(k.v),
+        isClosed: k.x
+      };
+
+      if (!this.candlesH4[symbol]) this.candlesH4[symbol] = [];
+      const history = this.candlesH4[symbol];
+
+      if (candle.isClosed) {
+        history.push(candle);
+        if (history.length > 200) history.shift();
+        this.emit('candleClosedH4', { symbol, candle, candles: history });
+      } else {
+        if (history.length > 0 && history[history.length - 1].time === candle.time) {
+          history[history.length - 1] = candle;
+        }
+      }
+    } else if (stream.includes('@kline_')) {
       const k = data.k;
       const symbol = k.s;
       const candle = {
@@ -179,15 +214,16 @@ class BinanceWsService extends EventEmitter {
     if (!this.symbols.includes(sym)) {
       this.symbols.push(sym);
     }
-    // Tải nến lịch sử cho coin mới thêm
+    // Tải nến lịch sử cho coin mới thêm (cả 15m và 4h)
     await this.fetchInitialCandles(sym, '15m', 250);
+    await this.fetchInitialCandles(sym, '4h', 100);
 
     // Gửi lệnh SUBSCRIBE động lên Binance WebSocket nếu đang mở kết nối
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       const lower = sym.toLowerCase();
       const subPayload = {
         method: 'SUBSCRIBE',
-        params: [`${lower}@ticker`, `${lower}@kline_15m`],
+        params: [`${lower}@ticker`, `${lower}@kline_15m`, `${lower}@kline_4h`],
         id: Date.now()
       };
       this.ws.send(JSON.stringify(subPayload));
@@ -208,7 +244,7 @@ class BinanceWsService extends EventEmitter {
       const lower = sym.toLowerCase();
       const unsubPayload = {
         method: 'UNSUBSCRIBE',
-        params: [`${lower}@ticker`, `${lower}@kline_15m`],
+        params: [`${lower}@ticker`, `${lower}@kline_15m`, `${lower}@kline_4h`],
         id: Date.now()
       };
       this.ws.send(JSON.stringify(unsubPayload));
@@ -218,6 +254,10 @@ class BinanceWsService extends EventEmitter {
 
   getCandles(symbol) {
     return this.candles[symbol] || [];
+  }
+
+  getCandlesH4(symbol) {
+    return this.candlesH4[symbol] || [];
   }
 
   getAllPrices() {

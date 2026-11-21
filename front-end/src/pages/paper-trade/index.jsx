@@ -550,14 +550,15 @@ export default function PaperTradingPage() {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
             gap: 1.5
           }}
         >
           {(data?.botList || [
             { id: 'acc_binance_futures', name: 'Bot 1: Trend Pullback (EMA)', desc: 'Thuận xu hướng EMA200 + Pullback EMA21 & RSI', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true },
             { id: 'acc_futures_reversion', name: 'Bot 2: Bollinger Reversion', desc: 'Đảo chiều Sideway dải Bollinger Bands + RSI Quá mua/bán', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true },
-            { id: 'acc_futures_breakout', name: 'Bot 3: Breakout Momentum', desc: 'Phá vỡ đỉnh/đáy 20 nến Donchian + Bùng nổ Volume', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true }
+            { id: 'acc_futures_breakout', name: 'Bot 3: Breakout Momentum', desc: 'Phá vỡ đỉnh/đáy 20 nến Donchian + Bùng nổ Volume', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true },
+            { id: 'acc_futures_h4_trend', name: 'Bot 4: H4 Trend Sniper', desc: 'Kênh Donchian 55 + EMA 50/200 khung H4 (Turtle Trend)', equity: 100, balance: 100, pnl: 0, pnlPct: 0, winrate: 0, total_trades: 0, is_bot_active: true }
           ]).map((bot) => {
             const isSelected = selectedBotId === bot.id;
             const isPnlPositive = (bot.pnl || 0) >= 0;

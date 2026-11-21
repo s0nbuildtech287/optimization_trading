@@ -21,7 +21,7 @@ async function fetchBinanceKlines(symbol = 'BTCUSDT', interval = '15m', days = 3
     return cached.candles;
   }
 
-  const msPerCandle = 15 * 60 * 1000; // 15 phút
+  const msPerCandle = interval === '4h' ? 4 * 60 * 60 * 1000 : 15 * 60 * 1000;
   const totalCandles = Math.ceil((days * 24 * 60 * 60 * 1000) / msPerCandle);
   const startTime = now - (days * 24 * 60 * 60 * 1000);
 
@@ -87,9 +87,14 @@ async function runBacktest({
   leverage = 3,
   marginPerTrade = 15.0
 }) {
-  const candles = await fetchBinanceKlines(symbol, '15m', days);
-  if (!candles || candles.length < 210) {
-    throw new Error(`Không đủ dữ liệu nến (${candles ? candles.length : 0} nến). Cần tối thiểu 210 nến.`);
+  const isH4 = strategyKey === 'H4_TREND_SNIPER';
+  const interval = isH4 ? '4h' : '15m';
+  const queryDays = isH4 ? Math.max(days, 60) : days;
+  const minCandles = isH4 ? 60 : 210;
+
+  const candles = await fetchBinanceKlines(symbol, interval, queryDays);
+  if (!candles || candles.length < minCandles) {
+    throw new Error(`Không đủ dữ liệu nến (${candles ? candles.length : 0} nến ${interval}). Cần tối thiểu ${minCandles} nến.`);
   }
 
   // Lựa chọn hàm đánh giá chiến lược
@@ -101,6 +106,9 @@ async function runBacktest({
   } else if (strategyKey === 'BREAKOUT_MOMENTUM') {
     evaluator = paperStrategyService.evaluateBreakoutMomentumStrategy;
     strategyName = 'Breakout Momentum (Donchian)';
+  } else if (strategyKey === 'H4_TREND_SNIPER') {
+    evaluator = paperStrategyService.evaluateH4TrendSniperStrategy;
+    strategyName = 'H4 Trend Sniper (Donchian 55)';
   } else {
     evaluator = paperStrategyService.evaluateTrendPullbackStrategy;
     strategyName = 'Trend Pullback (EMA 200 + EMA 21)';
@@ -118,15 +126,15 @@ async function runBacktest({
 
   // Ghi nhận snapshot đầu tiên
   equityCurve.push({
-    time: new Date(candles[210].openTime).toLocaleDateString() + ' ' + new Date(candles[210].openTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    rawTime: candles[210].openTime,
+    time: new Date(candles[minCandles].openTime).toLocaleDateString() + ' ' + new Date(candles[minCandles].openTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    rawTime: candles[minCandles].openTime,
     equity: Number(balance.toFixed(2)),
     balance: Number(balance.toFixed(2)),
     drawdownPct: 0
   });
 
-  // Vòng lặp duyệt từng nến 15m (từ nến 210 trở đi để đủ dữ liệu chỉ báo)
-  for (let i = 210; i < candles.length; i++) {
+  // Vòng lặp duyệt từng nến
+  for (let i = minCandles; i < candles.length; i++) {
     const candle = candles[i];
     const prevClose = candles[i - 1].close;
 
@@ -254,8 +262,9 @@ async function runBacktest({
       }
     }
 
-    // Ghi nhận snapshot định kỳ mỗi 16 nến (4 tiếng) nếu không có đóng lệnh
-    if (i % 16 === 0) {
+    // Ghi nhận snapshot định kỳ (H4: mỗi 2 nến = 8 tiếng; M15: mỗi 16 nến = 4 tiếng) nếu không có đóng lệnh
+    const snapshotStep = isH4 ? 2 : 16;
+    if (i % snapshotStep === 0) {
       let unrealized = 0;
       if (currentPos) {
         unrealized = currentPos.side === 'LONG'
@@ -327,13 +336,15 @@ async function runBacktest({
     strategyKey,
     strategyName,
     symbol,
-    days,
+    days: queryDays,
+    interval,
     totalCandles: candles.length,
     summary: {
       strategyKey,
       strategyName,
       symbol,
-      days,
+      days: queryDays,
+      interval,
       totalCandles: candles.length,
       initialBalance: parseFloat(initialBalance),
       finalBalance: Number(balance.toFixed(2)),

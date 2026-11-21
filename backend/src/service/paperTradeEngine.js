@@ -10,6 +10,7 @@ const FUTURES_BOTS = [
     name: 'Bot 1: Trend Pullback (EMA)',
     desc: 'Thuận xu hướng EMA200 + Pullback EMA21 & RSI',
     strategyKey: 'TREND_PULLBACK',
+    interval: '15m',
     evaluator: paperStrategyService.evaluateTrendPullbackStrategy
   },
   {
@@ -17,6 +18,7 @@ const FUTURES_BOTS = [
     name: 'Bot 2: Bollinger Reversion',
     desc: 'Đảo chiều Sideway dải Bollinger Bands + RSI Quá mua/Quá bán',
     strategyKey: 'BOLLINGER_REVERSION',
+    interval: '15m',
     evaluator: paperStrategyService.evaluateBollingerMeanReversionStrategy
   },
   {
@@ -24,7 +26,16 @@ const FUTURES_BOTS = [
     name: 'Bot 3: Breakout Momentum',
     desc: 'Phá vỡ đỉnh/đáy 20 nến Donchian + Bùng nổ Volume',
     strategyKey: 'BREAKOUT_MOMENTUM',
+    interval: '15m',
     evaluator: paperStrategyService.evaluateBreakoutMomentumStrategy
+  },
+  {
+    id: 'acc_futures_h4_trend',
+    name: 'Bot 4: H4 Trend Sniper',
+    desc: 'Kênh Donchian 55 + EMA 50/200 khung H4 (Turtle Trend)',
+    strategyKey: 'H4_TREND_SNIPER',
+    interval: '4h',
+    evaluator: paperStrategyService.evaluateH4TrendSniperStrategy
   }
 ];
 
@@ -67,6 +78,11 @@ class PaperTradeEngine {
     // 3. Lắng nghe nến 15m đóng để đánh giá tín hiệu chiến lược Futures & Spot
     binanceWsService.on('candleClosed', async ({ symbol, candle, candles }) => {
       await this.handleCandleClosed(symbol, candles);
+    });
+
+    // 3b. Lắng nghe nến 4h đóng để đánh giá tín hiệu cho Bot 4 (H4 Trend Sniper)
+    binanceWsService.on('candleClosedH4', async ({ symbol, candle, candles }) => {
+      await this.handleCandleClosedH4(symbol, candles);
     });
 
     // 4. Khởi động Binance Data Stream
@@ -332,8 +348,9 @@ class PaperTradeEngine {
         this.lastEvaluations[symbol] = signalTrend;
       }
 
-      // 2. THỰC THI CHIẾN LƯỢC CHO TỪNG BOT FUTURES ĐỘC LẬP
-      for (const bot of this.futuresBots) {
+      // 2. THỰC THI CHIẾN LƯỢC CHO TỪNG BOT FUTURES M15 ĐỘC LẬP
+      const m15Bots = this.futuresBots.filter((b) => b.interval !== '4h');
+      for (const bot of m15Bots) {
         try {
           const botSignal = bot.evaluator(symbol, candles);
           await this.evaluateFuturesCandleForBot(bot, symbol, botSignal);
@@ -348,6 +365,25 @@ class PaperTradeEngine {
       }
     } catch (err) {
       console.error('[PaperEngine] Error in handleCandleClosed:', err.message);
+    }
+  }
+
+  /**
+   * Đánh giá chiến lược khi nến 4h đóng cửa (Dành riêng cho Bot 4: H4 Trend Sniper)
+   */
+  async handleCandleClosedH4(symbol, candles) {
+    try {
+      const h4Bots = this.futuresBots.filter((b) => b.interval === '4h');
+      for (const bot of h4Bots) {
+        try {
+          const botSignal = bot.evaluator(symbol, candles);
+          await this.evaluateFuturesCandleForBot(bot, symbol, botSignal);
+        } catch (botErr) {
+          console.error(`[PaperEngine-${bot.id}] Lỗi thực thi bot H4:`, botErr.message);
+        }
+      }
+    } catch (err) {
+      console.error('[PaperEngine] Error in handleCandleClosedH4:', err.message);
     }
   }
 
@@ -710,9 +746,11 @@ class PaperTradeEngine {
     if (isActive && mode === 'futures') {
       const symbols = account?.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
       const botObj = this.futuresBots.find((b) => b.id === accId) || this.futuresBots[0];
+      const isH4 = botObj.interval === '4h';
+      const minCandles = isH4 ? 60 : 30;
       for (const sym of symbols) {
-        const candles = binanceWsService.getCandles(sym);
-        if (candles && candles.length >= 30) {
+        const candles = isH4 ? binanceWsService.getCandlesH4(sym) : binanceWsService.getCandles(sym);
+        if (candles && candles.length >= minCandles) {
           try {
             const sig = botObj.evaluator(sym, candles);
             if (sig && sig.action !== 'HOLD') {

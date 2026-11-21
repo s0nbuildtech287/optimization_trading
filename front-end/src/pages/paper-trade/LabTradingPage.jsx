@@ -81,6 +81,16 @@ const STRATEGIES = [
     desc: 'Bắt điểm phá vỡ đỉnh/đáy 20 nến Donchian Channel kèm khối lượng giao dịch đột biến (> 1.5x MA20).',
     color: '#fa8c16',
     icon: <ThunderboltOutlined style={{ fontSize: 22 }} />
+  },
+  {
+    key: 'H4_TREND_SNIPER',
+    bot: 'Bot 4',
+    name: 'H4 Trend Sniper',
+    badge: 'H4 Donchian 55 + EMA',
+    market: 'Macro Trend (Sóng lớn đa ngày)',
+    desc: 'Chiến lược Rùa Biển (Turtle Trading) nến H4. Phá vỡ đỉnh/đáy 55 nến kèm xác nhận EMA 50/200. Sóng dài 5%-15%, phí sàn cực thấp.',
+    color: '#00b96b',
+    icon: <RiseOutlined style={{ fontSize: 22 }} />
   }
 ];
 
@@ -95,12 +105,20 @@ const POPULAR_SYMBOLS = [
   { symbol: 'AVAXUSDT', label: 'AVAX' }
 ];
 
-const DURATION_OPTIONS = [
+const M15_DURATION_OPTIONS = [
   { days: 7, label: '7 Ngày (~670 nến)' },
   { days: 14, label: '14 Ngày (~1.340 nến)' },
   { days: 30, label: '30 Ngày (~2.880 nến - Khuyên dùng)' },
   { days: 60, label: '60 Ngày (~5.760 nến)' },
   { days: 90, label: '90 Ngày (~8.640 nến)' }
+];
+
+const H4_DURATION_OPTIONS = [
+  { days: 30, label: '30 Ngày (~180 nến H4)' },
+  { days: 60, label: '60 Ngày (~360 nến H4)' },
+  { days: 90, label: '90 Ngày (~540 nến H4)' },
+  { days: 180, label: '180 Ngày (~1.080 nến H4 - Khuyên dùng)' },
+  { days: 365, label: '365 Ngày (~2.190 nến H4 - 1 Năm)' }
 ];
 
 export default function LabTradingPage() {
@@ -121,6 +139,18 @@ export default function LabTradingPage() {
   const [result, setResult] = useState(null);
 
   const selectedStrategy = STRATEGIES.find((s) => s.key === strategyKey) || STRATEGIES[0];
+  const isH4Strategy = strategyKey === 'H4_TREND_SNIPER';
+  const durationOptions = isH4Strategy ? H4_DURATION_OPTIONS : M15_DURATION_OPTIONS;
+
+  const handleSelectStrategy = (key) => {
+    if (loading) return;
+    setStrategyKey(key);
+    if (key === 'H4_TREND_SNIPER' && days < 30) {
+      setDays(180);
+    } else if (key === 'H4_TREND_SNIPER' && days === 30) {
+      setDays(180);
+    }
+  };
 
   const handleRunBacktest = async () => {
     setLoading(true);
@@ -219,15 +249,15 @@ export default function LabTradingPage() {
                         }}
                       />
                     }
-                    label="Binance 15m Engine"
+                    label={isH4Strategy ? "Binance 4h Engine" : "Binance 15m Engine"}
                     size="small"
                     variant="outlined"
-                    color="success"
+                    color={isH4Strategy ? "info" : "success"}
                     sx={{ fontWeight: 600, height: 24 }}
                   />
                 </Stack>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                  Kiểm thử thuật toán tự động trên nến M15 Binance thật. Mô phỏng đầy đủ SL, TP 2R, Dời hòa vốn (Breakeven) và Phí sàn 0.04%/chiều.
+                  Kiểm thử thuật toán tự động trên nến {isH4Strategy ? 'H4' : 'M15'} Binance thật. Mô phỏng đầy đủ SL, {isH4Strategy ? 'TP 2.5R' : 'TP 2R'}, Dời hòa vốn (Breakeven) và Phí sàn 0.04%/chiều.
                 </Typography>
               </Box>
             </Stack>
@@ -245,7 +275,7 @@ export default function LabTradingPage() {
         }}
       >
         <Stack spacing={3}>
-          {/* 2.1 Chọn Chiến Lược (3 Cards dạng Lưới) */}
+          {/* 2.1 Chọn Chiến Lược (4 Cards dạng Lưới) */}
           <Box>
             <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1.5 }}>
               <Typography variant="subtitle1" fontWeight={700} color="text.primary">
@@ -259,7 +289,7 @@ export default function LabTradingPage() {
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+                gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
                 gap: 2
               }}
             >
@@ -268,7 +298,7 @@ export default function LabTradingPage() {
                 return (
                   <Box
                     key={s.key}
-                    onClick={() => !loading && setStrategyKey(s.key)}
+                    onClick={() => handleSelectStrategy(s.key)}
                     sx={{
                       p: 2.25,
                       borderRadius: 2,
@@ -402,7 +432,7 @@ export default function LabTradingPage() {
                 disabled={loading}
                 sx={{ bgcolor: isDark ? 'background.default' : '#fcfcfc' }}
               >
-                {DURATION_OPTIONS.map((d) => (
+                {durationOptions.map((d) => (
                   <MenuItem key={d.days} value={d.days}>
                     {d.label}
                   </MenuItem>
@@ -512,6 +542,11 @@ export default function LabTradingPage() {
                 >
                   {loading ? 'Đang Chạy Mô Phỏng...' : 'Bắt Đầu Thử Nghiệm'}
                 </Button>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', mt: 0.8, fontSize: 11 }}>
+                  {isH4Strategy
+                    ? '⚡ Nến H4 Binance thật, kênh Donchian 55 + EMA 50/200, SL ATR, TP 2.5R, BE'
+                    : '⚡ Nến M15 Binance thật, khớp lệnh theo nến đóng, SL, TP 2R, BE'}
+                </Typography>
               </Box>
             </Box>
           </Box>
@@ -579,7 +614,7 @@ export default function LabTradingPage() {
                 </Stack>
               </Box>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
-                Vốn cuối: <b>${summary.finalEquity || summary.finalBalance}</b> • Khởi điểm: <b>${summary.initialBalance}</b> (
+                Vốn cuối: <b>${summary.finalEquity || summary.finalBalance || initialBalance}</b> • Khởi điểm: <b>${summary.initialBalance || initialBalance}</b> (
                 <span style={{ color: isProfitable ? '#52c41a' : '#ff4d4f', fontWeight: 700 }}>
                   {summary.netProfitPct >= 0 ? `+${summary.netProfitPct}%` : `${summary.netProfitPct}%`}
                 </span>)
@@ -595,7 +630,7 @@ export default function LabTradingPage() {
                       TỶ LỆ THẮNG (WIN RATE)
                     </Typography>
                     <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 0.75 }}>
-                      {summary.winRate}%
+                      {summary.winRate || 0}%
                     </Typography>
                   </Box>
                   <Box
@@ -615,7 +650,7 @@ export default function LabTradingPage() {
                 </Stack>
               </Box>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
-                Tổng: <b>{summary.totalTrades}</b> lệnh (Thắng: <b style={{ color: '#52c41a' }}>{summary.winningTrades}</b> • Thua: <b style={{ color: '#ff4d4f' }}>{summary.losingTrades}</b> • Hòa: <b>{summary.breakevenTrades || 0}</b>)
+                Tổng: <b>{summary.totalTrades || 0}</b> lệnh (Thắng: <b style={{ color: '#52c41a' }}>{summary.winningTrades || 0}</b> • Thua: <b style={{ color: '#ff4d4f' }}>{summary.losingTrades || 0}</b> • Hòa: <b>{summary.breakevenTrades || 0}</b>)
               </Typography>
             </Card>
 
@@ -628,7 +663,7 @@ export default function LabTradingPage() {
                       PROFIT FACTOR (LÃI/LỖ)
                     </Typography>
                     <Typography variant="h3" fontWeight={700} color="#722ed1" sx={{ mt: 0.75 }}>
-                      {summary.profitFactor}
+                      {summary.profitFactor || 0}
                     </Typography>
                   </Box>
                   <Box
@@ -648,7 +683,7 @@ export default function LabTradingPage() {
                 </Stack>
               </Box>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
-                Lệnh max: <b style={{ color: '#52c41a' }}>+${summary.bestTrade}</b> • Lệnh min: <b style={{ color: '#ff4d4f' }}>${summary.worstTrade}</b>
+                Lệnh max: <b style={{ color: '#52c41a' }}>+${summary.bestTrade || 0}</b> • Lệnh min: <b style={{ color: '#ff4d4f' }}>${summary.worstTrade || 0}</b>
               </Typography>
             </Card>
 
@@ -665,10 +700,10 @@ export default function LabTradingPage() {
                       fontWeight={700}
                       sx={{
                         mt: 0.75,
-                        color: summary.maxDrawdownPct > 10 ? 'error.main' : 'warning.main'
+                        color: (summary.maxDrawdownPct || 0) > 10 ? 'error.main' : 'warning.main'
                       }}
                     >
-                      {summary.maxDrawdownPct}%
+                      {summary.maxDrawdownPct || 0}%
                     </Typography>
                   </Box>
                   <Box
@@ -688,7 +723,7 @@ export default function LabTradingPage() {
                 </Stack>
               </Box>
               <Typography variant="caption" color="text.secondary" sx={{ mt: 1.5, display: 'block' }}>
-                Sụt giảm: <b>-${summary.maxDrawdownUsd}</b> • Dữ liệu: <b>{summary.totalCandles || result.totalCandles}</b> nến M15 ({summary.days || result.days} ngày)
+                Sụt giảm: <b>-${summary.maxDrawdownUsd || 0}</b> • Dữ liệu: <b>{summary.totalCandles || result?.totalCandles || 0}</b> nến {summary.interval || (isH4Strategy ? 'H4' : 'M15')} ({summary.days || result?.days || days} ngày)
               </Typography>
             </Card>
           </Box>
@@ -700,7 +735,7 @@ export default function LabTradingPage() {
               <Stack direction="row" spacing={1} alignItems="center">
                 <LineChartOutlined style={{ color: '#1677ff', fontSize: 18 }} />
                 <Typography variant="subtitle1" fontWeight={700} color="text.primary">
-                  Biểu Đồ Tăng Trưởng Vốn (Equity Curve) — {summary.symbol || result.symbol} ({summary.days || result.days} Ngày)
+                  Biểu Đồ Tăng Trưởng Vốn (Equity Curve) — {summary.symbol || result?.symbol || symbol} ({summary.days || result?.days || days} Ngày)
                 </Typography>
               </Stack>
             }
