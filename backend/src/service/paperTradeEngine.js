@@ -529,11 +529,15 @@ class PaperTradeEngine {
    * Logic gom hàng Spot theo RSI Quá Bán (Smart RSI DCA)
    */
   async evaluateSpotCandle(symbol, indicators) {
-  const spotAccount = await paperTradeDao.getAccount(this.spotAccountId);
-  if (!spotAccount || !spotAccount.is_bot_active) return;
+    const spotAccount = await paperTradeDao.getAccount(this.spotAccountId);
+    if (!spotAccount || !spotAccount.is_bot_active) return;
 
-  const rsi = indicators.rsi;
-  const currentPrice = indicators.currentClose;
+    // Lọc nghiêm ngặt: Chỉ gom những coin nằm trong danh sách theo dõi của Spot
+    const tracked = spotAccount.tracked_symbols || [];
+    if (tracked.length > 0 && !tracked.includes(symbol)) return;
+
+    const rsi = indicators.rsi;
+    const currentPrice = indicators.currentClose;
 
   // Điều kiện gom hàng Spot: RSI < 35 (Vùng điều chỉnh quá bán)
   if (rsi <= 35) {
