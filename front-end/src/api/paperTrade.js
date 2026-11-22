@@ -107,3 +107,11 @@ export async function runPaperTradeBacktest(params) {
   if (!res.ok) throw new Error(data.message || 'Không thể chạy kiểm thử chiến lược');
   return data.data || data;
 }
+
+export async function getCalendarPnL({ accountId = 'ALL', month = null } = {}) {
+  let url = `/api/paper-trade/calendar-pnl?accountId=${encodeURIComponent(accountId)}`;
+  if (month) url += `&month=${encodeURIComponent(month)}`;
+  const res = await authFetch(url);
+  if (!res.ok) throw new Error('Không thể tải dữ liệu Lịch PnL');
+  return res.json();
+}

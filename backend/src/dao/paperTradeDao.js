@@ -380,6 +380,66 @@ async function getAllAccounts() {
   return res.rows;
 }
 
+async function getDailyPnLSummary({ accountId = null, month = null }) {
+  let accountFilter = '';
+  const params = [];
+  let paramIdx = 1;
+
+  if (accountId === 'FUTURES_ALL') {
+    accountFilter = `WHERE account_id IN ('acc_binance_futures', 'acc_futures_reversion', 'acc_futures_breakout', 'acc_futures_h4_trend', 'acc_futures_ttm_squeeze', 'acc_futures_momentum_leader')`;
+  } else if (accountId === 'SPOT' || accountId === 'acc_binance_spot') {
+    accountFilter = `WHERE account_id = 'acc_binance_spot'`;
+  } else if (accountId && accountId !== 'ALL') {
+    accountFilter = `WHERE account_id = $${paramIdx++}`;
+    params.push(accountId);
+  } else {
+    accountFilter = `WHERE 1=1`;
+  }
+
+  let monthFilter = '';
+  if (month) {
+    monthFilter = `AND TO_CHAR(closed_at AT TIME ZONE 'Asia/Ho_Chi_Minh', 'YYYY-MM') = $${paramIdx++}`;
+    params.push(month);
+  }
+
+  const queryDaily = `
+    SELECT 
+      TO_CHAR(closed_at AT TIME ZONE 'Asia/Ho_Chi_Minh', 'YYYY-MM-DD') AS date,
+      COUNT(*)::int AS trades_count,
+      COUNT(CASE WHEN realized_pnl > 0 THEN 1 END)::int AS winning_trades,
+      COUNT(CASE WHEN realized_pnl < 0 THEN 1 END)::int AS losing_trades,
+      COUNT(CASE WHEN realized_pnl = 0 THEN 1 END)::int AS breakeven_trades,
+      ROUND(SUM(realized_pnl)::numeric, 2) AS total_pnl,
+      ROUND(AVG(realized_pnl_pct)::numeric, 2) AS avg_pnl_pct
+    FROM paper_orders
+    ${accountFilter} ${monthFilter}
+    GROUP BY TO_CHAR(closed_at AT TIME ZONE 'Asia/Ho_Chi_Minh', 'YYYY-MM-DD')
+    ORDER BY date ASC;
+  `;
+
+  const queryOrders = `
+    SELECT 
+      id, account_id, symbol, side, entry_price, exit_price, quantity, margin,
+      realized_pnl, realized_pnl_pct, exit_reason,
+      TO_CHAR(closed_at AT TIME ZONE 'Asia/Ho_Chi_Minh', 'YYYY-MM-DD') AS date,
+      TO_CHAR(closed_at AT TIME ZONE 'Asia/Ho_Chi_Minh', 'HH24:MI:SS') AS time,
+      closed_at
+    FROM paper_orders
+    ${accountFilter} ${monthFilter}
+    ORDER BY closed_at DESC;
+  `;
+
+  const [dailyRes, ordersRes] = await Promise.all([
+    pool.query(queryDaily, params),
+    pool.query(queryOrders, params)
+  ]);
+
+  return {
+    dailyStats: dailyRes.rows,
+    orders: ordersRes.rows
+  };
+}
+
 module.exports = {
   initPaperTradeTables,
   getAccount,
@@ -400,6 +460,7 @@ module.exports = {
   createEquitySnapshot,
   getEquityHistory,
   createLog,
-  getLogs
+  getLogs,
+  getDailyPnLSummary
 };
 

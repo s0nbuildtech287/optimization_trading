@@ -1,6 +1,7 @@
 const paperTradeEngine = require('../service/paperTradeEngine');
 const binanceWsService = require('../service/binanceWsService');
 const paperBacktestService = require('../service/paperBacktestService');
+const paperTradeDao = require('../dao/paperTradeDao');
 
 async function getDashboardData(req, res) {
   try {
@@ -224,6 +225,22 @@ async function runBacktest(req, res) {
   }
 }
 
+async function getCalendarPnL(req, res) {
+  try {
+    const { accountId = 'ALL', month = null } = req.query;
+    const data = await paperTradeDao.getDailyPnLSummary({ accountId, month });
+    return res.status(200).json({
+      success: true,
+      data
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+}
+
 module.exports = {
   getDashboardData,
   toggleBot,
@@ -236,5 +253,6 @@ module.exports = {
   removeSymbol,
   withdrawProfit,
   getLivePrices,
-  runBacktest
+  runBacktest,
+  getCalendarPnL
 };
