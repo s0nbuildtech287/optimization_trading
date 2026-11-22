@@ -1091,8 +1091,13 @@ export default function SpotTradingPage() {
                     const isWin = pnl >= 0;
                     return (
                       <TableRow key={o.id} hover>
-                        <TableCell sx={{ fontSize: 12 }}>
-                          {new Date(o.closed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        <TableCell sx={{ fontSize: 12, whiteSpace: 'nowrap' }}>
+                          <Typography variant="body2" fontWeight={600} sx={{ fontSize: 12, lineHeight: 1.2 }}>
+                            {new Date(o.closed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: 10.5 }}>
+                            {new Date(o.closed_at).toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                          </Typography>
                         </TableCell>
                         <TableCell>
                           <Chip
@@ -1172,8 +1177,8 @@ export default function SpotTradingPage() {
                   }}
                 >
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <Typography variant="caption" color="text.secondary" sx={{ minWidth: 60, fontSize: 11 }}>
-                      {new Date(log.created_at).toLocaleTimeString()}
+                    <Typography variant="caption" color="text.secondary" sx={{ minWidth: 95, fontSize: 11, whiteSpace: 'nowrap' }}>
+                      {new Date(log.created_at).toLocaleString([], { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                     </Typography>
                     <Chip
                       label={log.symbol || 'SPOT'}
