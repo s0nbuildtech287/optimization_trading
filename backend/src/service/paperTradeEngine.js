@@ -64,6 +64,7 @@ class PaperTradeEngine {
     this.isProcessingTick = false;
     this.snapshotTimer = null;
     this.lastEvaluations = {};
+    this.slCooldowns = {}; // { [`${botId}_${symbol}`]: expireTimestamp }
   }
 
   async init() {
@@ -185,8 +186,10 @@ class PaperTradeEngine {
 
           // Dời SL về Breakeven khi lãi >= 1.4R ($2.80)
           // Khóa thêm 0.05% để bảo toàn phí giao dịch sàn
-          const beThreshold = 2.80; // 1.4R
-          if (!isBreakeven && pnl >= beThreshold) {
+          // Riêng Bot 4 (H4 Turtle) không áp dụng dời BE sớm để tránh bị quét văng khỏi sóng dài
+          const isH4Bot = bot.id === 'acc_futures_h4_trend';
+          const beThreshold = 2.80; // 1.4R với R = $2.00
+          if (!isH4Bot && !isBreakeven && pnl >= beThreshold) {
             const lockedSl = pos.side === 'LONG' ? entryPrice * 1.0005 : entryPrice * 0.9995;
             await paperTradeDao.updatePosition(pos.id, {
               stop_loss: lockedSl,
@@ -334,6 +337,13 @@ class PaperTradeEngine {
 
     await paperTradeDao.deletePosition(pos.id);
 
+    // Kích hoạt Cooldown 60 phút nếu lệnh bị dừng lỗ (Stop Loss) để tránh bị thị trường vả liên tiếp
+    if (exitReason === 'STOP_LOSS') {
+      const cdTime = (FUTURES_RISK && FUTURES_RISK.SL_COOLDOWN_MS) || (60 * 60 * 1000);
+      this.slCooldowns[`${targetAccId}_${pos.symbol}`] = Date.now() + cdTime;
+      console.log(`[PaperEngine] Kích hoạt Cooldown 60 phút sau khi SL cho ${pos.symbol} [${targetAccId}]`);
+    }
+
     const account = await paperTradeDao.getAccount(targetAccId);
     if (account) {
       const newBalance = parseFloat(account.balance) + netPnl;
@@ -403,6 +413,27 @@ class PaperTradeEngine {
     try {
       const h4Bots = this.futuresBots.filter((b) => b.interval === '4h');
       for (const bot of h4Bots) {
+        // 1. Kiểm tra Trailing Exit Donchian 20 cho các vị thế đang mở của Bot 4 (Turtle Trend)
+        const openPositions = await paperTradeDao.getOpenPositions(bot.id);
+        const pos = openPositions.find((p) => p.symbol === symbol);
+        if (pos && candles && candles.length >= 25) {
+          const currentCandle = candles[candles.length - 1];
+          const past20 = candles.slice(-21, -1);
+          const highestHigh20 = Math.max(...past20.map((c) => c.high));
+          const lowestLow20 = Math.min(...past20.map((c) => c.low));
+
+          if (pos.side === 'LONG' && currentCandle.close < lowestLow20) {
+            console.log(`[PaperEngine-Bot4] Turtle Trailing Exit LONG ${symbol} @ ${currentCandle.close} (thủng đáy 20 nến H4: ${lowestLow20})`);
+            await this.closeFuturesPosition(pos, currentCandle.close, 'TURTLE_TRAILING_EXIT');
+            continue;
+          } else if (pos.side === 'SHORT' && currentCandle.close > highestHigh20) {
+            console.log(`[PaperEngine-Bot4] Turtle Trailing Exit SHORT ${symbol} @ ${currentCandle.close} (vượt đỉnh 20 nến H4: ${highestHigh20})`);
+            await this.closeFuturesPosition(pos, currentCandle.close, 'TURTLE_TRAILING_EXIT');
+            continue;
+          }
+        }
+
+        // 2. Nếu chưa có vị thế, đánh giá tín hiệu mở mới
         try {
           const botSignal = bot.evaluator(symbol, candles);
           await this.evaluateFuturesCandleForBot(bot, symbol, botSignal);
@@ -424,12 +455,20 @@ class PaperTradeEngine {
   if (!signal || signal.action === 'HOLD') return;
 
   // Chỉ thực thi lệnh nếu cặp tiền nằm trong danh sách theo dõi của Bot này
-  const tracked = account.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
+  const tracked = account.tracked_symbols || ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'PAXGUSDT'];
   if (!tracked.includes(symbol)) return;
+
+  // 0. KIỂM TRA COOLDOWN SAU KHI SL: Không vào lại coin này trong 60 phút
+  const cdKey = `${bot.id}_${symbol}`;
+  if (this.slCooldowns[cdKey] && Date.now() < this.slCooldowns[cdKey]) {
+    const remainMins = Math.ceil((this.slCooldowns[cdKey] - Date.now()) / (60 * 1000));
+    console.log(`[PaperEngine-${bot.id}] Bỏ qua ${symbol}: Đang trong thời gian Cooldown sau SL (còn ${remainMins} phút).`);
+    return;
+  }
 
   const openPositions = await paperTradeDao.getOpenPositions(bot.id);
   const existingPos = openPositions.find((p) => p.symbol === symbol);
-  if (existingPos || openPositions.length >= FUTURES_RISK.MAX_OPEN_POSITIONS) return;
+  if (existingPos || openPositions.length >= (FUTURES_RISK.MAX_OPEN_POSITIONS || 3)) return;
 
   // 1. CIRCUIT BREAKER: Kiểm tra ngưỡng sụt giảm tối đa 15%
   if (parseFloat(account.max_drawdown_pct || 0) >= 15.0) {
@@ -437,22 +476,28 @@ class PaperTradeEngine {
     return;
   }
 
-  // 2. GIỚI HẠN TƯƠNG QUAN (CORRELATION): Nhóm coin lớn (BTC, ETH, SOL, BNB)
-  // Tối đa không quá 2 vị thế cùng chiều trên nhóm này để tránh rủi ro hệ thống
-  const HIGH_CORRELATION_GROUP = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT'];
-  if (HIGH_CORRELATION_GROUP.includes(symbol)) {
-    const sameDirectionCount = openPositions.filter(
-      (p) => HIGH_CORRELATION_GROUP.includes(p.symbol) && p.side === signal.action
-    ).length;
-    if (sameDirectionCount >= 2) {
-      console.warn(`[PaperEngine-${bot.id}] Bỏ qua lệnh ${signal.action} ${symbol}: Đã có ${sameDirectionCount} vị thế ${signal.action} trong nhóm coin tương quan cao.`);
-      return;
+  // 2. GIỚI HẠN TƯƠNG QUAN CẤP DANH MỤC TOÀN HỆ THỐNG (PORTFOLIO CORRELATION LOCK)
+  // Lấy toàn bộ vị thế đang mở trên tất cả 6 bot Futures để tránh rủi ro dồn cùng 1 hướng
+  let allFuturesPositions = [];
+  try {
+    for (const b of this.futuresBots) {
+      const bPos = await paperTradeDao.getOpenPositions(b.id);
+      allFuturesPositions.push(...bPos);
     }
+  } catch (err) {
+    allFuturesPositions = openPositions;
+  }
+
+  const sameSideCount = allFuturesPositions.filter((p) => p.side === signal.action).length;
+  const maxPortfolioSameSide = FUTURES_RISK.PORTFOLIO_MAX_SAME_SIDE || 2;
+  if (sameSideCount >= maxPortfolioSameSide) {
+    console.warn(`[PaperEngine-${bot.id}] Bỏ qua lệnh ${signal.action} ${symbol}: Đã có ${sameSideCount} vị thế ${signal.action} trên toàn bộ hệ thống (Portfolio Correlation Lock: max ${maxPortfolioSameSide}).`);
+    return;
   }
 
   const currentBalance = parseFloat(account.balance);
-  const riskPerTrade = parseFloat(account.risk_per_trade) || 2.0;
-  const leverage = parseInt(account.leverage, 10) || 3;
+  const riskPerTrade = parseFloat(account.risk_per_trade) || 2.0; // Chuẩn $2.00 (2% vốn $100)
+  const leverage = Math.max(parseInt(account.leverage, 10) || 5, 5); // Đòn bẩy tối thiểu 5x
   const entryPrice = signal.entryPrice;
   const stopLoss = signal.stopLoss;
   const takeProfit = signal.takeProfit;
@@ -460,11 +505,14 @@ class PaperTradeEngine {
   const slDistance = Math.abs(entryPrice - stopLoss);
   if (slDistance <= 0) return;
 
+  // QUẢN TRỊ RỦI RO ĐỊNH LƯỢNG CHUẨN: quantity = riskPerTrade / slDistance
+  // Đảm bảo chạm SL mất đúng $2.00 (1R), ăn TP 2R được đúng $4.00, TP 2.5R được đúng $5.00
   let quantity = riskPerTrade / slDistance;
   let notional = quantity * entryPrice;
 
-  if (notional < 6.0) {
-    notional = 6.0;
+  const minNotional = FUTURES_RISK.MIN_NOTIONAL || 10.0;
+  if (notional < minNotional) {
+    notional = minNotional;
     quantity = notional / entryPrice;
   }
 
@@ -477,26 +525,15 @@ class PaperTradeEngine {
   }
   const freeMargin = Math.max(0, currentBalance - usedMargin);
 
-  // Giới hạn ký quỹ mỗi lệnh trong khoảng $10 - $15 để chia đều vốn cho nhiều lệnh
-  const TARGET_MIN_MARGIN = FUTURES_RISK.TARGET_MIN_MARGIN || 10.0;
-  const TARGET_MAX_MARGIN = FUTURES_RISK.TARGET_MAX_MARGIN || 15.0;
-
-  // Giới hạn trần mỗi lệnh là $15, nhưng không vượt quá Free Margin - $3 tiền đệm
-  const maxMarginAllowed = Math.min(TARGET_MAX_MARGIN, Math.max(TARGET_MIN_MARGIN, freeMargin - 3.0));
+  // Khống chế trần Margin tối đa $45 để mỗi tài khoản $100 luôn mở được ít nhất 2 lệnh an toàn
+  const maxMarginAllowed = Math.min(FUTURES_RISK.MAX_MARGIN_PER_ORDER || 45.0, freeMargin - 5.0);
   if (margin > maxMarginAllowed) {
     margin = maxMarginAllowed;
     notional = margin * leverage;
     quantity = notional / entryPrice;
   }
 
-  // Nếu margin nhỏ hơn $10 mà Free Margin vẫn còn đủ, nâng lên $10 để đạt kích thước chuẩn
-  if (margin < TARGET_MIN_MARGIN && freeMargin >= TARGET_MIN_MARGIN + 3.0) {
-    margin = TARGET_MIN_MARGIN;
-    notional = margin * leverage;
-    quantity = notional / entryPrice;
-  }
-
-  if (margin > freeMargin || notional < 6.0 || margin < 3.0) {
+  if (margin > freeMargin || notional < minNotional || margin < 3.0) {
     console.warn(`[PaperEngine-${bot.id}] Bỏ qua vào lệnh ${symbol}: Ký quỹ $${margin.toFixed(2)} vượt Free Margin $${freeMargin.toFixed(2)}.`);
     return;
   }
@@ -565,6 +602,16 @@ class PaperTradeEngine {
 
   // Điều kiện gom hàng Spot: RSI < 35 (Vùng điều chỉnh quá bán)
   if (rsi <= 35) {
+    // 0. Bộ lọc xu hướng vĩ mô H4: Không gom bắt dao rơi nếu đang downtrend sâu dưới EMA50 H4
+    const h4Candles = binanceWsService.getCandlesH4 ? binanceWsService.getCandlesH4(symbol) : [];
+    if (h4Candles && h4Candles.length >= 50) {
+      const h4Closes = h4Candles.map((c) => c.close);
+      const ema50H4 = paperStrategyService.calculateEMA(h4Closes, 50);
+      if (ema50H4 && currentPrice < ema50H4 * 0.95) {
+        return; // Đang trong xu hướng giảm vĩ mô, hoãn gom hàng
+      }
+    }
+
     const holdings = await paperTradeDao.getSpotHoldings(this.spotAccountId);
     const symbolHolding = holdings.find((h) => h.symbol === symbol);
 

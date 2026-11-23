@@ -114,23 +114,23 @@ Chiến lược săn tìm lợi nhuận trong thị trường đi ngang (Sideway
 Chiến lược săn các pha bùng nổ phá vỡ khỏi vùng tích lũy ngắn hạn đi kèm dòng tiền lớn.
 
 * Khung thời gian: 15 phút (M15).
-* Đòn bẩy: 3x.
-* Danh mục theo dõi (8 coin): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`, `DOGEUSDT`, `NEARUSDT`, `AVAXUSDT`.
+* Đòn bẩy: 5x.
+* Danh mục theo dõi (5 coin an toàn): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
 
 ### 5.1. Tín hiệu Mở vị thế
 * LONG (Breakout phá đỉnh):
   * Giá đóng cửa nến vượt qua đỉnh cao nhất của 20 nến trước đó (`currentClose > HighestHigh(20)`).
-  * Khối lượng giao dịch bùng nổ: $Volume_{\text{nến}} \ge 1.5 \times SMA(Volume, 20)$.
-  * Lọc phá vỡ giả (False Breakout): Nến breakout phải là nến xanh dứt khoát, giá đóng cửa nằm ở 45% nửa trên thân nến.
+  * Khối lượng giao dịch bùng nổ mạnh: $Volume_{\text{nến}} \ge 2.0 \times SMA(Volume, 20)$.
+  * Lọc phá vỡ giả (False Breakout): Thân nến phải chiếm ít nhất 60% chiều dài cây nến (nến đặc), giá đóng cửa nằm ở 35% sát đỉnh nến (>= 65% biên độ).
 * SHORT (Breakdown phá đáy):
   * Giá đóng cửa nến thủng đáy thấp nhất của 20 nến trước đó (`currentClose < LowestLow(20)`).
-  * Khối lượng $Volume_{\text{nến}} \ge 1.5 \times SMA(Volume, 20)$.
-  * Nến đỏ dứt khoát, giá đóng cửa nằm ở 45% nửa dưới thân nến.
+  * Khối lượng bùng nổ: $Volume_{\text{nến}} \ge 2.0 \times SMA(Volume, 20)$.
+  * Nến đỏ đặc dứt khoát, giá đóng cửa nằm ở 35% sát đáy nến (>= 65% biên độ).
 
 ### 5.2. Quản trị Rủi ro & Mục tiêu
 * Stop Loss: $1.4 \times ATR(14)$.
-* Take Profit: Tỷ lệ $\mathbf{R:R = 1:2.0}$.
-* Breakeven: Kéo SL về hòa vốn khi giá chạy được $1.2R$.
+* Take Profit: Tỷ lệ R:R = 1:2.0.
+* Breakeven: Kéo SL về hòa vốn khi giá chạy được $1.4R$ ($2.80).
 
 ---
 
@@ -139,9 +139,9 @@ Chiến lược săn các pha bùng nổ phá vỡ khỏi vùng tích lũy ngắ
 Chiến lược săn sóng lớn dài hạn dựa trên hệ thống giao dịch huyền thoại Turtle Trading (Rùa Biển Richard Dennis) trên khung nến H4.
 
 * Khung thời gian: 4 giờ (H4).
-* Đòn bẩy: 3x.
+* Đòn bẩy: 5x.
 * Tần suất: Ít lệnh (1–3 lệnh/tuần), nhưng mỗi lệnh đều giữ theo sóng lớn kéo dài nhiều ngày.
-* Danh mục theo dõi (6 coin): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `NEARUSDT`, `AVAXUSDT`.
+* Danh mục theo dõi (5 coin): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
 
 ### 6.1. Tín hiệu Vào lệnh
 * LONG:
@@ -151,10 +151,12 @@ Chiến lược săn sóng lớn dài hạn dựa trên hệ thống giao dịch
   * Giá đóng cửa nến H4 thủng đáy 55 nến H4 trước đó.
   * Xác nhận xu hướng vĩ mô: $EMA 50 \le EMA 200$ trên khung H4.
 
-### 6.2. Quản trị Rủi ro & Mục tiêu
-* Stop Loss: $1.8 \times ATR(14)$ khung H4 (biên độ rộng để chịu được rung lắc nến H4).
-* Take Profit: Mục tiêu sóng dài $\mathbf{R:R = 1:2.5}$.
-* Breakeven: Dời SL về hòa vốn khi giá đạt $1.4R$.
+### 6.2. Quản trị Rủi ro & Thoát lệnh Chuẩn Turtle
+* Stop Loss khởi đầu: $1.8 \times ATR(14)$ khung H4 (đủ rộng để hấp thụ rung lắc).
+* Cơ chế Thoát lệnh (Donchian 20 Trailing Exit): Không dùng trần chốt lời cố định hẹp.
+  * Vị thế LONG: Thoát lệnh khi nến H4 đóng cửa thủng đáy 20 nến H4 gần nhất.
+  * Vị thế SHORT: Thoát lệnh khi nến H4 đóng cửa vượt đỉnh 20 nến H4 gần nhất.
+* Trần bảo vệ khẩn cấp: 8.0R (đảm bảo không bị tuột mất siêu sóng).
 
 ---
 
@@ -163,21 +165,23 @@ Chiến lược săn sóng lớn dài hạn dựa trên hệ thống giao dịch
 Chiến lược kinh điển của huyền thoại John Carter, bắt trọn các pha tích lũy nén biên độ (Volatility Compression) trước khi bung nổ cực mạnh (Volatility Expansion).
 
 * Khung thời gian: 15 phút (M15).
-* Đòn bẩy: 3x.
-* Danh mục theo dõi (8 coin): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `DOGEUSDT`, `NEARUSDT`, `AVAXUSDT`, `XRPUSDT`.
+* Đòn bẩy: 5x.
+* Danh mục theo dõi (5 coin an toàn): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
 
-### 7.1. Cơ chế Hoạt động (Hai Giai đoạn)
+### 7.1. Cơ chế Hoạt động (Hai Giai đoạn Siết Chặt)
 1. Giai đoạn 1 — Lò xo bị nén chặt (The Squeeze On):
    * Dải Bollinger Bands $(20, 2)$ co thắt lại và nằm gọn hoàn toàn bên trong dải Keltner Channel $(20, 1.5 \times ATR)$.
-   * Thị trường cạn kiệt thanh khoản, nén biên độ ở mức cao nhất.
+   * Thời gian nén: Phải tích lũy tối thiểu 6 cây nến M15 liên tiếp trong trạng thái nén.
+   * Bộ lọc biến động: Chỉ báo $ADX(14) \le 22$ (xác nhận thị trường kiệt quệ dao động trước khi bùng nổ).
 2. Giai đoạn 2 — Lò xo bung nổ (The Squeeze Fires):
-   * Dải Bollinger Bands bất ngờ mở rộng bung ra ngoài dải Keltner Channel.
+   * Dải Bollinger Bands bung mở ra ngoài Keltner Channel sau ít nhất 6 nến nén.
    * LONG: Nến xanh đóng vượt dải trên Keltner Channel kèm xung lực $Momentum > 0$.
    * SHORT: Nến đỏ đóng thủng dải dưới Keltner Channel kèm xung lực $Momentum < 0$.
 
 ### 7.2. Quản trị Rủi ro & Mục tiêu
-* Stop Loss: $1.6 \times ATR(14)$ (đặt ngay tại trục giữa Keltner hoặc theo ATR).
-* Take Profit: Tỷ lệ $\mathbf{R:R = 1:2.5}$.
+* Stop Loss: $1.5 \times ATR(14)$.
+* Take Profit: Tỷ lệ R:R = 1:2.5.
+* Breakeven: Tự động khóa hòa vốn khi giá đi được $1.4R$.
 
 ---
 
@@ -186,42 +190,42 @@ Chiến lược kinh điển của huyền thoại John Carter, bắt trọn cá
 Chiến lược quét xoay trục dòng tiền (Capital Rotation), liên tục sàng lọc để chọn ra đồng coin dẫn dắt thị trường (Top Gainer/Leader) có gia tốc tăng trưởng mạnh nhất.
 
 * Khung thời gian: 15 phút (M15).
-* Đòn bẩy: 3x.
-* Danh mục theo dõi (10 coin rộng nhất): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `DOGEUSDT`, `NEARUSDT`, `AVAXUSDT`, `XRPUSDT`, `SUIUSDT`, `LINKUSDT`.
+* Đòn bẩy: 5x.
+* Danh mục theo dõi (5 coin chính): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
 
 ### 8.1. Các Chỉ số Định lượng (Quant Metrics)
 1. Tốc độ thay đổi giá 24h ($ROC_{24h}$): Đo lường tỷ lệ % tăng/giảm giá so với 96 nến trước.
 2. Tốc độ thay đổi giá 6h ($ROC_{6h}$): Đo lường tỷ lệ % tăng/giảm giá so với 24 nến gần nhất.
 3. Chỉ số Bùng nổ Khối lượng (Volume Ratio): So sánh $SMA(Volume, 10)$ với $SMA(Volume, 50)$.
 
-### 8.2. Tín hiệu Vào lệnh
+### 8.2. Tín hiệu Vào lệnh Siết chặt
 * LONG (Coin Dẫn sóng Tăng):
-  * $ROC_{24h} \ge \mathbf{+1.2\%}$ và $ROC_{6h} \ge \mathbf{+0.4\%}$.
-  * $Volume_{\text{Ratio}} \ge 1.05$ (khối lượng ngắn hạn gấp ít nhất 1.05 lần trung bình).
+  * $ROC_{24h} \ge +2.5\%$ và $ROC_{6h} \ge +1.0\%$.
+  * $Volume_{\text{Ratio}} \ge 1.5$ (khối lượng ngắn hạn gấp ít nhất 1.5 lần trung bình 50 nến).
   * Cấu trúc tăng giá: Giá nằm trên $EMA 20$ và $EMA 20 > EMA 50$.
 * SHORT (Coin Bị Xả Dẫn đầu):
-  * $ROC_{24h} \le \mathbf{-1.2\%}$ và $ROC_{6h} \le \mathbf{-0.4\%}$.
-  * $Volume_{\text{Ratio}} \ge 1.05$.
+  * $ROC_{24h} \le -2.5\%$ và $ROC_{6h} \le -1.0\%$.
+  * $Volume_{\text{Ratio}} \ge 1.5$.
   * Cấu trúc giảm giá: Giá nằm dưới $EMA 20$ và $EMA 20 < EMA 50$.
 
-### 8.3. Quản trị Rủi ro & Mục tiêu
+### 8.3. Quản trị Rủi ro & Thời gian Nghỉ (Cooldown)
 * Stop Loss: $1.6 \times ATR(14)$.
-* Take Profit: Tỷ lệ $\mathbf{R:R = 1:2.5}$.
-* Breakeven: Tự động khóa hòa vốn khi giá đi được $1.4R$.
+* Take Profit: Tỷ lệ R:R = 1:2.5.
+* Thời gian nghỉ Cooldown: Sau khi một coin bị dính Stop Loss, bot tạm dừng mở lại coin đó trong 60 phút để chống bẫy giá thị trường.
 
 ---
 
 ## 9. Hệ thống Quản trị Rủi ro Danh mục & Phanh dừng Khẩn cấp
 
-Tất cả các bot trên hệ thống đều tuân thủ các quy tắc bảo vệ vốn đa lớp:
+Tất cả các bot trên hệ thống đều tuân thủ các quy tắc bảo vệ vốn định lượng:
 
-1. Khóa Tương quan (Correlation Lock):
-   * Trong nhóm coin có tính đồng pha cao (`BTC, ETH, SOL, BNB`), hệ thống chỉ cho phép mở tối đa 2 vị thế cùng chiều tại một thời điểm. Tránh rủi ro bị quét đồng loạt khi thị trường đảo chiều bất ngờ.
-2. Quy mô Vị thế Cố định (Fixed Position Sizing):
-   * Ký quỹ mặc định: $15 USDT / vị thế (với đòn bẩy 3x, giá trị vị thế là $45 USDT).
-   * Rủi ro chịu lỗ mỗi lệnh luôn được khống chế $\approx 2\%$ vốn ban đầu.
+1. Định cỡ Vị thế Chuẩn theo Rủi ro (Pure Risk-Based Sizing):
+   * Không dùng Margin cố định. Kích thước vị thế Notional = 2 USD / (Khoảng cách SL %).
+   * Đảm bảo nếu chạm SL thì tài khoản luôn mất đúng $2.00 (2% vốn ban đầu $100). Khi chạm TP 2R ăn trọn vẹn $4.00, TP 2.5R ăn $5.00.
+2. Khóa Tương quan Cấp Danh mục Toàn Hệ thống (Portfolio Correlation Lock):
+   * Toàn bộ 6 bot Futures chia sẻ một hạn mức chung: Tối đa không quá 2 vị thế cùng chiều Long hoặc Short được mở đồng thời trên toàn bộ thị trường.
 3. Phanh Ngắt Mạch Tự động (Circuit Breaker):
    * Nếu tài khoản của bất kỳ bot nào chạm ngưỡng sụt giảm vốn Max Drawdown $\ge 15\%$, hệ thống sẽ lập tức kích hoạt chế độ TẠM DỪNG MỞ LỆNH đối với bot đó để bảo toàn vốn và chờ rà soát.
 4. Cơ chế Kéo dời Hòa vốn (Breakeven Trailing):
-   * Khi vị thế có lãi vượt mức $1.2R - 1.4R$, hệ thống tự động dời Stop Loss về giá hòa vốn (`entry_price`). Nếu thị trường quay đầu, lệnh thoát với kết quả hòa phí thay vì biến lệnh thắng thành lệnh thua.
+   * Khi vị thế có lãi vượt mức $1.4R$ ($2.80), hệ thống tự động dời Stop Loss về giá hòa vốn (+0.05% để bảo toàn phí sàn). Riêng Bot 4 (Turtle Trend) thả lỏng để bám sóng dài.
 

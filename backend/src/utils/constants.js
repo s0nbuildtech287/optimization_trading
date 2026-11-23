@@ -83,16 +83,18 @@ exports.SYMBOL_VOLUME_CAPS = Object.freeze({
 });
 
 exports.SPOT_RISK = Object.freeze({
-  TAKE_PROFIT_PCT: 4.5,
-  STOP_LOSS_PCT: -6,
-  DCA_STOP_PCT: -5,
+  TAKE_PROFIT_PCT: 5.0,
+  STOP_LOSS_PCT: -12.0,
+  DCA_STOP_PCT: -10.0,
   MAX_TRANCHES_PER_SYMBOL: 3
 });
 
 exports.FUTURES_RISK = Object.freeze({
-  MAX_OPEN_POSITIONS: 5,
-  TARGET_MIN_MARGIN: 10.0,
-  TARGET_MAX_MARGIN: 15.0
+  MAX_OPEN_POSITIONS: 3,
+  PORTFOLIO_MAX_SAME_SIDE: 2,
+  MAX_MARGIN_PER_ORDER: 45.0,
+  MIN_NOTIONAL: 10.0,
+  SL_COOLDOWN_MS: 60 * 60 * 1000 // 60 phút nghỉ sau khi dính SL
 });
 
 exports.MT5 = Object.freeze({

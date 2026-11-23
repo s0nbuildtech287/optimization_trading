@@ -360,7 +360,8 @@ function evaluateBreakoutMomentumStrategy(symbol, candles) {
   const currentCandle = candles[candles.length - 1];
   const currentClose = currentCandle.close;
   const currentVolume = parseFloat(currentCandle.volume) || 0;
-  const isVolumeSpike = volumeSMA20 > 0 && currentVolume >= 1.5 * volumeSMA20;
+  // Siết điều kiện Volume Spike: Khối lượng phải bùng nổ gấp 2.0 lần trung bình 20 nến
+  const isVolumeSpike = volumeSMA20 > 0 && currentVolume >= 2.0 * volumeSMA20;
 
   const atr = calculateATR(candles, 14);
   if (!atr) return null;
@@ -375,11 +376,14 @@ function evaluateBreakoutMomentumStrategy(symbol, candles) {
   const isPaxg = symbol && symbol.includes('PAXG');
   const minSlPct = isPaxg ? 0.0035 : 0.008;
 
-  // Lọc False Breakout: Nến phá đỉnh phải là nến xanh đóng gần đỉnh (upper 45% của nến)
+  // Lọc False Breakout: Nến phá đỉnh phải là nến đặc (thân nến >= 60% tổng chiều dài cây nến)
+  // và giá đóng cửa phải nằm sát đỉnh (>= 65% phạm vi nến)
   const candleRange = currentCandle.high - currentCandle.low;
-  const isDecisiveBullish = candleRange > 0 && currentClose > currentCandle.open && ((currentClose - currentCandle.low) / candleRange) >= 0.55;
+  const candleBody = Math.abs(currentClose - currentCandle.open);
+  const isSolidBody = candleRange > 0 && (candleBody / candleRange) >= 0.60;
+  const isDecisiveBullish = isSolidBody && currentClose > currentCandle.open && ((currentClose - currentCandle.low) / candleRange) >= 0.65;
 
-  // 1. KỊCH BẢN LONG (Breakout phá đỉnh + Volume lớn + Nến dứt khoát)
+  // 1. KỊCH BẢN LONG (Breakout phá đỉnh + Volume lớn x2.0 + Nến đặc dứt khoát)
   if (currentClose > highestHigh && isVolumeSpike && isDecisiveBullish) {
     const slDistance = Math.max(1.4 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose - slDistance).toFixed(4));
@@ -393,15 +397,15 @@ function evaluateBreakoutMomentumStrategy(symbol, candles) {
       takeProfit,
       riskDistance: slDistance,
       rrRatio: 2.0,
-      reason: `Donchian Breakout High (${highestHigh}), Vol Spike x${(currentVolume / volumeSMA20).toFixed(1)}, Bullish Close`,
+      reason: `Donchian Breakout High (${highestHigh}), Vol Spike x${(currentVolume / volumeSMA20).toFixed(1)} >= 2.0x, Solid Bullish`,
       indicators
     };
   }
 
-  // Lọc False Breakdown: Nến phá đáy phải là nến đỏ đóng gần đáy (lower 45% của nến)
-  const isDecisiveBearish = candleRange > 0 && currentClose < currentCandle.open && ((currentCandle.high - currentClose) / candleRange) >= 0.55;
+  // Lọc False Breakdown: Nến phá đáy phải là nến đỏ đặc và đóng sát đáy (>= 65% phạm vi nến)
+  const isDecisiveBearish = isSolidBody && currentClose < currentCandle.open && ((currentCandle.high - currentClose) / candleRange) >= 0.65;
 
-  // 2. KỊCH BẢN SHORT (Breakdown phá đáy + Volume lớn + Nến dứt khoát)
+  // 2. KỊCH BẢN SHORT (Breakdown phá đáy + Volume lớn x2.0 + Nến đặc dứt khoát)
   if (currentClose < lowestLow && isVolumeSpike && isDecisiveBearish) {
     const slDistance = Math.max(1.4 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose + slDistance).toFixed(4));
@@ -415,7 +419,7 @@ function evaluateBreakoutMomentumStrategy(symbol, candles) {
       takeProfit,
       riskDistance: slDistance,
       rrRatio: 2.0,
-      reason: `Donchian Breakdown Low (${lowestLow}), Vol Spike x${(currentVolume / volumeSMA20).toFixed(1)}, Bearish Close`,
+      reason: `Donchian Breakdown Low (${lowestLow}), Vol Spike x${(currentVolume / volumeSMA20).toFixed(1)} >= 2.0x, Solid Bearish`,
       indicators
     };
   }
@@ -466,7 +470,8 @@ function evaluateH4TrendSniperStrategy(symbol, candles) {
 
   if (isUpTrend && isBreakoutHigh) {
     const stopLoss = Number((currentClose - slDistance).toFixed(4));
-    const takeProfit = Number((currentClose + slDistance * 2.5).toFixed(4)); // R:R 1:2.5
+    // Turtle Trend: Không dùng TP cố định hẹp, đặt trần bảo vệ 8.0R (Thoát chính qua Trailing Donchian 20)
+    const takeProfit = Number((currentClose + slDistance * 8.0).toFixed(4));
 
     return {
       action: 'LONG',
@@ -475,8 +480,8 @@ function evaluateH4TrendSniperStrategy(symbol, candles) {
       stopLoss,
       takeProfit,
       riskDistance: slDistance,
-      rrRatio: 2.5,
-      reason: `H4 Donchian 55 Breakout (${highestHigh55}), EMA50 > EMA200 Macro Trend`,
+      rrRatio: 8.0,
+      reason: `H4 Donchian 55 Breakout (${highestHigh55}), EMA50 > EMA200 Macro Trend (Turtle Trailing)`,
       indicators
     };
   }
@@ -487,7 +492,8 @@ function evaluateH4TrendSniperStrategy(symbol, candles) {
 
   if (isDownTrend && isBreakdownLow) {
     const stopLoss = Number((currentClose + slDistance).toFixed(4));
-    const takeProfit = Number((currentClose - slDistance * 2.5).toFixed(4)); // R:R 1:2.5
+    // Turtle Trend: Không dùng TP cố định hẹp, đặt trần bảo vệ 8.0R (Thoát chính qua Trailing Donchian 20)
+    const takeProfit = Number((currentClose - slDistance * 8.0).toFixed(4));
 
     return {
       action: 'SHORT',
@@ -496,8 +502,8 @@ function evaluateH4TrendSniperStrategy(symbol, candles) {
       stopLoss,
       takeProfit,
       riskDistance: slDistance,
-      rrRatio: 2.5,
-      reason: `H4 Donchian 55 Breakdown (${lowestLow55}), EMA50 < EMA200 Macro Trend`,
+      rrRatio: 8.0,
+      reason: `H4 Donchian 55 Breakdown (${lowestLow55}), EMA50 < EMA200 Macro Trend (Turtle Trailing)`,
       indicators
     };
   }
@@ -532,9 +538,9 @@ function evaluateTTMSqueezeStrategy(symbol, candles) {
   // Kiểm tra trạng thái nén Squeeze hiện tại
   const isCurrentSqueezed = bb.lower > kcLower && bb.upper < kcUpper;
 
-  // Kiểm tra trong 1-5 nến trước có Squeeze hay không
-  let wasSqueezedRecently = false;
-  for (let offset = 2; offset <= 5; offset++) {
+  // Kiểm tra tối thiểu 6 nến nén Squeeze liên tục trước khi bung
+  let consecutiveSqueezeBars = 0;
+  for (let offset = 2; offset <= 10; offset++) {
     if (candles.length < offset + period) break;
     const subCandles = candles.slice(0, candles.length - offset + 1);
     const subCloses = subCandles.map((c) => c.close);
@@ -545,14 +551,16 @@ function evaluateTTMSqueezeStrategy(symbol, candles) {
       const subKcUpper = subEma20 + 1.5 * subAtr;
       const subKcLower = subEma20 - 1.5 * subAtr;
       if (subBB.lower > subKcLower && subBB.upper < subKcUpper) {
-        wasSqueezedRecently = true;
+        consecutiveSqueezeBars++;
+      } else {
         break;
       }
     }
   }
 
-  // Squeeze bung nén (Release / Fire)
-  const isSqueezeFired = wasSqueezedRecently && !isCurrentSqueezed;
+  // Squeeze bung nén (Release / Fire) sau ít nhất 6 nến nén chặt liên tiếp
+  const isSqueezeFired = consecutiveSqueezeBars >= 6 && !isCurrentSqueezed;
+  const adx = calculateADX(candles, 14);
 
   // John Carter Momentum: Close so với trung bình (Donchian Mid + SMA20)
   const slice20 = candles.slice(-period);
@@ -569,11 +577,14 @@ function evaluateTTMSqueezeStrategy(symbol, candles) {
     kcLower: Number(kcLower.toFixed(2)),
     isSqueeze: isCurrentSqueezed,
     isSqueezeFired,
+    consecutiveSqueezeBars,
+    adx,
     momentum,
     atr: Number(atr.toFixed(2))
   };
 
-  if (!isSqueezeFired) {
+  // BỘ LỌC CHẶT: Phải nén ít nhất 6 nến và ADX <= 22 (thị trường thực sự nén kiệt quệ trước khi bùng nổ)
+  if (!isSqueezeFired || adx > 22) {
     return { action: 'HOLD', symbol, indicators };
   }
 
@@ -668,9 +679,9 @@ function evaluateMomentumLeaderStrategy(symbol, candles) {
     atr: Number(atr.toFixed(2))
   };
 
-  // KỊCH BẢN LONG: Momentum dẫn đầu (ROC 24h > 1.2%, ROC 6h > 0.4%, Vol bùng nổ > 1.05x, giá trên EMA20 > EMA50)
+  // KỊCH BẢN LONG: Momentum dẫn đầu thực sự (ROC 24h >= 2.5%, ROC 6h >= 1.0%, Vol bùng nổ >= 1.5x, giá trên EMA20 > EMA50)
   const isStrongUptrend = currentClose > ema20 && ema20 > ema50;
-  const isMomentumLeaderLong = roc24h >= 1.2 && roc6h >= 0.4 && volumeRatio >= 1.05 && currentClose > currentCandle.open;
+  const isMomentumLeaderLong = roc24h >= 2.5 && roc6h >= 1.0 && volumeRatio >= 1.5 && currentClose > currentCandle.open;
 
   if (isStrongUptrend && isMomentumLeaderLong) {
     const stopLoss = Number((currentClose - slDistance).toFixed(4));
@@ -684,14 +695,14 @@ function evaluateMomentumLeaderStrategy(symbol, candles) {
       takeProfit,
       riskDistance: slDistance,
       rrRatio: 2.5,
-      reason: `Momentum Leader Long (ROC24h=+${roc24h.toFixed(1)}%, Vol=${volumeRatio.toFixed(1)}x, EMA20>50)`,
+      reason: `Momentum Leader Long (ROC24h=+${roc24h.toFixed(1)}% >= 2.5%, Vol=${volumeRatio.toFixed(1)}x >= 1.5x, EMA20>50)`,
       indicators
     };
   }
 
-  // KỊCH BẢN SHORT: Momentum suy yếu xả mạnh (ROC 24h < -1.2%, ROC 6h < -0.4%, Vol bùng nổ, giá dưới EMA20 < EMA50)
+  // KỊCH BẢN SHORT: Momentum suy yếu xả mạnh thực sự (ROC 24h <= -2.5%, ROC 6h <= -1.0%, Vol bùng nổ >= 1.5x, giá dưới EMA20 < EMA50)
   const isStrongDowntrend = currentClose < ema20 && ema20 < ema50;
-  const isMomentumLeaderShort = roc24h <= -1.2 && roc6h <= -0.4 && volumeRatio >= 1.05 && currentClose < currentCandle.open;
+  const isMomentumLeaderShort = roc24h <= -2.5 && roc6h <= -1.0 && volumeRatio >= 1.5 && currentClose < currentCandle.open;
 
   if (isStrongDowntrend && isMomentumLeaderShort) {
     const stopLoss = Number((currentClose + slDistance).toFixed(4));
@@ -705,7 +716,7 @@ function evaluateMomentumLeaderStrategy(symbol, candles) {
       takeProfit,
       riskDistance: slDistance,
       rrRatio: 2.5,
-      reason: `Momentum Leader Short (ROC24h=${roc24h.toFixed(1)}%, Vol=${volumeRatio.toFixed(1)}x, EMA20<50)`,
+      reason: `Momentum Leader Short (ROC24h=${roc24h.toFixed(1)}% <= -2.5%, Vol=${volumeRatio.toFixed(1)}x >= 1.5x, EMA20<50)`,
       indicators
     };
   }
