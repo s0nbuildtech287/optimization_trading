@@ -7,6 +7,14 @@ if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
   });
 }
 
+// Auto-recover from stale chunks on new deployments (Fix Failed to fetch dynamically imported module)
+if (typeof window !== 'undefined') {
+  window.addEventListener('vite:preloadError', (event) => {
+    console.warn('Phát hiện bản build mới trên máy chủ, đang tự động làm mới trang...');
+    window.location.reload();
+  });
+}
+
 import { createRoot } from 'react-dom/client';
 
 // style.scss
