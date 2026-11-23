@@ -1,6 +1,7 @@
 const binanceWsService = require('./binanceWsService');
 const paperStrategyService = require('./paperStrategyService');
 const paperTradeDao = require('../dao/paperTradeDao');
+const telegramService = require('./telegramService');
 const { SPOT_RISK, FUTURES_RISK } = require('../utils/constants');
 
 // Danh sách các Bot Futures độc lập (Multi-Bot Tournament)
@@ -141,6 +142,14 @@ class PaperTradeEngine {
 
     // Chụp snapshot khởi đầu nếu chưa có
     await this.recordEquitySnapshot();
+
+    // Khởi động Telegram Notification Service
+    try {
+      telegramService.setEngine(this);
+      telegramService.init();
+    } catch (tgErr) {
+      console.warn('[PaperEngine] Không thể khởi động Telegram Service:', tgErr.message);
+    }
 
     console.log('[PaperEngine] Paper Trading Engine (Futures & Spot) is running and ready.');
   }
@@ -350,6 +359,9 @@ class PaperTradeEngine {
       `${icon} Đóng vị thế Futures ${pos.side} [${exitReason}] @ ${exitPrice}. Lãi/Lỗ ròng: ${netPnl >= 0 ? '+' : ''}$${netPnl.toFixed(2)} (${pnlPct.toFixed(1)}%)`
     );
 
+    const botName = this.futuresBots.find((b) => b.id === targetAccId)?.name || 'Futures Bot';
+    telegramService.notifyOrderClosed(botName, pos.side, pos.symbol, exitPrice, netPnl, pnlPct, exitReason).catch(() => {});
+
     await this.recordEquitySnapshot(targetAccId);
   }
 
@@ -514,6 +526,18 @@ class PaperTradeEngine {
     `🚀 [${bot.name}] Mở vị thế Futures [${signal.action}] ${symbol} @ ${entryPrice}. SL: ${stopLoss} | TP: ${takeProfit} | Ký quỹ: $${margin.toFixed(2)} (${leverage}x). Lý do: ${signal.reason}`
   );
 
+  telegramService.notifyOrderOpened(
+    bot.name,
+    signal.action,
+    symbol,
+    entryPrice,
+    stopLoss,
+    takeProfit,
+    margin,
+    leverage,
+    signal.reason
+  ).catch(() => {});
+
   await this.recordEquitySnapshot(bot.id);
 }
 
@@ -630,6 +654,8 @@ class PaperTradeEngine {
     `🛒 Mua Spot ${boughtQty.toFixed(4)} ${coin} @ $${price}. Chi $${spendUsdt.toFixed(2)} USDT (Giá TB mới: $${newAvgPrice.toFixed(2)}). Lý do: ${reason}`
   );
 
+  telegramService.notifySpotBuy(symbol, price, spendUsdt, reason).catch(() => {});
+
   await this.checkSpotHoldingsUpdate(symbol, price);
 }
 
@@ -694,6 +720,8 @@ class PaperTradeEngine {
     netPnl > 0 ? 'SUCCESS' : 'WARN',
     `${icon} Bán Spot ${quantity.toFixed(4)} ${coin} @ $${price} [${reason}]. Thu về $${netProceeds.toFixed(2)} USDT (Lãi ròng: ${netPnl >= 0 ? '+' : ''}$${netPnl.toFixed(2)} / ${pnlPct.toFixed(1)}%)`
   );
+
+  telegramService.notifySpotSell(symbol, price, netPnl, pnlPct, reason).catch(() => {});
 
   await this.checkSpotHoldingsUpdate(symbol, price);
   await this.recordEquitySnapshot(this.spotAccountId);
