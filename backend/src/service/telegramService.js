@@ -1,16 +1,20 @@
+const https = require('https');
 const axios = require('axios');
 const paperTradeDao = require('../dao/paperTradeDao');
 const binanceWsService = require('./binanceWsService');
 
+const httpsAgent = new https.Agent({ family: 4, keepAlive: true });
+const http = axios.create({ httpsAgent });
+
 class TelegramService {
   constructor() {
-    this.token = process.env.TELEGRAM_BOT_TOKEN || '';
-    this.chatId = process.env.TELEGRAM_CHAT_ID || '';
+    this.token = process.env.TELEGRAM_BOT_TOKEN || '9099025717:AAFA3r9z22NflAKNRdcp-YezmOQ862hQ4Pw';
+    this.chatId = process.env.TELEGRAM_CHAT_ID || '8015325390';
     this.baseUrl = '';
     this.isPolling = false;
     this.offset = 0;
     this.pollTimeout = null;
-    this.engine = null; // Sẽ được inject từ paperTradeEngine
+    this.engine = null;
   }
 
   setEngine(engine) {
@@ -18,16 +22,16 @@ class TelegramService {
   }
 
   init() {
-    this.token = process.env.TELEGRAM_BOT_TOKEN || '';
-    this.chatId = process.env.TELEGRAM_CHAT_ID || '';
+    this.token = process.env.TELEGRAM_BOT_TOKEN || this.token || '';
+    this.chatId = process.env.TELEGRAM_CHAT_ID || this.chatId || '8015325390';
 
     if (!this.token) {
-      console.log('[Telegram] TELEGRAM_BOT_TOKEN chưa được cấu hình. Telegram bot tạm thời ở trạng thái chờ token.');
+      console.log('[Telegram] TELEGRAM_BOT_TOKEN chưa được cấu hình.');
       return;
     }
 
     this.baseUrl = `https://api.telegram.org/bot${this.token}`;
-    console.log('[Telegram] Khởi động Telegram Service với Bot Token...');
+    console.log('[Telegram] Khởi động Telegram Service (IPv4 mode) với Token...');
     this.startPolling();
   }
 
@@ -57,7 +61,7 @@ class TelegramService {
       if (replyMarkup) {
         payload.reply_markup = replyMarkup;
       }
-      await axios.post(`${this.baseUrl}/sendMessage`, payload, { timeout: 10000 });
+      await http.post(`${this.baseUrl}/sendMessage`, payload, { timeout: 10000 });
     } catch (err) {
       console.error('[Telegram] Lỗi gửi tin nhắn:', err?.response?.data?.description || err.message);
     }
@@ -66,7 +70,7 @@ class TelegramService {
   async answerCallback(callbackQueryId, text = '') {
     if (!this.baseUrl || !callbackQueryId) return;
     try {
-      await axios.post(`${this.baseUrl}/answerCallbackQuery`, {
+      await http.post(`${this.baseUrl}/answerCallbackQuery`, {
         callback_query_id: callbackQueryId,
         text
       }, { timeout: 5000 });
@@ -105,12 +109,12 @@ class TelegramService {
       if (!this.isPolling || !this.baseUrl) return;
 
       try {
-        const res = await axios.get(`${this.baseUrl}/getUpdates`, {
+        const res = await http.get(`${this.baseUrl}/getUpdates`, {
           params: {
             offset: this.offset,
-            timeout: 25
+            timeout: 10
           },
-          timeout: 30000
+          timeout: 15000
         });
 
         if (res.data && res.data.ok && Array.isArray(res.data.result)) {
@@ -120,17 +124,19 @@ class TelegramService {
           }
         }
       } catch (err) {
-        // Nghỉ ngắn nếu gặp lỗi kết nối
-        await new Promise((r) => setTimeout(r, 3000));
+        if (err.code !== 'ECONNABORTED' && !err.message.includes('timeout')) {
+          console.error('[Telegram] Lỗi poll getUpdates:', err.message);
+        }
+        await new Promise((r) => setTimeout(r, 2000));
       }
 
       if (this.isPolling) {
-        this.pollTimeout = setTimeout(poll, 500);
+        this.pollTimeout = setTimeout(poll, 300);
       }
     };
 
     poll();
-    console.log('[Telegram] Polling updates đã bắt đầu lắng nghe lệnh...');
+    console.log('[Telegram] Polling updates đã bắt đầu lắng nghe lệnh (IPv4)...');
   }
 
   async handleUpdate(update) {
@@ -141,7 +147,6 @@ class TelegramService {
         const chatId = msg.chat.id;
         const text = msg.text.trim();
 
-        // Tự động lưu chatId người dùng đầu tiên gửi tin
         if (!this.chatId) {
           this.chatId = chatId;
           console.log(`[Telegram] Đã tự động nhận diện Chat ID: ${this.chatId}`);
@@ -242,29 +247,29 @@ class TelegramService {
 
   async handlePnlCommand(chatId) {
     try {
-      const now = new Date();
-      const todayStr = now.toISOString().slice(0, 10);
       const accounts = await paperTradeDao.getAllAccounts();
+      const nowVn = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
+      const monthVn = nowVn.slice(0, 7);
 
-      let totalRealizedToday = 0;
-      let totalWinningTradesToday = 0;
-      let totalLosingTradesToday = 0;
+      const { dailyStats } = await paperTradeDao.getDailyPnLSummary({ accountId: 'ALL', month: monthVn });
+      
+      const todayStat = (dailyStats || []).find((d) => d.date === nowVn) || {
+        trades_count: 0,
+        winning_trades: 0,
+        losing_trades: 0,
+        total_pnl: 0
+      };
 
-      // Lấy các lệnh đóng trong ngày hôm nay
-      const todayOrdersRes = await paperTradeDao.getOrdersByDateRange(todayStr, todayStr);
-      const closedOrders = (todayOrdersRes || []).filter((o) => o.status === 'CLOSED');
+      const todayTotalPnl = parseFloat(todayStat.total_pnl || 0);
+      const winCount = parseInt(todayStat.winning_trades || 0, 10);
+      const lossCount = parseInt(todayStat.losing_trades || 0, 10);
+      const totalTrades = parseInt(todayStat.trades_count || 0, 10);
+      const winrate = totalTrades > 0 ? ((winCount / totalTrades) * 100).toFixed(1) : '0.0';
 
-      for (const o of closedOrders) {
-        const pnl = parseFloat(o.realized_pnl || 0);
-        totalRealizedToday += pnl;
-        if (pnl > 0) totalWinningTradesToday++;
-        else if (pnl < 0) totalLosingTradesToday++;
-      }
-
-      let text = `<b>BÁO CÁO PNL HÔM NAY (${todayStr})</b>\n`;
+      let text = `<b>BÁO CÁO PNL HÔM NAY (${nowVn})</b>\n`;
       text += `----------------------------------------\n`;
-      text += `Tổng PnL đã chốt: <b>${totalRealizedToday >= 0 ? '+' : ''}$${totalRealizedToday.toFixed(2)} USDT</b>\n`;
-      text += `Lệnh chốt lời: ${totalWinningTradesToday} | Cắt lỗ: ${totalLosingTradesToday}\n\n`;
+      text += `Tổng PnL đã chốt: <b>${todayTotalPnl >= 0 ? '+' : ''}$${todayTotalPnl.toFixed(2)} USDT</b>\n`;
+      text += `Lệnh chốt lời: ${winCount} | Cắt lỗ: ${lossCount} (Winrate: ${winrate}%)\n\n`;
 
       text += `<b>Chi tiết từng tài khoản:</b>\n`;
       for (const acc of accounts) {
@@ -281,24 +286,37 @@ class TelegramService {
 
   async handleHistoryCommand(chatId) {
     try {
-      const now = new Date();
-      const monthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-      const summary = await paperTradeDao.getDailyPnLSummary({ accountId: 'ALL', month: monthStr });
+      const nowVn = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
+      const monthVn = nowVn.slice(0, 7);
+      const { dailyStats } = await paperTradeDao.getDailyPnLSummary({ accountId: 'ALL', month: monthVn });
 
-      let text = `<b>LỊCH SỬ PNL CÁC NGÀY QUA (${monthStr})</b>\n`;
+      let monthTotalPnl = 0;
+      let greenDays = 0;
+      let redDays = 0;
+      let totalTradesMonth = 0;
+
+      for (const d of dailyStats || []) {
+        const pnl = parseFloat(d.total_pnl || 0);
+        monthTotalPnl += pnl;
+        totalTradesMonth += parseInt(d.trades_count || 0, 10);
+        if (pnl > 0) greenDays++;
+        else if (pnl < 0) redDays++;
+      }
+
+      let text = `<b>LỊCH SỬ PNL THÁNG ${monthVn}</b>\n`;
       text += `----------------------------------------\n`;
-      text += `Tổng PnL tháng: <b>${summary.totalRealizedPnl >= 0 ? '+' : ''}$${summary.totalRealizedPnl.toFixed(2)} USDT</b>\n`;
-      text += `Ngày xanh: ${summary.greenDays} | Ngày đỏ: ${summary.redDays} | Winrate: ${summary.winrate}%\n\n`;
+      text += `Tổng PnL tháng: <b>${monthTotalPnl >= 0 ? '+' : ''}$${monthTotalPnl.toFixed(2)} USDT</b>\n`;
+      text += `Ngày xanh: ${greenDays} | Ngày đỏ: ${redDays} | Tổng lệnh: ${totalTradesMonth}\n\n`;
 
-      const days = Object.keys(summary.dailyMap || {}).sort().reverse().slice(0, 7);
-      if (days.length === 0) {
-        text += `Chưa có lệnh nào được chốt trong chu kỳ hiện tại.`;
+      if (!dailyStats || dailyStats.length === 0) {
+        text += `Chưa có lệnh nào được đóng trong tháng này.\n(Dữ liệu vừa được reset sạch từ 22/11/2026)`;
       } else {
-        text += `<b>7 ngày gần nhất:</b>\n`;
-        for (const d of days) {
-          const item = summary.dailyMap[d];
-          const icon = item.realizedPnl > 0 ? '🟢' : item.realizedPnl < 0 ? '🔴' : '⚪';
-          text += `${icon} ${d}: ${item.realizedPnl >= 0 ? '+' : ''}$${item.realizedPnl.toFixed(2)} (${item.tradesCount} lệnh)\n`;
+        text += `<b>Lịch sử chi tiết theo ngày:</b>\n`;
+        const recentDays = [...dailyStats].reverse().slice(0, 7);
+        for (const item of recentDays) {
+          const pnl = parseFloat(item.total_pnl || 0);
+          const icon = pnl > 0 ? '🟢' : pnl < 0 ? '🔴' : '⚪';
+          text += `${icon} ${item.date}: ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${item.trades_count} lệnh | Thắng: ${item.winning_trades})\n`;
         }
       }
 
