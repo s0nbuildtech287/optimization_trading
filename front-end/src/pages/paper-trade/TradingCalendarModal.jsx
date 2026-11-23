@@ -263,14 +263,14 @@ export default function TradingCalendarModal({ open, onClose, defaultAccount = '
         </Stack>
       </DialogTitle>
 
-      <DialogContent sx={{ p: { xs: 2, sm: 3 } }}>
+      <DialogContent sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 }, pt: '28px !important' }}>
         {/* 2. Controls Bar: Chọn tháng & Bộ lọc tài khoản/Bot */}
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
           justifyContent="space-between"
           alignItems={{ xs: 'stretch', sm: 'center' }}
           spacing={2}
-          sx={{ mb: 2.5 }}
+          sx={{ mt: 1, mb: 3 }}
         >
           {/* Bộ điều hướng tháng */}
           <Stack direction="row" spacing={1} alignItems="center">
