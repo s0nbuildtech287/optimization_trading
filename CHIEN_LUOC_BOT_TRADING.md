@@ -55,29 +55,30 @@ Chiến lược gom hàng giao ngay (Spot) an toàn, tích sản dựa trên vù
 Chiến lược đi theo dòng chảy xu hướng chính của thị trường và bắt điểm vào lệnh tại các nhịp hồi kỹ thuật lành mạnh.
 
 * Khung thời gian: 15 phút (M15).
-* Đòn bẩy: 3x (Isolated Margin).
-* Rủi ro mỗi lệnh: 2% vốn ($2.00 / lệnh với vốn $100).
+* Đòn bẩy: 5x (Isolated Margin).
+* Rủi ro mỗi lệnh: 1% vốn ($1.00 / lệnh với vốn $100).
 * Danh mục theo dõi (5 coin): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
 
-### 3.1. Tín hiệu Mở vị thế LONG (Mua đuổi xu hướng tăng)
-1. Cấu trúc Xu hướng Tăng:
+### 3.1. Tín hiệu Mở vị thế LONG (Mua theo xu hướng tăng)
+1. Cấu trúc Xu hướng Tăng & Xác nhận H4:
    * Giá hiện tại nằm trên đường $EMA 200$ (`currentClose > ema200`).
-   * Đường $EMA 50 > EMA 200$.
-   * Độ dốc đường $EMA 200$ đang hướng lên (EMA200 hiện tại $\ge$ EMA200 cách đó 4 nến $\times 0.9998$).
-2. Nhịp hồi (Pullback) hợp lệ:
-   * Giá nến hiện tại chạm hoặc lùi về sát đường $EMA 21$ (trong biên độ $\pm 0.4\%$ quanh EMA21).
+   * Đường $EMA 50 > EMA 200$, độ dốc EMA 200 hướng lên.
+   * Đồng pha vĩ mô H4: Đường $EMA 20 \ge EMA 50$ trên khung H4 (tuyệt đối không mở Long nếu khung lớn đang cắm đầu giảm).
+2. Nhịp hồi (Pullback) & Nến Xác nhận (Confirmation Candle):
+   * Giá chạm hoặc lùi về sát đường $EMA 21$ (trong biên độ $\pm 0.3\%$).
+   * Bắt buộc có nến XANH rút chân/đảo chiều đóng cửa giữ vững trên EMA21 (loại bỏ hoàn toàn rủi ro bắt dao rơi nến đỏ).
 3. Sức mạnh xung lực:
-   * $40 \le RSI(14) \le 65$ (nằm trong vùng điều chỉnh lành mạnh, chưa bị hưng phấn quá mua $> 70$).
+   * $40 \le RSI(14) \le 65$ (vùng điều chỉnh lành mạnh, chưa bị hưng phấn quá mua $> 70$).
 
 ### 3.2. Tín hiệu Mở vị thế SHORT (Đánh theo xu hướng giảm)
-1. Cấu trúc Xu hướng Giảm: Giá $< EMA 200$, $EMA 50 < EMA 200$, độ dốc EMA 200 cắm xuống.
-2. Nhịp hồi lên (Pullback): Giá giật lên sát đường $EMA 21$.
+1. Cấu trúc Xu hướng Giảm: Giá $< EMA 200$, $EMA 50 < EMA 200$, đồng pha giảm trên H4 ($EMA 20 < EMA 50$).
+2. Nhịp hồi lên & Nến Đỏ từ chối: Giá giật lên chạm $EMA 21$ và đóng nến ĐỎ xác nhận bị bán ép xuống.
 3. Sức mạnh xung lực: $35 \le RSI(14) \le 60$ (chưa bị quá bán $< 30$).
 
 ### 3.3. Quản trị Rủi ro & Mục tiêu
 * Stop Loss (SL): Đặt tại $1.5 \times ATR(14)$ (tối thiểu 0.8% giá với crypto, 0.35% với PAXG).
-* Take Profit (TP): Đặt tại tỷ lệ $\mathbf{R:R = 1:2.0}$ ($2.0 \times \text{Khoảng cách SL}$).
-* Kéo dời hòa vốn (Breakeven): Khi giá đi được $1.2R$, tự động dời SL về điểm hòa vốn (`entry_price`).
+* Take Profit (TP): Đặt tại tỷ lệ R:R = 1:2.0 ($2.0 \times \text{Khoảng cách SL}$).
+* Kéo dời hòa vốn (Breakeven): Khi giá đi được $1.4R$, tự động dời SL về điểm hòa vốn (+0.05% phí sàn).
 
 ---
 
@@ -86,8 +87,13 @@ Chiến lược đi theo dòng chảy xu hướng chính của thị trường v
 Chiến lược săn tìm lợi nhuận trong thị trường đi ngang (Sideway) bằng cách bắt nhịp đảo chiều khi giá chạm dải biên Bollinger Bands và hồi quy về giá trị trung bình.
 
 * Khung thời gian: 15 phút (M15).
-* Đòn bẩy: 3x.
+* Đòn bẩy: 5x.
 * Danh mục theo dõi (5 coin): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
+
+### 4.1. Điều kiện Vào lệnh An toàn
+* LONG: Giá chạm dải dưới Bollinger Bands, $RSI \le 38$, và bắt buộc có nến XANH bật nảy trở lại vào trong dải.
+* SHORT: Giá chạm dải trên Bollinger Bands, $RSI \ge 62$, và bắt buộc có nến ĐỎ từ chối đảo chiều đi xuống.
+* Bộ lọc triệt tiêu Trend: $ADX < 23$ (thị trường đang sideway thật sự, nếu ADX $\ge 23$ bot bỏ qua không bắt dao rơi).
 
 ### 4.1. Bộ lọc Bắt buộc (Trend Filter)
 * Quy tắc ADX: Chỉ báo $ADX(14)$ phải $< 23$.

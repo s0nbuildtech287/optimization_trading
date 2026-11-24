@@ -92,7 +92,8 @@ exports.SPOT_RISK = Object.freeze({
 exports.FUTURES_RISK = Object.freeze({
   MAX_OPEN_POSITIONS: 3,
   PORTFOLIO_MAX_SAME_SIDE: 2,
-  MAX_MARGIN_PER_ORDER: 45.0,
+  TARGET_RISK_PER_TRADE: 1.0,
+  MAX_MARGIN_PER_ORDER: 20.0,
   MIN_NOTIONAL: 10.0,
   SL_COOLDOWN_MS: 60 * 60 * 1000 // 60 phút nghỉ sau khi dính SL
 });

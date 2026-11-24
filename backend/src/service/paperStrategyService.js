@@ -169,7 +169,14 @@ function evaluateTrendPullbackStrategy(symbol, candles) {
   const prevEma200 = calculateEMA(closes.slice(0, -4), 200) || ema200;
   const isEma200Up = ema200 >= prevEma200 * 0.9998;
   const isUpTrend = currentClose > ema200 && ema50 > ema200 && isEma200Up;
-  const isLongPullback = currentCandle.low <= ema21 * 1.004 && currentClose >= ema21 * 0.996;
+
+  // Xác nhận nến Xanh đảo chiều/rút chân bật lên từ EMA21 (chặn đứng bắt dao rơi nến đỏ)
+  const candleRange = currentCandle.high - currentCandle.low;
+  const isBullishCandle = currentClose > currentCandle.open;
+  const isBouncingAboveEma21 = currentClose >= ema21;
+  const hasTouchedEma21 = currentCandle.low <= ema21 * 1.003 || prevCandle.low <= ema21 * 1.003;
+  const isDecisiveSupport = isBullishCandle && candleRange > 0 && ((currentClose - currentCandle.low) / candleRange) >= 0.50;
+  const isLongPullback = hasTouchedEma21 && isBouncingAboveEma21 && isDecisiveSupport;
   const isRsiHealthyLong = rsi >= 40 && rsi <= 65;
 
   const isPaxg = symbol && symbol.includes('PAXG');
@@ -189,7 +196,7 @@ function evaluateTrendPullbackStrategy(symbol, candles) {
       takeProfit,
       riskDistance: slDistance,
       rrRatio: 2.0,
-      reason: `EMA200 UpTrend (EMA50 > EMA200 & Slope Up), Pullback EMA21, RSI=${rsi.toFixed(1)}`,
+      reason: `EMA200 UpTrend, Bullish Bounce EMA21, RSI=${rsi.toFixed(1)}`,
       indicators
     };
   }
@@ -197,11 +204,15 @@ function evaluateTrendPullbackStrategy(symbol, candles) {
   // 2. KỊCH BẢN SHORT (SELL)
   // - Xu hướng chính giảm: Giá < EMA200 và EMA50 < EMA200
   // - Độ dốc EMA200 hướng xuống
-  // - Giá hồi lên gần đường EMA 21
+  // - Giá hồi lên gần đường EMA 21 và bị từ chối đóng nến đỏ quay đầu
   // - RSI ở vùng lành mạnh (từ 35 đến 60), chưa bị quá bán (<30)
   const isEma200Down = ema200 <= prevEma200 * 1.0002;
   const isDownTrend = currentClose < ema200 && ema50 < ema200 && isEma200Down;
-  const isShortPullback = currentCandle.high >= ema21 * 0.996 && currentClose <= ema21 * 1.004;
+  const isBearishCandle = currentClose < currentCandle.open;
+  const isRejectingBelowEma21 = currentClose <= ema21;
+  const hasTouchedEma21Short = currentCandle.high >= ema21 * 0.997 || prevCandle.high >= ema21 * 0.997;
+  const isDecisiveResistance = isBearishCandle && candleRange > 0 && ((currentCandle.high - currentClose) / candleRange) >= 0.50;
+  const isShortPullback = hasTouchedEma21Short && isRejectingBelowEma21 && isDecisiveResistance;
   const isRsiHealthyShort = rsi <= 60 && rsi >= 35;
 
   if (isDownTrend && isShortPullback && isRsiHealthyShort) {
@@ -291,12 +302,13 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
   const isPaxg = symbol && symbol.includes('PAXG');
   const minSlPct = isPaxg ? 0.003 : 0.007;
 
-  // 1. KỊCH BẢN LONG (Bắt bật hồi từ dải dưới khi Sideway)
+  // 1. KỊCH BẢN LONG (Bắt bật hồi từ dải dưới khi Sideway - Bắt buộc nến XANH)
   const isLowerTouch = prevCandle.low <= bb.lower || currentCandle.low <= bb.lower;
   const isBouncingUp = currentClose > bb.lower;
   const isOversold = rsi <= 38;
+  const isBullishCandle = currentClose > currentCandle.open;
 
-  if (isLowerTouch && isBouncingUp && isOversold) {
+  if (isLowerTouch && isBouncingUp && isOversold && isBullishCandle) {
     const slDistance = Math.max(1.2 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose - slDistance).toFixed(4));
     // Mục tiêu TP là trục giữa SMA 20 (Mean-Reversion) hoặc tối thiểu 1.4R
@@ -311,17 +323,18 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
       takeProfit,
       riskDistance: slDistance,
       rrRatio: 1.5,
-      reason: `Bollinger Lower Bounce (Sideway ADX=${adx}), RSI=${rsi.toFixed(1)} <= 38`,
+      reason: `Bollinger Lower Bounce (Sideway ADX=${adx}), Bullish Reversal, RSI=${rsi.toFixed(1)} <= 38`,
       indicators
     };
   }
 
-  // 2. KỊCH BẢN SHORT (Bắt đảo chiều từ dải trên khi Sideway)
+  // 2. KỊCH BẢN SHORT (Bắt đảo chiều từ dải trên khi Sideway - Bắt buộc nến ĐỎ)
   const isUpperTouch = prevCandle.high >= bb.upper || currentCandle.high >= bb.upper;
   const isRejectionDown = currentClose < bb.upper;
   const isOverbought = rsi >= 62;
+  const isBearishCandle = currentClose < currentCandle.open;
 
-  if (isUpperTouch && isRejectionDown && isOverbought) {
+  if (isUpperTouch && isRejectionDown && isOverbought && isBearishCandle) {
     const slDistance = Math.max(1.2 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose + slDistance).toFixed(4));
     // Mục tiêu TP là trục giữa SMA 20 hoặc tối thiểu 1.4R

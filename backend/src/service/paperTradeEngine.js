@@ -466,6 +466,25 @@ class PaperTradeEngine {
     return;
   }
 
+  // 0a. BỘ LỌC XU HƯỚNG VĨ MÔ H4 CHO BOT 1 (Trend Pullback):
+  // Tuyệt đối không mở LONG trên M15 nếu khung H4 đang downtrend (EMA20 < EMA50 khung H4)
+  if (bot.id === 'acc_binance_futures') {
+    const h4Candles = binanceWsService.getCandlesH4 ? binanceWsService.getCandlesH4(symbol) : [];
+    if (h4Candles && h4Candles.length >= 25) {
+      const h4Closes = h4Candles.map((c) => c.close);
+      const ema50H4 = paperStrategyService.calculateEMA(h4Closes, 50);
+      const ema20H4 = paperStrategyService.calculateEMA(h4Closes, 20);
+      if (signal.action === 'LONG' && ema20H4 && ema50H4 && ema20H4 < ema50H4 * 0.998) {
+        console.warn(`[PaperEngine-Bot1] Chặn lệnh LONG ${symbol}: Khung H4 đang downtrend (EMA20 H4 < EMA50 H4).`);
+        return;
+      }
+      if (signal.action === 'SHORT' && ema20H4 && ema50H4 && ema20H4 > ema50H4 * 1.002) {
+        console.warn(`[PaperEngine-Bot1] Chặn lệnh SHORT ${symbol}: Khung H4 đang uptrend (EMA20 H4 > EMA50 H4).`);
+        return;
+      }
+    }
+  }
+
   const openPositions = await paperTradeDao.getOpenPositions(bot.id);
   const existingPos = openPositions.find((p) => p.symbol === symbol);
   if (existingPos || openPositions.length >= (FUTURES_RISK.MAX_OPEN_POSITIONS || 3)) return;
@@ -496,7 +515,8 @@ class PaperTradeEngine {
   }
 
   const currentBalance = parseFloat(account.balance);
-  const riskPerTrade = parseFloat(account.risk_per_trade) || 2.0; // Chuẩn $2.00 (2% vốn $100)
+  const targetRisk = FUTURES_RISK.TARGET_RISK_PER_TRADE || 1.0;
+  const riskPerTrade = Math.min(parseFloat(account.risk_per_trade) || targetRisk, targetRisk); // Chuẩn an toàn 1.00 USD (1% vốn $100)
   const leverage = Math.max(parseInt(account.leverage, 10) || 5, 5); // Đòn bẩy tối thiểu 5x
   const entryPrice = signal.entryPrice;
   const stopLoss = signal.stopLoss;
@@ -505,8 +525,8 @@ class PaperTradeEngine {
   const slDistance = Math.abs(entryPrice - stopLoss);
   if (slDistance <= 0) return;
 
-  // QUẢN TRỊ RỦI RO ĐỊNH LƯỢNG CHUẨN: quantity = riskPerTrade / slDistance
-  // Đảm bảo chạm SL mất đúng $2.00 (1R), ăn TP 2R được đúng $4.00, TP 2.5R được đúng $5.00
+  // QUẢN TRỊ RỦI RO ĐỊNH LƯỢNG AN TOÀN: quantity = riskPerTrade / slDistance
+  // Đảm bảo chạm SL chỉ mất tối đa ~1.00 USD, khi ăn TP 2R được 2.00 USD, TP 2.5R được 2.50 USD
   let quantity = riskPerTrade / slDistance;
   let notional = quantity * entryPrice;
 
@@ -525,8 +545,8 @@ class PaperTradeEngine {
   }
   const freeMargin = Math.max(0, currentBalance - usedMargin);
 
-  // Khống chế trần Margin tối đa $45 để mỗi tài khoản $100 luôn mở được ít nhất 2 lệnh an toàn
-  const maxMarginAllowed = Math.min(FUTURES_RISK.MAX_MARGIN_PER_ORDER || 45.0, freeMargin - 5.0);
+  // Khống chế trần Margin an toàn tối đa $20 để giảm thiểu biến động, giữ vốn bền bỉ
+  const maxMarginAllowed = Math.min(FUTURES_RISK.MAX_MARGIN_PER_ORDER || 20.0, freeMargin - 3.0);
   if (margin > maxMarginAllowed) {
     margin = maxMarginAllowed;
     notional = margin * leverage;
