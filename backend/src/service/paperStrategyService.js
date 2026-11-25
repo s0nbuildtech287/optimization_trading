@@ -312,8 +312,16 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
     const slDistance = Math.max(1.2 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose - slDistance).toFixed(4));
     // Mục tiêu TP là trục giữa SMA 20 (Mean-Reversion) hoặc tối thiểu 1.4R
-    const targetTp = Math.max(bb.middle, currentClose + slDistance * 1.4);
-    const takeProfit = Number(targetTp.toFixed(4));
+    const meanDistance = bb.middle - currentClose;
+    if (meanDistance < slDistance * 1.2) {
+      return {
+        action: 'HOLD',
+        symbol,
+        reason: `Bỏ qua: khoảng hồi về SMA20 chỉ ${meanDistance.toFixed(4)} (< 1.2R)`,
+        indicators
+      };
+    }
+    const takeProfit = Number(bb.middle.toFixed(4));
 
     return {
       action: 'LONG',
@@ -322,7 +330,7 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
       stopLoss,
       takeProfit,
       riskDistance: slDistance,
-      rrRatio: 1.5,
+      rrRatio: Number((meanDistance / slDistance).toFixed(2)),
       reason: `Bollinger Lower Bounce (Sideway ADX=${adx}), Bullish Reversal, RSI=${rsi.toFixed(1)} <= 38`,
       indicators
     };
@@ -338,8 +346,16 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
     const slDistance = Math.max(1.2 * atr, currentClose * minSlPct);
     const stopLoss = Number((currentClose + slDistance).toFixed(4));
     // Mục tiêu TP là trục giữa SMA 20 hoặc tối thiểu 1.4R
-    const targetTp = Math.min(bb.middle, currentClose - slDistance * 1.4);
-    const takeProfit = Number(targetTp.toFixed(4));
+    const meanDistance = currentClose - bb.middle;
+    if (meanDistance < slDistance * 1.2) {
+      return {
+        action: 'HOLD',
+        symbol,
+        reason: `Bỏ qua: khoảng hồi về SMA20 chỉ ${meanDistance.toFixed(4)} (< 1.2R)`,
+        indicators
+      };
+    }
+    const takeProfit = Number(bb.middle.toFixed(4));
 
     return {
       action: 'SHORT',
@@ -348,7 +364,7 @@ function evaluateBollingerMeanReversionStrategy(symbol, candles) {
       stopLoss,
       takeProfit,
       riskDistance: slDistance,
-      rrRatio: 1.5,
+      rrRatio: Number((meanDistance / slDistance).toFixed(2)),
       reason: `Bollinger Upper Rejection (Sideway ADX=${adx}), RSI=${rsi.toFixed(1)} >= 62`,
       indicators
     };
@@ -751,4 +767,3 @@ module.exports = {
   evaluateTTMSqueezeStrategy,
   evaluateMomentumLeaderStrategy
 };
-

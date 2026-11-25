@@ -508,6 +508,11 @@ class PaperTradeEngine {
   }
 
   const sameSideCount = allFuturesPositions.filter((p) => p.side === signal.action).length;
+  const sameSymbolPosition = allFuturesPositions.find((p) => p.symbol === symbol);
+  if (sameSymbolPosition) {
+    console.warn(`[PaperEngine-${bot.id}] Bỏ qua ${signal.action} ${symbol}: coin đã có vị thế trên bot ${sameSymbolPosition.account_id}.`);
+    return;
+  }
   const maxPortfolioSameSide = FUTURES_RISK.PORTFOLIO_MAX_SAME_SIDE || 2;
   if (sameSideCount >= maxPortfolioSameSide) {
     console.warn(`[PaperEngine-${bot.id}] Bỏ qua lệnh ${signal.action} ${symbol}: Đã có ${sameSideCount} vị thế ${signal.action} trên toàn bộ hệ thống (Portfolio Correlation Lock: max ${maxPortfolioSameSide}).`);
