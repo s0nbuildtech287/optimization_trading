@@ -83,10 +83,20 @@ exports.SYMBOL_VOLUME_CAPS = Object.freeze({
 });
 
 exports.SPOT_RISK = Object.freeze({
-  TAKE_PROFIT_PCT: 5.0,
-  STOP_LOSS_PCT: -12.0,
-  DCA_STOP_PCT: -10.0,
-  MAX_TRANCHES_PER_SYMBOL: 3
+  TAKE_PROFIT_PCT: 4.5,
+  TAKE_PROFIT_BY_SYMBOL: Object.freeze({
+    BTCUSDT: 4.5,
+    ETHUSDT: 4.5,
+    SOLUSDT: 5.0,
+    BNBUSDT: 5.0,
+    PAXGUSDT: 3.0
+  }),
+  STOP_LOSS_PCT: -9.0,
+  DCA_STOP_PCT: -6.0,
+  MAX_TRANCHES_PER_SYMBOL: 3,
+  MAX_HOLD_MS: 21 * 24 * 60 * 60 * 1000,
+  H4_MAX_BELOW_EMA50_PCT: 2.5,
+  MIN_H4_RSI: 35
 });
 
 exports.FUTURES_RISK = Object.freeze({

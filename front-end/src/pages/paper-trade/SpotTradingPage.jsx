@@ -460,7 +460,7 @@ export default function SpotTradingPage() {
                   />
                 </Stack>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                  Vốn: <b>${usdtBalance.toFixed(2)} USDT</b> • Kích thước đợt gom (Tranche): ${parseFloat(account.risk_per_trade || 10).toFixed(0)} • Smart RSI DCA: Gom RSI ≤ 35 (max 3 đợt) • TP ≥ +4.5% • SL -6% (Phanh dừng DCA tại -5%)
+                  Vốn: <b>${usdtBalance.toFixed(2)} USDT</b> • Kích thước đợt gom (Tranche): ${parseFloat(account.risk_per_trade || 10).toFixed(0)} • Smart RSI DCA: M15 RSI ≤ 35 + H4 xác nhận • max 3 đợt • TP theo coin (PAXG 3%, crypto 4.5–5%) • SL -9% • TIME EXIT 21 ngày
                 </Typography>
               </Box>
             </Stack>

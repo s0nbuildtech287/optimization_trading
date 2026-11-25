@@ -255,6 +255,13 @@ class PaperTradeEngine {
       if (symbolHolding && spotAccount.is_bot_active) {
         const avgPrice = parseFloat(symbolHolding.avg_buy_price);
         const gainPct = ((currentPrice - avgPrice) / avgPrice) * 100;
+        const takeProfitPct = SPOT_RISK.TAKE_PROFIT_BY_SYMBOL?.[symbol] || SPOT_RISK.TAKE_PROFIT_PCT;
+        const openedAt = new Date(symbolHolding.created_at).getTime();
+
+        if (Number.isFinite(openedAt) && Date.now() - openedAt >= SPOT_RISK.MAX_HOLD_MS) {
+          await this.sellSpotHolding(symbol, currentPrice, 'TIME_EXIT_21D');
+          return;
+        }
 
         // Chốt lời khi lãi >= 4.5%
         if (gainPct <= SPOT_RISK.STOP_LOSS_PCT) {
@@ -262,8 +269,8 @@ class PaperTradeEngine {
           return;
         }
 
-        if (gainPct >= SPOT_RISK.TAKE_PROFIT_PCT) {
-          await this.sellSpotHolding(symbol, currentPrice, 'TAKE_PROFIT_4.5%');
+        if (gainPct >= takeProfitPct) {
+          await this.sellSpotHolding(symbol, currentPrice, `TAKE_PROFIT_${takeProfitPct}%`);
           return;
         }
       }
@@ -609,9 +616,11 @@ class PaperTradeEngine {
     if (h4Candles && h4Candles.length >= 50) {
       const h4Closes = h4Candles.map((c) => c.close);
       const ema50H4 = paperStrategyService.calculateEMA(h4Closes, 50);
-      if (ema50H4 && currentPrice < ema50H4 * 0.95) {
+      if (ema50H4 && currentPrice < ema50H4 * (1 - SPOT_RISK.H4_MAX_BELOW_EMA50_PCT / 100)) {
         return; // Đang trong xu hướng giảm vĩ mô, hoãn gom hàng
       }
+      const h4Rsi = paperStrategyService.calculateRSI(h4Closes, 14);
+      if (h4Rsi < SPOT_RISK.MIN_H4_RSI) return;
     }
 
     const holdings = await paperTradeDao.getSpotHoldings(this.spotAccountId);
