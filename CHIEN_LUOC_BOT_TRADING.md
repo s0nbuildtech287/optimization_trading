@@ -24,6 +24,7 @@ Hệ thống được thiết kế theo mô hình Đấu trường Đa chiến l
 * Tính độc lập: Mỗi con bot quản lý một ví ảo riêng với vốn khởi điểm cố định $100.00 USDT.
 * Đa dạng hóa phong cách: Kết hợp hài hòa giữa Trend Following (ăn sóng dài), Mean Reversion (bắt biên sideway), Breakout/Squeeze (bắt nổ biến động), và Momentum Rotation (xoay trục theo coin dẫn dắt).
 * Bảo vệ tài khoản nhỏ: Không sử dụng Martingale/nhồi lệnh vô tội vạ; mọi lệnh Futures đều có Stop Loss tự động theo độ biến động thực tế (ATR) và tỷ lệ Lời:Lỗ (Risk:Reward) tối thiểu từ 1:1.5 đến 1:2.5.
+* Chuẩn hóa rủi ro: Áp dụng phương pháp định cỡ vị thế theo rủi ro định lượng (Risk-Based Sizing) khống chế mức lỗ ở 1% vốn ($1.00 / lệnh), loại bỏ rủi ro cháy tài khoản.
 
 ---
 
@@ -38,15 +39,16 @@ Chiến lược gom hàng giao ngay (Spot) an toàn, tích sản dựa trên vù
 
 ### 2.1. Điều kiện Mua gom (Buy Entry)
 1. Bộ lọc danh mục: Coin phải nằm trong danh mục 5 mã được cấp phép.
-2. Tín hiệu Quá bán: Chỉ báo $RSI(14) \le 35$.
-3. Quy tắc Gom thêm (DCA Rules - Khi đã có vị thế):
+2. Bộ lọc xu hướng vĩ mô H4 (Macro Trend Filter): Giá hiện tại không được rơi sâu hơn 5% dưới đường EMA50 khung H4 (tránh bắt dao rơi khi thị trường rơi tự do vào downtrend lớn).
+3. Tín hiệu Quá bán: Chỉ báo $RSI(14) \le 35$.
+4. Quy tắc Gom thêm (DCA Rules - Khi đã có vị thế):
    * Quy tắc bước giá: Giá hiện tại phải thấp hơn ít nhất 3% so với giá vốn trung bình (`avg_buy_price`) trước đó mới được mua tranche tiếp theo.
    * Giới hạn số lần gom: Tối đa 3 tranches cho mỗi coin (tối đa $30 / coin), tránh việc dồn toàn bộ vốn vào 1 mã duy nhất.
-   * Phanh dừng DCA (DCA Stop): Nếu vị thế đang âm sâu $\ge 5\%$ (gần chạm ngưỡng SL 6%), bot tuyệt đối KHÔNG gom thêm để tránh kịch bản "bắt dao rơi".
+   * Phanh dừng DCA (DCA Stop): Nếu vị thế đang âm sâu $\ge 10\%$, bot tuyệt đối KHÔNG gom thêm để bảo toàn tiền mặt.
 
 ### 2.2. Điều kiện Thoát lệnh (Exit Rules)
-* Chốt lời (Take Profit): Tự động bán sạch 100% khi lợi nhuận đạt $\ge \mathbf{+4.5\%}$ so với giá vốn trung bình.
-* Cắt lỗ (Stop Loss): Tự động bán sạch 100% khi mức lỗ chạm $\le \mathbf{-6.0\%}$ so với giá vốn trung bình để bảo toàn vốn.
+* Chốt lời (Take Profit): Tự động bán sạch 100% khi lợi nhuận đạt $\ge +5.0\%$ so với giá vốn trung bình.
+* Cắt lỗ bảo vệ (Stop Loss): Tự động bán sạch khi mức lỗ chạm $\le -12.0\%$ so với giá vốn trung bình để bảo vệ dòng vốn.
 
 ---
 
@@ -77,8 +79,8 @@ Chiến lược đi theo dòng chảy xu hướng chính của thị trường v
 
 ### 3.3. Quản trị Rủi ro & Mục tiêu
 * Stop Loss (SL): Đặt tại $1.5 \times ATR(14)$ (tối thiểu 0.8% giá với crypto, 0.35% với PAXG).
-* Take Profit (TP): Đặt tại tỷ lệ R:R = 1:2.0 ($2.0 \times \text{Khoảng cách SL}$).
-* Kéo dời hòa vốn (Breakeven): Khi giá đi được $1.4R$, tự động dời SL về điểm hòa vốn (+0.05% phí sàn).
+* Take Profit (TP): Đặt tại tỷ lệ R:R = 1:2.0 ($2.0 \times \text{Khoảng cách SL}$, ăn $2.00 / lệnh).
+* Kéo dời hòa vốn (Breakeven): Khi giá đi được $1.4R$ ($1.40), tự động dời SL về điểm hòa vốn (+0.05% phí sàn).
 
 ---
 
@@ -88,30 +90,28 @@ Chiến lược săn tìm lợi nhuận trong thị trường đi ngang (Sideway
 
 * Khung thời gian: 15 phút (M15).
 * Đòn bẩy: 5x.
+* Rủi ro mỗi lệnh: 1% vốn ($1.00 / lệnh).
 * Danh mục theo dõi (5 coin): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
-
-### 4.1. Điều kiện Vào lệnh An toàn
-* LONG: Giá chạm dải dưới Bollinger Bands, $RSI \le 38$, và bắt buộc có nến XANH bật nảy trở lại vào trong dải.
-* SHORT: Giá chạm dải trên Bollinger Bands, $RSI \ge 62$, và bắt buộc có nến ĐỎ từ chối đảo chiều đi xuống.
-* Bộ lọc triệt tiêu Trend: $ADX < 23$ (thị trường đang sideway thật sự, nếu ADX $\ge 23$ bot bỏ qua không bắt dao rơi).
 
 ### 4.1. Bộ lọc Bắt buộc (Trend Filter)
 * Quy tắc ADX: Chỉ báo $ADX(14)$ phải $< 23$.
-* *Lý do:* Nếu $ADX \ge 23$, thị trường đang có xu hướng mạnh (Uptrend hoặc Downtrend dốc), dải Bollinger sẽ mở miệng chạy theo trend $\rightarrow$ Bắt đảo chiều lúc này rất dễ "cháy tài khoản". Bot sẽ đứng ngoài hoàn toàn.
+* Lý do: Nếu $ADX \ge 23$, thị trường đang có xu hướng mạnh (Uptrend hoặc Downtrend dốc), dải Bollinger sẽ mở miệng chạy theo trend. Bắt đảo chiều lúc này rất nguy hiểm, bot sẽ đứng ngoài hoàn toàn.
 
-### 4.2. Tín hiệu Vào lệnh
+### 4.2. Tín hiệu Vào lệnh An toàn
 * LONG (Bắt bật dải dưới):
-  * Giá nến trước hoặc nến này thọc thủng dải dưới $BB_{\text{Lower}} (20, 2)$.
-  * Nến hiện tại rút chân đóng cửa trở lại bên trên $BB_{\text{Lower}}$.
-  * $RSI(14) \le 38$ (xác nhận quá bán ngắn hạn).
+   * Giá nến trước hoặc nến này thọc thủng dải dưới $BB_{\text{Lower}} (20, 2)$.
+   * Nến hiện tại rút chân đóng cửa trở lại bên trên $BB_{\text{Lower}}$.
+   * Bắt buộc là nến XANH (đóng cửa cao hơn mở cửa) xác nhận lực cầu bật nảy.
+   * $RSI(14) \le 38$ (xác nhận quá bán ngắn hạn).
 * SHORT (Bắt đảo chiều dải trên):
-  * Giá nến chọc thủng dải trên $BB_{\text{Upper}} (20, 2)$.
-  * Nến hiện tại rụt cổ đóng cửa tụt lại dưới $BB_{\text{Upper}}$.
-  * $RSI(14) \ge 62$ (xác nhận quá mua ngắn hạn).
+   * Giá nến chọc thủng dải trên $BB_{\text{Upper}} (20, 2)$.
+   * Nến hiện tại rụt cổ đóng cửa tụt lại dưới $BB_{\text{Upper}}$.
+   * Bắt buộc là nến ĐỎ xác nhận lực bán ép xuống.
+   * $RSI(14) \ge 62$ (xác nhận quá mua ngắn hạn).
 
 ### 4.3. Quản trị Rủi ro & Mục tiêu
 * Stop Loss: $1.2 \times ATR(14)$.
-* Take Profit: Mục tiêu chốt lời là trục giữa $SMA 20$ (Mean Reversion) hoặc tối thiểu $1.4R$ ($R:R \approx 1:1.5$).
+* Take Profit: Mục tiêu chốt lời là trục giữa $SMA 20$ (Mean Reversion) hoặc tối thiểu $1.4R - 1.5R$.
 
 ---
 
@@ -121,6 +121,7 @@ Chiến lược săn các pha bùng nổ phá vỡ khỏi vùng tích lũy ngắ
 
 * Khung thời gian: 15 phút (M15).
 * Đòn bẩy: 5x.
+* Rủi ro mỗi lệnh: 1% vốn ($1.00 / lệnh).
 * Danh mục theo dõi (5 coin an toàn): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
 
 ### 5.1. Tín hiệu Mở vị thế
@@ -135,8 +136,8 @@ Chiến lược săn các pha bùng nổ phá vỡ khỏi vùng tích lũy ngắ
 
 ### 5.2. Quản trị Rủi ro & Mục tiêu
 * Stop Loss: $1.4 \times ATR(14)$.
-* Take Profit: Tỷ lệ R:R = 1:2.0.
-* Breakeven: Kéo SL về hòa vốn khi giá chạy được $1.4R$ ($2.80).
+* Take Profit: Tỷ lệ R:R = 1:2.0 ($2.00 / lệnh).
+* Breakeven: Kéo SL về hòa vốn khi giá chạy được $1.4R$ ($1.40).
 
 ---
 
@@ -146,6 +147,7 @@ Chiến lược săn sóng lớn dài hạn dựa trên hệ thống giao dịch
 
 * Khung thời gian: 4 giờ (H4).
 * Đòn bẩy: 5x.
+* Rủi ro mỗi lệnh: 1% vốn ($1.00 / lệnh).
 * Tần suất: Ít lệnh (1–3 lệnh/tuần), nhưng mỗi lệnh đều giữ theo sóng lớn kéo dài nhiều ngày.
 * Danh mục theo dõi (5 coin): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
 
@@ -163,6 +165,7 @@ Chiến lược săn sóng lớn dài hạn dựa trên hệ thống giao dịch
   * Vị thế LONG: Thoát lệnh khi nến H4 đóng cửa thủng đáy 20 nến H4 gần nhất.
   * Vị thế SHORT: Thoát lệnh khi nến H4 đóng cửa vượt đỉnh 20 nến H4 gần nhất.
 * Trần bảo vệ khẩn cấp: 8.0R (đảm bảo không bị tuột mất siêu sóng).
+* Không áp dụng kéo dời hòa vốn sớm 1.4R để vị thế có không gian thở theo sóng lớn H4.
 
 ---
 
@@ -172,6 +175,7 @@ Chiến lược kinh điển của huyền thoại John Carter, bắt trọn cá
 
 * Khung thời gian: 15 phút (M15).
 * Đòn bẩy: 5x.
+* Rủi ro mỗi lệnh: 1% vốn ($1.00 / lệnh).
 * Danh mục theo dõi (5 coin an toàn): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
 
 ### 7.1. Cơ chế Hoạt động (Hai Giai đoạn Siết Chặt)
@@ -186,7 +190,7 @@ Chiến lược kinh điển của huyền thoại John Carter, bắt trọn cá
 
 ### 7.2. Quản trị Rủi ro & Mục tiêu
 * Stop Loss: $1.5 \times ATR(14)$.
-* Take Profit: Tỷ lệ R:R = 1:2.5.
+* Take Profit: Tỷ lệ R:R = 1:2.5 ($2.50 / lệnh).
 * Breakeven: Tự động khóa hòa vốn khi giá đi được $1.4R$.
 
 ---
@@ -197,6 +201,7 @@ Chiến lược quét xoay trục dòng tiền (Capital Rotation), liên tục s
 
 * Khung thời gian: 15 phút (M15).
 * Đòn bẩy: 5x.
+* Rủi ro mỗi lệnh: 1% vốn ($1.00 / lệnh).
 * Danh mục theo dõi (5 coin chính): `BTCUSDT`, `ETHUSDT`, `SOLUSDT`, `BNBUSDT`, `PAXGUSDT`.
 
 ### 8.1. Các Chỉ số Định lượng (Quant Metrics)
@@ -226,12 +231,14 @@ Chiến lược quét xoay trục dòng tiền (Capital Rotation), liên tục s
 Tất cả các bot trên hệ thống đều tuân thủ các quy tắc bảo vệ vốn định lượng:
 
 1. Định cỡ Vị thế Chuẩn theo Rủi ro (Pure Risk-Based Sizing):
-   * Không dùng Margin cố định. Kích thước vị thế Notional = 2 USD / (Khoảng cách SL %).
-   * Đảm bảo nếu chạm SL thì tài khoản luôn mất đúng $2.00 (2% vốn ban đầu $100). Khi chạm TP 2R ăn trọn vẹn $4.00, TP 2.5R ăn $5.00.
+   * Không dùng Margin cố định. Kích thước vị thế Notional = 1.00 USD / (Khoảng cách SL %).
+   * Khống chế trần ký quỹ Margin tối đa 20 USD/lệnh để tài khoản $100 luôn mở được ít nhất 3 lệnh an toàn.
+   * Đảm bảo nếu chạm SL thì tài khoản chỉ mất tối đa ~1.00 USD (1% vốn ban đầu $100). Khi chạm TP 2R ăn trọn vẹn $2.00, TP 2.5R ăn $2.50.
 2. Khóa Tương quan Cấp Danh mục Toàn Hệ thống (Portfolio Correlation Lock):
    * Toàn bộ 6 bot Futures chia sẻ một hạn mức chung: Tối đa không quá 2 vị thế cùng chiều Long hoặc Short được mở đồng thời trên toàn bộ thị trường.
-3. Phanh Ngắt Mạch Tự động (Circuit Breaker):
+3. Cooldown 60 phút Sau Khi Dừng Lỗ:
+   * Khi bất kỳ bot nào dính Stop Loss trên một cặp coin, bot đó tự động kích hoạt chế độ nghỉ 60 phút với mã đó, tuyệt đối không nhảy vào mở lệnh lại ngay.
+4. Phanh Ngắt Mạch Tự động (Circuit Breaker):
    * Nếu tài khoản của bất kỳ bot nào chạm ngưỡng sụt giảm vốn Max Drawdown $\ge 15\%$, hệ thống sẽ lập tức kích hoạt chế độ TẠM DỪNG MỞ LỆNH đối với bot đó để bảo toàn vốn và chờ rà soát.
-4. Cơ chế Kéo dời Hòa vốn (Breakeven Trailing):
-   * Khi vị thế có lãi vượt mức $1.4R$ ($2.80), hệ thống tự động dời Stop Loss về giá hòa vốn (+0.05% để bảo toàn phí sàn). Riêng Bot 4 (Turtle Trend) thả lỏng để bám sóng dài.
-
+5. Cơ chế Kéo dời Hòa vốn (Breakeven Trailing):
+   * Khi vị thế có lãi vượt mức $1.4R$ ($1.40), hệ thống tự động dời Stop Loss về giá hòa vốn (+0.05% để bảo toàn phí sàn). Riêng Bot 4 (Turtle Trend) thả lỏng để bám sóng dài.
