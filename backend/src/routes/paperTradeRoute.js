@@ -37,6 +37,7 @@ router.post('/symbols/remove', controller.removeSymbol);
 
 // Route chạy kiểm thử chiến lược (Strategy Lab / Backtest)
 router.post('/lab/run', controller.runBacktest);
+router.post('/lab/portfolio', controller.runPortfolioBacktest);
 
 // Route lấy dữ liệu Lịch PnL theo ngày (Trading Calendar Heatmap)
 router.get('/calendar-pnl', controller.getCalendarPnL);

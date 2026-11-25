@@ -388,5 +388,33 @@ async function runBacktest({
 
 module.exports = {
   fetchBinanceKlines,
-  runBacktest
+  runBacktest,
+  async runPortfolioBacktest({ symbol = 'BTCUSDT', days = 30, initialBalance = 100, leverage = 5, riskPerTrade = 1 }) {
+    const strategyKeys = [
+      'TREND_PULLBACK',
+      'BOLLINGER_REVERSION',
+      'BREAKOUT_MOMENTUM',
+      'H4_TREND_SNIPER',
+      'TTM_SQUEEZE',
+      'MOMENTUM_LEADER'
+    ];
+    const results = await Promise.all(strategyKeys.map((strategyKey) => runBacktest({
+      strategyKey, symbol, days, initialBalance, leverage, riskPerTrade, marginPerTrade: riskPerTrade
+    })));
+    const rows = results.map((result) => result.summary);
+    return {
+      symbol,
+      days,
+      initialBalance,
+      leverage,
+      riskPerTrade,
+      strategies: rows,
+      totals: {
+        totalTrades: rows.reduce((sum, row) => sum + row.totalTrades, 0),
+        netProfit: Number(rows.reduce((sum, row) => sum + row.netProfit, 0).toFixed(2)),
+        averageWinRate: Number((rows.reduce((sum, row) => sum + row.winRate, 0) / rows.length).toFixed(1)),
+        worstDrawdownPct: Number(Math.max(...rows.map((row) => row.maxDrawdownPct)).toFixed(1))
+      }
+    };
+  }
 };

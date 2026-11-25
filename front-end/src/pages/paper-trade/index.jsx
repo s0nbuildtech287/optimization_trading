@@ -979,6 +979,9 @@ export default function PaperTradingPage() {
                 </Stack>
 
                 <Divider sx={{ my: 1.5, borderColor: 'divider' }} />
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1, minHeight: 18 }}>
+                  {evalState?.reason || (signalAction === 'HOLD' ? 'Chưa có tín hiệu vào lệnh' : 'Tín hiệu hợp lệ — bot sẽ kiểm tra slot, lock và cooldown')}
+                </Typography>
 
                 {inds ? (
                   <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>

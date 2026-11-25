@@ -225,6 +225,22 @@ async function runBacktest(req, res) {
   }
 }
 
+async function runPortfolioBacktest(req, res) {
+  try {
+    const { symbol = 'BTCUSDT', days = 30, initialBalance = 100, leverage = 5, riskPerTrade = 1 } = req.body;
+    const result = await paperBacktestService.runPortfolioBacktest({
+      symbol,
+      days: parseInt(days, 10) || 30,
+      initialBalance: parseFloat(initialBalance) || 100,
+      leverage: parseInt(leverage, 10) || 5,
+      riskPerTrade: parseFloat(riskPerTrade) || 1
+    });
+    return res.status(200).json({ success: true, data: result });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+}
+
 async function getCalendarPnL(req, res) {
   try {
     const { accountId = 'ALL', month = null } = req.query;
@@ -254,5 +270,6 @@ module.exports = {
   withdrawProfit,
   getLivePrices,
   runBacktest,
+  runPortfolioBacktest,
   getCalendarPnL
 };

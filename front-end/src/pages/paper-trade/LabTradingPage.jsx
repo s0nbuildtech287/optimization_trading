@@ -49,7 +49,7 @@ import {
 } from 'recharts';
 
 import MainCard from 'components/MainCard';
-import { runPaperTradeBacktest } from 'api/paperTrade';
+import { runPaperTradeBacktest, runPaperPortfolioBacktest } from 'api/paperTrade';
 
 const STRATEGIES = [
   {
@@ -157,6 +157,7 @@ export default function LabTradingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
+  const [portfolioResult, setPortfolioResult] = useState(null);
 
   const selectedStrategy = STRATEGIES.find((s) => s.key === strategyKey) || STRATEGIES[0];
   const isH4Strategy = strategyKey === 'H4_TREND_SNIPER';
@@ -189,6 +190,25 @@ export default function LabTradingPage() {
       setResult(backtestResult);
     } catch (err) {
       setError(err.message || 'Lỗi khi chạy backtest');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRunPortfolio = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await runPaperPortfolioBacktest({
+        symbol,
+        days: Number(days),
+        initialBalance: Number(initialBalance) || 100,
+        riskPerTrade: Number(riskPerTrade) || 1,
+        leverage: Number(leverage) || 5
+      });
+      setPortfolioResult(data?.data || data);
+    } catch (err) {
+      setError(err.message || 'Lỗi khi chạy portfolio backtest');
     } finally {
       setLoading(false);
     }
@@ -563,6 +583,9 @@ export default function LabTradingPage() {
                 >
                   {loading ? 'Đang Chạy Mô Phỏng...' : 'Bắt Đầu Thử Nghiệm'}
                 </Button>
+                <Button fullWidth variant="outlined" size="small" onClick={handleRunPortfolio} disabled={loading} sx={{ mt: 1, fontWeight: 700 }}>
+                  So sánh Portfolio 6 Bot
+                </Button>
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', mt: 0.8, fontSize: 11 }}>
                   {isH4Strategy
                     ? '⚡ Nến H4 Binance thật, kênh Donchian 55 + EMA 50/200, SL ATR, TP 2.5R, BE'
@@ -586,6 +609,31 @@ export default function LabTradingPage() {
       )}
 
       {/* 3. Kết Quả Kiểm Thử (Hiển Thị Khi Đã Chạy Xong) */}
+      {portfolioResult && (
+        <MainCard title="Portfolio Backtest — 6 Bot độc lập cùng dữ liệu">
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+            Kết quả so sánh từng bot trên cùng coin/thời gian; chưa áp dụng portfolio lock giữa các bot.
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table size="small">
+              <TableHead><TableRow><TableCell>Bot</TableCell><TableCell align="right">Lệnh</TableCell><TableCell align="right">Win rate</TableCell><TableCell align="right">Profit factor</TableCell><TableCell align="right">Net PnL</TableCell><TableCell align="right">Max DD</TableCell></TableRow></TableHead>
+              <TableBody>
+                {(portfolioResult.strategies || []).map((row) => (
+                  <TableRow key={row.strategyKey}>
+                    <TableCell>{row.strategyName}</TableCell>
+                    <TableCell align="right">{row.totalTrades}</TableCell>
+                    <TableCell align="right">{row.winRate}%</TableCell>
+                    <TableCell align="right">{row.profitFactor}</TableCell>
+                    <TableCell align="right" sx={{ color: row.netProfit >= 0 ? 'success.main' : 'error.main', fontWeight: 700 }}>${row.netProfit}</TableCell>
+                    <TableCell align="right">{row.maxDrawdownPct}%</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </MainCard>
+      )}
+
       {result && result.summary && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, width: '100%' }}>
           {/* 3.1. 4 Thẻ KPI - Chuẩn CSS Grid như Tab Futures */}

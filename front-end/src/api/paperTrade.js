@@ -108,6 +108,17 @@ export async function runPaperTradeBacktest(params) {
   return data.data || data;
 }
 
+export async function runPaperPortfolioBacktest(params) {
+  const res = await authFetch('/api/paper-trade/lab/portfolio', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Không thể chạy portfolio backtest');
+  return data.data || data;
+}
+
 export async function getCalendarPnL({ accountId = 'ALL', month = null } = {}) {
   let url = `/api/paper-trade/calendar-pnl?accountId=${encodeURIComponent(accountId)}`;
   if (month) url += `&month=${encodeURIComponent(month)}`;
