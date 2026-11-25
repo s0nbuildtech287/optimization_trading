@@ -263,70 +263,71 @@ export default function TradingCalendarModal({ open, onClose, defaultAccount = '
         </Stack>
       </DialogTitle>
 
-      <DialogContent sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 }, pt: '28px !important' }}>
+      <DialogContent sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 }, pt: '32px !important' }}>
         {/* 2. Controls Bar: Chọn tháng & Bộ lọc tài khoản/Bot */}
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          justifyContent="space-between"
-          alignItems={{ xs: 'stretch', sm: 'center' }}
-          spacing={2}
-          sx={{ mt: 1, mb: 3 }}
-        >
-          {/* Bộ điều hướng tháng */}
-          <Stack direction="row" spacing={1} alignItems="center">
-            <IconButton onClick={handlePrevMonth} size="small" sx={{ border: '1px solid', borderColor: 'divider' }}>
-              <LeftOutlined style={{ fontSize: 12 }} />
-            </IconButton>
+        <Box sx={{ pt: 1, pb: 0.5, mb: 3 }}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            justifyContent="space-between"
+            alignItems={{ xs: 'stretch', sm: 'center' }}
+            spacing={2}
+          >
+            {/* Bộ điều hướng tháng */}
+            <Stack direction="row" spacing={1} alignItems="center">
+              <IconButton onClick={handlePrevMonth} size="small" sx={{ border: '1px solid', borderColor: 'divider' }}>
+                <LeftOutlined style={{ fontSize: 12 }} />
+              </IconButton>
 
-            <Typography
-              variant="subtitle1"
-              fontWeight={800}
-              sx={{
-                minWidth: 150,
-                textAlign: 'center',
-                textTransform: 'capitalize',
-                color: 'primary.main'
-              }}
-            >
-              {dayjs(currentMonth, 'YYYY-MM').format('MMMM, YYYY')}
-            </Typography>
-
-            <IconButton onClick={handleNextMonth} size="small" sx={{ border: '1px solid', borderColor: 'divider' }}>
-              <RightOutlined style={{ fontSize: 12 }} />
-            </IconButton>
-
-            <Button
-              size="small"
-              variant="outlined"
-              onClick={handleCurrentMonth}
-              sx={{ ml: 1, height: 30, fontSize: 11, fontWeight: 700, borderRadius: 1.5 }}
-            >
-              Hôm nay
-            </Button>
-          </Stack>
-
-          {/* Bộ lọc chọn Bot / Thị trường */}
-          <Box sx={{ minWidth: { xs: '100%', sm: 260 } }}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="pnl-cal-filter-label" sx={{ fontSize: 13, fontWeight: 600 }}>
-                Nguồn Dữ Liệu
-              </InputLabel>
-              <Select
-                labelId="pnl-cal-filter-label"
-                value={selectedAccount}
-                label="Nguồn Dữ Liệu"
-                onChange={(e) => setSelectedAccount(e.target.value)}
-                sx={{ borderRadius: 1.5, fontSize: 13, fontWeight: 700 }}
+              <Typography
+                variant="subtitle1"
+                fontWeight={800}
+                sx={{
+                  minWidth: 150,
+                  textAlign: 'center',
+                  textTransform: 'capitalize',
+                  color: 'primary.main'
+                }}
               >
-                {FILTER_OPTIONS.map((opt) => (
-                  <MenuItem key={opt.id} value={opt.id} sx={{ fontSize: 12.5, fontWeight: 600 }}>
-                    {opt.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Stack>
+                {dayjs(currentMonth, 'YYYY-MM').format('MMMM, YYYY')}
+              </Typography>
+
+              <IconButton onClick={handleNextMonth} size="small" sx={{ border: '1px solid', borderColor: 'divider' }}>
+                <RightOutlined style={{ fontSize: 12 }} />
+              </IconButton>
+
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={handleCurrentMonth}
+                sx={{ ml: 1, height: 30, fontSize: 11, fontWeight: 700, borderRadius: 1.5 }}
+              >
+                Hôm nay
+              </Button>
+            </Stack>
+
+            {/* Bộ lọc chọn Bot / Thị trường */}
+            <Box sx={{ minWidth: { xs: '100%', sm: 260 }, pt: 0.5 }}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="pnl-cal-filter-label" sx={{ fontSize: 13, fontWeight: 600 }}>
+                  Nguồn Dữ Liệu
+                </InputLabel>
+                <Select
+                  labelId="pnl-cal-filter-label"
+                  value={selectedAccount}
+                  label="Nguồn Dữ Liệu"
+                  onChange={(e) => setSelectedAccount(e.target.value)}
+                  sx={{ borderRadius: 1.5, fontSize: 13, fontWeight: 700 }}
+                >
+                  {FILTER_OPTIONS.map((opt) => (
+                    <MenuItem key={opt.id} value={opt.id} sx={{ fontSize: 12.5, fontWeight: 600 }}>
+                      {opt.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </Stack>
+        </Box>
 
         {/* 3. Monthly KPI Cards Summary */}
         <Box
