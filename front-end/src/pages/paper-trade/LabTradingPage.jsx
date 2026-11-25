@@ -150,7 +150,7 @@ export default function LabTradingPage() {
   const [symbol, setSymbol] = useState('BTCUSDT');
   const [days, setDays] = useState(30);
   const [initialBalance, setInitialBalance] = useState('100');
-  const [marginPerTrade, setMarginPerTrade] = useState('15');
+  const [riskPerTrade, setRiskPerTrade] = useState('1');
   const [leverage, setLeverage] = useState(3);
 
   // Execution states
@@ -181,7 +181,8 @@ export default function LabTradingPage() {
         symbol,
         days: Number(days),
         initialBalance: Number(initialBalance) || 100,
-        marginPerTrade: Number(marginPerTrade) || 15,
+        marginPerTrade: Number(riskPerTrade) || 1,
+        riskPerTrade: Number(riskPerTrade) || 1,
         leverage: Number(leverage) || 3
       });
       const backtestResult = data?.data || data;
@@ -500,17 +501,17 @@ export default function LabTradingPage() {
                 />
               </Box>
 
-              {/* Ký quỹ mỗi lệnh */}
+              {/* Rủi ro mục tiêu mỗi lệnh */}
               <Box>
                 <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ display: 'block', mb: 0.5 }}>
-                  KÝ QUỸ / LỆNH (MARGIN)
+                  RỦI RO / LỆNH (RISK)
                 </Typography>
                 <TextField
                   fullWidth
                   size="small"
                   type="number"
-                  value={marginPerTrade}
-                  onChange={(e) => setMarginPerTrade(e.target.value)}
+                  value={riskPerTrade}
+                  onChange={(e) => setRiskPerTrade(e.target.value)}
                   disabled={loading}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>

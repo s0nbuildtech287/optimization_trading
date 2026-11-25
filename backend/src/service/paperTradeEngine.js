@@ -545,8 +545,9 @@ class PaperTradeEngine {
   }
   const freeMargin = Math.max(0, currentBalance - usedMargin);
 
-  // Khống chế trần Margin an toàn tối đa $20 để giảm thiểu biến động, giữ vốn bền bỉ
-  const maxMarginAllowed = Math.min(FUTURES_RISK.MAX_MARGIN_PER_ORDER || 20.0, freeMargin - 3.0);
+  // Giữ lại một khoản dự phòng free margin để tránh khóa toàn bộ thanh khoản tài khoản.
+  const marginReserve = FUTURES_RISK.MIN_FREE_MARGIN_RESERVE || 3.0;
+  const maxMarginAllowed = freeMargin - marginReserve;
   if (margin > maxMarginAllowed) {
     margin = maxMarginAllowed;
     notional = margin * leverage;

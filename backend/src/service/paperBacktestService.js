@@ -85,7 +85,8 @@ async function runBacktest({
   days = 30,
   initialBalance = 100.0,
   leverage = 3,
-  marginPerTrade = 15.0
+  marginPerTrade = 1.0,
+  riskPerTrade = marginPerTrade
 }) {
   const isH4 = strategyKey === 'H4_TREND_SNIPER';
   const interval = isH4 ? '4h' : '15m';
@@ -245,10 +246,18 @@ async function runBacktest({
           const entryPrice = candle.close;
           const slDistance = Math.abs(entryPrice - signal.stopLoss);
 
-          if (slDistance > 0 && balance >= marginPerTrade) {
-            let margin = Math.min(marginPerTrade, balance);
-            let notional = margin * leverage;
-            let quantity = notional / entryPrice;
+          if (slDistance > 0) {
+            const targetRisk = Math.max(0.01, Number(riskPerTrade) || 1.0);
+            let quantity = targetRisk / slDistance;
+            let notional = quantity * entryPrice;
+            const minNotional = 10.0;
+            if (notional < minNotional) {
+              notional = minNotional;
+              quantity = notional / entryPrice;
+            }
+            const margin = notional / leverage;
+
+            if (balance < margin) continue;
 
             currentPos = {
               side: signal.action,
@@ -369,7 +378,8 @@ async function runBacktest({
       worstTrade: Number(worstTrade.toFixed(2)),
       avgTradePnl: avgPnl,
       leverage,
-      marginPerTrade
+      marginPerTrade,
+      riskPerTrade: Number(riskPerTrade)
     },
     equityCurve,
     trades: trades.reverse() // Mới nhất lên đầu
@@ -380,4 +390,3 @@ module.exports = {
   fetchBinanceKlines,
   runBacktest
 };
-
